@@ -3753,3 +3753,25 @@ print(phone_book['Имя'])
 #         phone_book[name] = int(input('Введите номер телефона: '))
 #     else:
 #         print('Ошибка: такое имя уже существует.')
+
+Методы словарей:
+Задача гистограмма
+# def histogram(string):
+#     sym_dict = dict()
+#     for sym in string:
+#         if sym in sym_dict:
+#             sym_dict[sym] += 1   # Здесь просто считаем уже существующий символ(ключ) в словаре
+#         else:
+#             sym_dict[sym] = 1    # А здесь добавляем в словарь символ(ключ), если его еще не было
+#     return sym_dict
+#
+#
+# text = input('Введите текст: ').lower()
+# hist = histogram(text)
+# print(hist)
+#
+# for i_sym in sorted(hist.keys()):        # Здесь используется метод .keys(), т.к. в словаре данные не упорядочены и сортировать их не выйдет
+#     print(i_sym, ':', hist[i_sym])       # потому мы просто берем ключи, не меняя их, т.к. в методе это не возможно
+#                                          # .sorted - сортирует ключи
+#
+# print('Максимальная частота:', max(hist.values()))  # .vlues() отображает значения ключей
