@@ -3577,7 +3577,7 @@ peoplre_str = ', '.join(people) - соединяем элементы в стр�
 #             count += 1
 #             continue                                 # здесь continue играет роль флага, то есть пока условие выполняется (текущий и следующий символ) ,счет в цикле продолжается (continue)
 #         compressed_str.append(text[sym] + str(count))
-#         count = 1
+#         count = 1                                     # Важно не забыть сбросить счетчик, после добавления результата в список
 #     return compressed_str
 #
 # s = (input('Введите строку: '))
@@ -3640,3 +3640,85 @@ peoplre_str = ', '.join(people) - соединяем элементы в стр�
 #         new_word = text[i_start:i]
 #         new_text += new_word[::-1]
 # print(new_text)
+
+Задача 10. Истина - текст зашифрован шифром цезаря. Сдвиг равен индексу строки.
+# def decryption(messenge):
+#     translated = ''
+#     for i_word in messenge:
+#         if i_word in letters:
+#             num_index = letters.find(i_word)
+#             translated += letters[num_index - 1]
+#         else:
+#             translated += i_word
+#     return translated
+#
+#
+# def shift(text, key):
+#     word_ln = len(text)
+#     shift = key % word_ln
+#     text = text[-shift:] + text[:-shift]
+#     return text
+#
+#
+# text = 'vujgvmCfb tj ufscfu ouib z/vhm jdjuFyqm jt fscfuu uibo jdju/jnqm fTjnqm tj scfuuf ibou fy/' \
+#        'dpnqm yDpnqmf jt cfuufs boui dbufe/dpnqmj uGmb tj fuufsc ouib oftufe/ bstfTq jt uufscf uibo otf/' \
+#        'ef uzSfbebcjmj vout/dp djbmTqf dbtft (ubsfo djbmtqf hifopv up csfbl ifu t/svmf ipvhiBmu zqsbdujdbmju fbutc uz/' \
+#        'qvsj Fsspst tipvme wfsof qbtt foumz/tjm omfttV mjdjumzfyq odfe/tjmf Jo fui dfgb pg hvjuz-bncj gvtfsf fui ubujpoufnq up ftt/' \
+#        'hv Uifsf vmetip fc pof.. boe sbcmzqsfgf zpom pof pvt..pcwj xbz pu pe ju/ ' \
+#        'Bmuipvhi uibu bzx bzn puo cf wjpvtpc bu jstug ttvomf sfzpv( i/Evud xOp tj scfuuf ibou /' \
+#        'ofwfs uipvhiBm fsofw jt fopgu cfuufs boui iu++sjh x/op gJ ifu nfoubujpojnqmf tj eibs pu mbjo-fyq tju( b bec /' \
+#        'jefb Jg fui foubujpojnqmfn jt fbtz up bjo-fyqm ju znb cf b hppe jefb/ ' \
+#        'bnftqbdftO bsf pof ipoljoh sfbuh efbj .. fu(tm pe psfn gp tf"uip'.split()
+#
+# letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#
+# text_2 = []
+# key = 3
+# for i_word in text:
+#     text_decryption = decryption(i_word)
+#     shift_text = shift(text_decryption, key)
+#     if shift_text.endswith("/"):
+#         key += 1
+#         text_2.append(shift_text)
+#     else:
+#         text_2.append(shift_text)
+#
+# text_2 = ' '.join(text_2)
+# text_2 = text_2.replace("+", "*")
+# text_2 = text_2.replace("-", ",")
+# text_2 = text_2.replace("(", "'")
+# text_2 = text_2.replace("..", "--")
+# text_2 = text_2.replace('"', "!")
+# text_2 = text_2.replace("/", ".\n")
+#
+# print(text_2)
+
+========================================================================================================================
+Словари!
+Инициализироватьс ловарь можно двумя способами:
+1) phone _book = {}
+2) phone _book = dict()
+Словарь состоит из ключа и значения:
+phone _book = {'Ваня': 89188886543} - где "Ваня" это ключ, номер телефона это данные. Ключ и значения разделены ":"
+Ключи не могут быть словарями или списками. Ключи уникальны (не повторяются в одном словаре)
+Что бы добавить данные в соварь:
+phone_book['Имя'] = 'Алексей' - добавляем данные как в работе со списками (так же и обновляются значения, т.к. ключи уникальны)
+Что бы вывести значение ключа:
+print(phone_book['Имя'])
+
+Задача Студент
+# student_str = input('Введите информацию о студенте через пробел\n'
+#                     '(имя, фамилия, город, место учебы, оценки): '
+# )
+# student_info = student_str.split()
+# student = dict()
+# student['Имя'] = student_info[0]
+# student['фамилия'] = student_info[1]
+# student['город'] = student_info[2]
+# student['Место учебы'] = student_info[3]
+# student['оценки'] = [] # Т.к. кол-во оценок не известно, здесь просто добавим список и заполним его циклом
+# for i_grade in student_info[4:]:  # Т.к. мы знаем, что оценки начинаются с 4го индекса, мы просто делаем срез в строке с [4]
+#     student['оценки'].append(int(i_grade))
+#
+# for i_info in student:
+#     print(i_info, '-', student[i_info]) # Зедсь выводи на печать через цикл ,что бы не печатать все в одну строку
