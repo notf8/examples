@@ -3770,9 +3770,9 @@ print(phone_book['Имя'])
 # hist = histogram(text)
 # print(hist)
 #
-# for i_sym in sorted(hist.keys()):        # метод .keys() отображает ключи, т.к. в словаре данные не упорядочены и сортировать их не выйдет
-#     print(i_sym, ':', hist[i_sym])       # потому мы просто берем ключи, не меняя их, т.к. в методе это не возможно
-#                                          # .sorted - сортирует ключи и выводет словарь в отсортированном виде
+# for i_sym in sorted(hist.keys()):        # метод .keys() отображает ключи, т.к. в словаре данные не упорядочены, сортировать их нельзя
+#     print(i_sym, ':', hist[i_sym])       # мы просто берем список ключей и сортируем его (списки в отличии от словаря можно сортировать
+#                                          # .sorted - сортирует ключи и выводит словарь в отсортированном виде
 #
 # print('Максимальная частота:', max(hist.values()))  # метод .vlues() отображает значения ключей
 Задача phonebook
@@ -3876,3 +3876,35 @@ print(phone_book['Имя'])
 # а потом значение, которое нужно вывести, если такого ключа нет (значение по умолчанию)
 # surname = data['family_member']['children'][1].get('surname', 'No_surname')
 # print(name, surname)
+
+Задача 2. Игроки. Есть готовый словарь игроков, у каждого игрока есть имя, команда, в которой он играет,
+а также его текущий статус, в котором указано, отдыхает он, тренируется или путешествует:
+# players_dict = {
+#     1: {'name': 'Vanya', 'team': 'A', 'status': 'Rest'},
+#     2: {'name': 'Lena', 'team': 'B', 'status': 'Training'},
+#     3: {'name': 'Maxim', 'team': 'C', 'status': 'Travel'},
+#     4: {'name': 'Egor', 'team': 'C', 'status': 'Rest'},
+#     5: {'name': 'Andrei', 'team': 'A', 'status': 'Training'},
+#     6: {'name': 'Sasha', 'team': 'A', 'status': 'Rest'},
+#     7: {'name': 'Alina', 'team': 'B', 'status': 'Rest'},
+#     8: {'name': 'Masha', 'team': 'C', 'status': 'Travel'}
+# }
+# player_A_members = [
+#     player['name']
+#     for player in players_dict.values()
+#     if player['team'] == 'A' and player['status'] == 'Rest'
+# ]
+# player_B_members = [
+#     player['name']
+#     for player in players_dict.values()
+#     if player['team'] == 'B' and player['status'] == 'Training'
+# ]
+# player_C_members = [
+#     player['name']
+#     for player in players_dict.values()
+#     if player['team'] == 'C' and player['status'] == 'Travel'
+# ]
+#
+# print('Все члены команды из команды А, которые отдыхают:', player_A_members)
+# print('Все члены команды из команды B, которые тренируются:', player_B_members)
+# print('Все члены команды из команды C, которые путешествуют:', player_C_members)
