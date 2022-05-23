@@ -3843,3 +3843,36 @@ print(phone_book['Имя'])
 # print('Самый маленький доход у', get_key(lower_p, incomes), '. Он составил:', lower_p)
 # incomes.pop(get_key(lower_p, incomes)) # Удалям элемент словаря по полученному ключу из функции
 # print('Итоговый словарь:', incomes)
+
+Задача
+Дана структура, которая содержит описание одного из членов семьи (имя, фамилия, хобби, сколько лет и дети)
+реализует такую структуру: имя, фамилия, хобби, кол-во лет и дети. Затем, с помощью метода get и установки значения по умолчанию,
+проверьте есть ли ребёнок с именем Bob. Затем в отдельную переменную получите фамилию этого ребёнка и выведите её на экран.
+Если у него нет фамилии, то получите значение ‘Nosurname
+# data = dict()  # Если планируем работать со словарем, нужно обязательно его создать
+# data['family_member'] = {
+#     "name": "Jane",
+#     "surname": "Doe",
+#     "hobbies": ["running", "sky diving", "singing"],
+#     "age": 35,
+#     "children": [
+#         {
+#             "name": "Alice",
+#             "age": 6
+#         },
+#         {
+#             "name": "Bob",
+#             "age": 8,
+#         }
+#     ]
+#     }
+#
+# print()
+# for i_value in data.values():
+#     for j_key in i_value:
+#         print(j_key, i_value[j_key])
+#
+# name = data['family_member']['children'][1].get('name', 'No_name') # В скобках метода.get Указываем сначала ключ,
+# а потом значение, которое нужно вывести, если такого ключа нет (значение по умолчанию)
+# surname = data['family_member']['children'][1].get('surname', 'No_surname')
+# print(name, surname)
