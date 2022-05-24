@@ -3970,3 +3970,29 @@ print(phone_book['Имя'])
 # #         new_string.add(i_elem)
 #
 # print(new_string)
+
+Представления словарей (dict comprehencion)
+# data = [
+#     {'ID': 10, 'user': 'Bob'},
+#     {'ID': 11, 'user': 'Misha'},
+#     {'ID': 12, 'user': 'Anton'},
+#     {'ID': 10, 'user': 'Bob'},
+#     {'ID': 11, 'user': 'Misha'},
+# ]
+# # Старый вариант. Двумя циклами по существующему списку
+# unique_data = []
+# for i_dict in data:
+#     data_exist = False
+#     for unic_dict in unique_data:
+#         if unic_dict['ID'] == i_dict['ID']:
+#             data_exist = True
+#             break
+#     if not data_exist:
+#         unique_data.append(i_dict)
+#
+# print(unique_data, '\n')
+#
+# # А это представление, только словарей (как и со списками)
+# unic_data_dict = {i_dict['ID']: i_dict for i_dict in data}
+#
+# print(unic_data_dict.values()) # .values() нужен что бы убрать значение ключей из вывода
