@@ -4031,8 +4031,8 @@ print(phone_book['Имя'])
 #
 # for i_country in range(q_countrys):
 #     country = input(f'{i_country + 1}-я страна: ').split()
-#     for city in country[1:]:
-#         country_dict[city] = country[0]
+#     for city in country[1:]:                               # Тут присваиваем каждому городу(город становится ключом, не наоборот!!)
+#         country_dict[city] = country[0]                    # Значение - Страну (иначе потом придется города списком добавлять)
 #
 # for i_city in range(3):
 #     city = input('\n{}-ый город: '.format(i_city + 1))
