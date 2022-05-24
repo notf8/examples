@@ -3956,3 +3956,17 @@ print(phone_book['Имя'])
 # print('\nОбъединение множеств:', nums1.union(nums2))
 # print('Пересечение множеств:', nums1.intersection(nums2))
 # print('Элементы, входящие в nums_2, но не входящие в nums_1:', nums2.difference(nums1))
+
+Задача 3. Различные цифры. Программа находит все различные цифры в символьной строке
+# string = input('Введите строку: ')
+#
+# l_string = [x for x in string if x.isdigit()]
+# new_string = set(l_string)
+#
+# # Второй вариант решения
+# # new_string = set()
+# # for i_elem in string:
+# #     if '0' <= i_elem <= '9':
+# #         new_string.add(i_elem)
+#
+# print(new_string)
