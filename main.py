@@ -4018,3 +4018,26 @@ print(phone_book['Имя'])
 #     playlist[song] = (violator_songs[song])
 #
 # print('Общее время звучания песен:', round(sum(playlist.values()), 2), 'минуты')
+
+Задача 2. География. Пользователь вводит количество стран N, а затем N раз вводит страну и города, которые в этой стране
+находятся, в одну строку. После пользователь вводит три названия городов. Реализуйте такую программу и для каждого из трёх
+городов укажите, в какой стране он находится. Если такого города нет, то выведите соответствующее сообщение
+# q_countrys = int(input('Количество стран: '))
+# print('Введите через пробел\n'
+#       '(Страна, первый город, второй город и т.д.)')
+#
+# print()
+# country_dict = dict()
+#
+# for i_country in range(q_countrys):
+#     country = input(f'{i_country + 1}-я страна: ').split()
+#     for city in country[1:]:
+#         country_dict[city] = country[0]
+#
+# for i_city in range(3):
+#     city = input('\n{}-ый город: '.format(i_city + 1))
+#     f_country = country_dict.get(city)
+#     if f_country:
+#         print(f'Город {city} расположен в стране {f_country}')
+#     else:
+#         print(f'По городу {city} данных нет.')
