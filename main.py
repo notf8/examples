@@ -4116,4 +4116,42 @@ print(phone_book['Имя'])
 # data['tokens'][1]['sec_token_info']['total_price'] = data['tokens'][1]['sec_token_info'].pop('price')
 # print(data['tokens'][1]['sec_token_info']['total_price'])
 
-
+Задача 4. Товары.В базе данных магазина вся необходимая информация по товарам делится на два словаря:
+первый отвечает за коды товаров, второй — за списки количества разнообразных товаров на складе:
+Програма рассчитывает, на какую сумму лежит каждого товара на складе
+goods = {
+#     'Лампа': '12345',
+#     'Стол': '23456',
+#     'Диван': '34567',
+#     'Стул': '45678',
+# }
+#
+# store = {
+#     '12345': [
+#         {'quantity': 27, 'price': 42},
+#     ],
+#     '23456': [
+#         {'quantity': 22, 'price': 510},
+#         {'quantity': 32, 'price': 520},
+#     ],
+#     '34567': [
+#         {'quantity': 2, 'price': 1200},
+#         {'quantity': 1, 'price': 1150},
+#     ],
+#     '45678': [
+#         {'quantity': 50, 'price': 100},
+#         {'quantity': 12, 'price': 95},
+#         {'quantity': 43, 'price': 97},
+#     ],
+# }
+#
+# for i_goods in goods:
+#     item_name = i_goods # Эта переменная нужна для принта в конце цикла
+#     item_code = goods[i_goods]    # А эта для того что бы по ней идти во вложенном цикле вместо .keys (с методом не получится присваивать значения на прямую
+#     item_quantity = 0
+#     item_total_coast = 0
+#     for j_goods in store[item_code]: # Здесь счетчик(j_goods) становится ключем словаря а 'in store[item_code]' - его значением
+#         item_quantity += j_goods['quantity']
+#         item_coast = j_goods['price']
+#         item_total_coast += j_goods['price'] * j_goods['quantity']
+#     print('{0} - {1} шт, общая стоимость {2} рублей'.format(item_name, item_quantity, item_total_coast))
