@@ -4188,7 +4188,7 @@ goods = {
 # print('\nИнвертированный словарь частот:')
 # for i_dict in r_dict:
 #     print(i_dict, ':', list(r_dict[i_dict])) # list нужен ,что бы все символы были в '', т.к. есть пробелы
-## И еще одно решение из инета, но там есть метод items(), но его еще не проходили (на всякий случай)
+# # И еще одно решение из инета, но там есть метод items(), но его еще не проходили (на всякий случай)
 # text = input('Введите текст: ')
 # sym_dict = dict()
 # text_dict = dict()
@@ -4208,4 +4208,4 @@ goods = {
 #     text_dict.setdefault(i_num, []).append(i_letter)
 # for i in text_dict:
 #     print(i, ': ', text_dict[i], sep='')
-## Есть еще вариант, но он подходит только для уникальных значений - dict = {sim_dict[k]: k for k in sim_dict}
+# # Есть еще вариант, но он подходит только для уникальных значений - dict = {sim_dict[k]: k for k in sim_dict}
