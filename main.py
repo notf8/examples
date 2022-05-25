@@ -3755,7 +3755,7 @@ print(phone_book['Имя'])
 #         print('Ошибка: такое имя уже существует.')
 
 Методы словарей:
-Задача гистограмма
+Задача гистограмма частоты
 # def histogram(string):
 #     sym_dict = dict()
 #     for sym in string:
@@ -4155,3 +4155,57 @@ goods = {
 #         item_coast = j_goods['price']
 #         item_total_coast += j_goods['price'] * j_goods['quantity']
 #     print('{0} - {1} шт, общая стоимость {2} рублей'.format(item_name, item_quantity, item_total_coast))
+
+Задача 5. Гистограмма частоты 2. Текст на вход и подсчет симвлов с выводом в виде таблицы + инвертированый словарь
+меняем местами ключи и значения
+# def table(text):
+#     sim_dict = dict()
+#     for i_sym in text:
+#         if i_sym in sim_dict:
+#             sim_dict[i_sym] += 1
+#         else:
+#             sim_dict[i_sym] = 1
+#     return sim_dict
+#
+# def invert_dict(sym_dict):
+#     new_dict = dict()
+#     for k in sym_table:
+#         value, key = k, sym_table[k] # Здесь с помощью переменных меняем ключи и значения местами. А дальше как в первой функции
+#         if key in new_dict:
+#             new_dict[key] += value
+#         else:
+#             new_dict[key] = value
+#     return new_dict
+#
+# string = input('Введите текст: ')
+# sym_table = table(string)
+# r_dict = invert_dict(sym_table)
+#
+# print('Оригинальный словарь частот:')
+# for i_table in sorted(sym_table.keys()):
+#     print(i_table, ':', sym_table[i_table])
+#
+# print('\nИнвертированный словарь частот:')
+# for i_dict in r_dict:
+#     print(i_dict, ':', list(r_dict[i_dict])) # list нужен ,что бы все символы были в '', т.к. есть пробелы
+## И еще одно решение из инета, но там есть метод items(), но его еще не проходили (на всякий случай)
+# text = input('Введите текст: ')
+# sym_dict = dict()
+# text_dict = dict()
+#
+# print('Оригинальный словарь частот:')
+# for sym in text:
+#     if
+# sym in sym_dict:
+# sym_dict[sym] += 1
+# else:
+# sym_dict[sym] = 1
+# for i_sym in sorted(sym_dict.keys()):
+#     print(i_sym, ': ', sym_dict[i_sym], sep='')
+#
+# print('Инвертированный словарь частот:')
+# for i_letter, i_num in sym_dict.items():
+#     text_dict.setdefault(i_num, []).append(i_letter)
+# for i in text_dict:
+#     print(i, ': ', text_dict[i], sep='')
+## Есть еще вариант, но он подходит только для уникальных значений - dict = {sim_dict[k]: k for k in sim_dict}
