@@ -4230,3 +4230,25 @@ goods = {
 #         print('Синоним:', pairs.get(word))
 #     else:
 #         print('Такого слова в словаре нет.')
+
+Задача 7. Пицца На вход в программу подаётся N заказов. Каждый заказ представляет собой строку вида
+«Покупатель — название пиццы — количество заказанных пицц» Код выводит список покупателей и их заказов по алфавиту
+# quantity = int(input('Введите количество заказов: '))
+# print('\nВведите данные заказов через пробел (Фамилия пицца количество)')
+#
+# order_dict = dict()
+# for i_order in range(quantity):
+#     order = input(f'{i_order + 1}-й заказ: ').split()
+#     if order[0] in order_dict:
+#         if order[1] in order_dict[order[0]]:
+#             order_dict[order[0]][order[1]] += int(order[2])
+#         else:
+#             order_dict[order[0]][order[1]] = int(order[2])
+#     else:
+#         order_dict[order[0]] = dict({order[1]: int(order[2])})
+#
+# print()
+# for i_order in sorted(order_dict):
+#     print(f'{i_order}: ')
+#     for j_order in sorted(order_dict[i_order]):
+#         print(f'        {j_order} : {order_dict[i_order][j_order]}')
