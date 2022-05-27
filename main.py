@@ -4252,3 +4252,21 @@ goods = {
 #     print(f'{i_order}: ')
 #     for j_order in sorted(order_dict[i_order]):
 #         print(f'        {j_order} : {order_dict[i_order][j_order]}')
+
+Задача 8. Угадай число  Артём загадал натуральное число от 1 до N. Борис пытается угадать это число, для этого он
+называет несколько чисел подряд. Артём говорит Борису «да», если среди названных Борисом чисел есть задуманное
+Если попросить помощи, выведутся возможные числа (на использования методов множеств)
+# max_num = int(input('Введите максимальное число: '))
+# all_nums = set(range(1, max_num + 1))
+# while True:
+#     guess = input('Нужное число есть среди вот этих чисел: ')
+#     if guess == 'Помогите!':
+#         break
+#     guess = {int(x) for x in guess.split()}
+#     answer = input('Ответ Артёма: ').lower()
+#     if answer == 'да':
+#         all_nums &= guess
+#     else:
+#         all_nums -= guess
+#
+# print('Артём мог загадать следующие числа:', all_nums)
