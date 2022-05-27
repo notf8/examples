@@ -3916,7 +3916,7 @@ print(phone_book['Имя'])
 # numbers1 = {1, 2, 3, 4, 5}
 # numbers2 = {4, 5, 6, 7, 8}
 # numbers1.intersection(numbers2) # находит только пересечения во множествах
-# nums1 = numbers1 & numbers2 # выполняет роль функции .intersection
+# nums1 = numbers1 & numbers2 # выполняет роль функции .intersection, называется амперсант
 # numbers1.union(numbers2) # объеденяет множества (не дублируя уникальные значения
 # nums = numbers1 | numbers2 # выполняет роль функции .union
 # numbers1.difference(numbers2) # выводит только разницу во множествах
