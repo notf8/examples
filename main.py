@@ -4169,8 +4169,8 @@ goods = {
 #
 # def invert_dict(sym_dict):
 #     new_dict = dict()
-#     for k in sym_table:
-#         value, key = k, sym_table[k] # Здесь с помощью переменных меняем ключи и значения местами. А дальше как в первой функции
+#     for k in sym_dict:
+#         value, key = k, sym_dict[k] # Здесь с помощью переменных меняем ключи и значения местами. А дальше как в первой функции
 #         if key in new_dict:
 #             new_dict[key] += value
 #         else:
