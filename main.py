@@ -4209,3 +4209,24 @@ goods = {
 # for i in text_dict:
 #     print(i, ': ', text_dict[i], sep='')
 # # Есть еще вариант, но он подходит только для уникальных значений - dict = {sim_dict[k]: k for k in sim_dict}
+
+Задача 6. Словарь синонимов На вход в программу подаётся N пар слов. Каждое слово является синонимом к своему парному слову
+затем запрашивает у пользователя слово и выводит на экран его синоним
+# quantity = int(input('Введите количество пар слов: '))
+# print('\nВведите пару через "-" ')
+#
+# pairs = dict()
+# for i_pairs in range(quantity):                                      # если нужно будет обращаться и к ключам и к занчениям
+#     pair = input(f'{i_pairs + 1}-я пара: ').split('-')               # проще завести 'двойной' словарь( в цикле двумя строками один и тот же элемент
+#     pairs[pair[0].strip().capitalize()] = pair[1].strip().capitalize()  # делаем сначала ключом, потом значением
+#     pairs[pair[1].strip().capitalize()] = pair[0].strip().capitalize()
+#
+#
+# while True:
+#     word = input('\nВведите слово: ').capitalize().strip()
+#     if word == 'end':
+#         break
+#     elif word in pairs:
+#         print('Синоним:', pairs.get(word))
+#     else:
+#         print('Такого слова в словаре нет.')
