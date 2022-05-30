@@ -4522,7 +4522,28 @@ isinstance(<элемент>, <тип данных>), которая возвра
 #     'persimmon': 310.00,
 # }
 # for i_title, i_cost in incomes.items():
-#     print('{title} -- {cost:,}'.format(
+#     print('{title} -- {cost:,.2f}'.format(
 #         title=i_title,
 #         cost=i_cost
 #     ))
+
+адача 2. Сервер
+У вас есть данные о сервере, которые хранятся в виде словаря: Нужно вывести красиво))
+# server_data = {
+#     "server": {
+#         "host": "127.0.0.1",
+#         "port": "10"
+#     },
+#     "configuration": {
+#         "access": "true",
+#         "login": "Ivan",
+#         "password": "qwerty"
+#     }
+# }
+# for i_server, i_configuration in server_data.items():
+#     print(i_server)
+#     for j_server in server_data[i_server]:
+#         print('     {server} : {configuration}'.format(
+#             server=j_server,
+#             configuration=i_configuration[j_server]
+#         ))
