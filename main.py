@@ -4393,9 +4393,27 @@ enumerate` - функция, которая генерирует кортежи 
 #     nums[i_scores] += 10 # Обращение по индексу, что бы изменить значение в самом списке
 
 
-Задача 1. Саботаж! Программа проходит по строке и выводит в консоль индексы символа ~
+Задача 1. Саботаж! Программа проходит по строке и выводит в консоль индексы символа '~'
 # string = input('Строка: ')
 #
 # for index, char in enumerate(string):
 #     if char == '~':
 #         print(index, end=' ')
+
+Задача 2. Словари из списков Создайте два списка, в каждом из которых лежит 10 случайных букв алфавита
+(могут повторяться). Затем для каждого списка создайте словарь из пар «индекс — значение» и выведите оба словаря на экран
+Буквы генерируем случайно
+# import random
+#
+# def dict_maker(lists):
+#     char_dict = dict()
+#     for index, char in enumerate(lists):
+#         char_dict[index] = char
+#     return char_dict
+#
+# letters = ''.join(chr(x) for x in range(ord('а'), ord('я'))) # Генерируем алфавит с помощью ord() и chr()
+# list1 = [random.choice(letters) for x in range(10)]
+# list2 = [random.choice(letters) for x in range(10)]
+#
+# print('Первый словарь:', dict_maker(list1))
+# print('Второй словарь:', dict_maker(list2))
