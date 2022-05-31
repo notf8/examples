@@ -4598,3 +4598,22 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #         phone_book[name] = int(input('Введите номер телефона: '))
 #     else:
 #         print('Ошибка: такое имя уже существует.')
+
+функция zip - позволяет объеденить (кпаковать) несколько списков в один. Важно! упаковывает только элемны, если в списках
+у них есть пары. Если пары нет - элемент отбрасывается. Что бы этого не происходило - нужен специальный модуль (нужно поискать)
+# names = ['Tom', 'Bob', 'Albert']
+# ages = [20, 45, 70]
+#
+# people = zip(names, ages) # Объединит в кортеж
+# for i_people in people: # Печатаем циклом, т.к. это "ленивая генерация" и просто так не распечатает
+#     print(i_people)
+#
+# people_list = list(zip(names, ages)) # Сделали писок с кортежами
+# print((people_list))
+#
+# people_dict = dict(zip(names, ages)) # Сделали словарь
+# print(people_dict)
+#
+# people_dict = dict(zip(names, people))
+# for i_people, i_ages in people_dict.items():
+#     print(i_people, i_ages)
