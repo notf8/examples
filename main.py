@@ -4617,3 +4617,9 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # people_dict = dict(zip(names, people))
 # for i_people, i_ages in people_dict.items():
 #     print(i_people, i_ages)
+
+# people_2 = {                                # А это comprehansions с функцией zip
+#     i_name: i_ages + 10                     # i_name - ключ, i_ages - значение (ну и например мы хоти увеличить его на 10
+#     for i_name, i_ages in zip(names, ages)
+# }
+# print(people_2)
