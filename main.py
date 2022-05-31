@@ -4623,3 +4623,37 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     for i_name, i_ages in zip(names, ages)
 # }
 # print(people_2)
+
+Задача 1. Ревью кода
+В задании был словарь из трёх студентов. Необходимо:
+Вывести на экран список пар «ID студента — возраст».
+Написать функцию, которая принимает в качестве аргумента словарь и возвращает два значения: полный список интересов всех
+студентов и общую длину всех фамилий студентов. Код должен быть максимально Pythonic
+# def data(dict):
+#     hobby = []
+#     l_surname = []
+#     for i_key, i_value in dict.items():
+#         hobby.extend(i_value.get('interests', ''))
+#         l_surname += i_value.get('surname', '')
+#     return set(hobby), len(l_surname), pair
+#
+# pair = [(i, students.get(i).get('age', 'Возраст не указан')) for i in students]
+#
+# print('\nСписок пар "ID студента — возраст":', pair)
+# print('Полный список интересов всех студентов:', data(students)[0])
+# print('Общая длина всех фамилий студентов:', data(students)[1])
+
+## Ну и супер Pytonic код
+# def data(dict):
+#     result = (
+#         set(sum([dict.get(i).get('interests') for i in range(1, len(dict) + 1)], [])),
+#         [(i, dict.get(i).get('age')) for i in range(1, len(dict) + 1)],
+#         sum([len(dict.get(i).get('surname')) for i in range(1, len(dict) + 1)])
+#     )
+#     f_print = (['Полный список интересов всех студентов:',
+#                 'Список пар "ID студента — возраст":',
+#                 'Общая длина всех фамилий студентов:'])
+#     for i in range(len(f_print)):
+#         print(f_print[i], result[i])
+#
+# data(students)
