@@ -4577,3 +4577,24 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # ## Второй вариант (без цикла)
 # print(data.get(series))
 
+Задача 2. Контакты 2 запрашивает у пользователя имя контакта, фамилию и номер телефона, добавляет их в словарь и выводит
+на экран текущий словарь контактов. Словарь состоит из пар «Ф. И. — телефон», где Ф. И. — это составной ключ
+# phone_book = dict()
+#
+# while True:
+#     if len(phone_book) < 1:
+#         print('Текущие контакты на телефоне: \n<Пусто>')
+#     else:
+#         print('\nТекущие контакты на телефоне:')
+#         for i_name, i_number in phone_book.items():
+#             print(i_name, ':', i_number)
+#
+#     name = input('\nВведите имя контакта: ').split()
+#     name = tuple(name)
+#
+#     if name == 'end':
+#         break
+#     elif name not in phone_book:
+#         phone_book[name] = int(input('Введите номер телефона: '))
+#     else:
+#         print('Ошибка: такое имя уже существует.')
