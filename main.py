@@ -4722,5 +4722,10 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # surname = input('Введите фамилию: ').capitalize()
 #
 # for i_surname in families:
-#     if len(set(surname).difference(set(i_surname[0]))) < 1:
+#     if i_surname[0].startswith(surname[:-1]):
+#         print(*i_surname, families[i_surname])
+
+# И альтернативное решение на всякий пожарный)))
+# for i_surname in families:
+#     if len(set(surname).difference(set(i_surname[0]))) <= 1:
 #         print(*i_surname, families[i_surname])
