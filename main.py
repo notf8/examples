@@ -4729,3 +4729,27 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # for i_surname in families:
 #     if len(set(surname).difference(set(i_surname[0]))) <= 1:
 #         print(*i_surname, families[i_surname])
+
+Задача 6. По парам инициализирует список из 10 случайных целых чисел, а затем делит эти числа на пары кортежей
+внутри списка. Выведите результат на экран
+# import random
+#
+# original_list_1 = [random.randint(0, 10) for x in range(10)]
+# print('\nОригинальный список:', original_list_1)
+#
+# new_list_1 = [(original_list_1[0 + x * 2], original_list_1[1 + x * 2])
+#               for x in range(len(original_list_1) // 2)]
+#
+# print('Новый список 1:', new_list_1)
+#
+# ## Второй способ
+#
+# original_list = [random.randint(0, 10) for x in range(10)]
+# print('\nОригинальный список:', original_list)
+#
+# zip_list = zip(original_list[::2], original_list[1::2])
+# new_list_2 = []
+# for pair in zip_list:
+#     new_list_2.append(pair)
+#
+# print('Новый список 2:', new_list_2)
