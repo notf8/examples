@@ -4694,3 +4694,12 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     return s_tuple[s_tuple.index(s_number):s_tuple.index(s_number, s_tuple.index(s_number) + 1) + 1]
 # # Здесь в срезе по индексу для начала и остановки дополнительный суппорт индекс(в нем как раз и указываем где стартовать и закнчивать)
 # print(slicer((1, 2, 3, 4, 5, 6, 7, 8, 2, 2, 9, 10), int(input('Введите число: '))))
+
+Задача 4. Игроки объединяет ключ словаря со значением в один кортеж, и выведите результат на экран
+# players = {
+#     ("Ivan", "Volkin"): (10, 5, 13),
+#     ("Bob", "Robbin"): (7, 5, 14),
+#     ("Rob", "Bobbin"): (12, 8, 2)
+# }
+#
+# print([(i_keys + i_values) for i_keys, i_values in players.items()])
