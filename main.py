@@ -4763,3 +4763,42 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     return sorted(some_tuple) # Тут важно не делать блок else. Если его вставить, то вернется кортеж наполовину отсортированный
 #
 # print(tpl_sort((6, 3, -1.3, 8, 4, 10, -5)))
+
+Задача 8. Контакты 3 Тоже что и контакты 2 + поиск по фамили и добавилось меню с выбором действия
+# phone_book = {}
+# def add_contact():
+#     if len(phone_book) < 1:
+#         print('Текущие контакты на телефоне: \n<Пусто>')
+#     else:
+#         print('\nТекущие контакты на телефоне:')
+#         for i_name, i_number in phone_book.items():
+#             print(i_name, ':', i_number)
+#
+#     name = input('\nВведите имя контакта через пробел: ').split()
+#     name = tuple(name)
+#
+#     if name not in phone_book:
+#         phone_book[name] = int(input('Введите номер телефона: '))
+#     else:
+#         print('\nОшибка: такое имя уже существует.')
+#
+# def find_contact():
+#     surname = input('Введите фамилию: ').capitalize()
+#     for i_surname in phone_book:
+#         if i_surname[1].startswith(surname[:-1]):
+#             print(*i_surname, phone_book[i_surname])
+#
+# while True:
+#     print('\nВведите номер действия: ')
+#     print('1. Добавить контакт', end='\n')
+#     print('2. Найти человека')
+#     print('3. Завершить программу')
+#
+#     action = int(input())
+#     if action == 1:
+#         add_contact()
+#     elif action == 2:
+#         find_contact()
+#     elif action == 3:
+#         print('Программа завершена')
+#         break
