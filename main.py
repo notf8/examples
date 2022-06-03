@@ -3706,6 +3706,29 @@ phone_book['Имя'] = 'Алексей' - добавляем данные как
 Что бы вывести значение ключа:
 print(phone_book['Имя'])
 
+Сортировка словаря по значениям: "На месте" сортировать дневник нельзя, потому создаем новый (пустой) дневник
+# player_list = {'qwerty': [95715, 0], 'Jack': [69485, 2],  'Alex': [95715, 1]}
+# sorted_dict = {}
+#
+# for i in sorted(player_list.values()): # Внешний цикл идет по значениям, так как сортируем по значениям
+#     for k in player_list.keys():
+#         if player_list[k] == i:
+#             sorted_dict[k] = player_list[k]
+#
+# print(sorted_dict)
+
+Сортировка словаря по ключам
+# sorted_dict = {}
+# nums = {1: 1, 3: 4, 2: 9}
+#
+# for i in sorted(nums):
+#     sorted_dict[i] = nums[i]
+#
+# print(sorted_dict)
+# print(sorted(nums.keys())) # Выводит отсортированные ключи
+# print(sorted(nums.items())) # Вывродит отсортированные ключи и значения
+# print(sorted(nums.values())) # Выводит отсортированные значения
+
 Задача Студент
 # student_str = input('Введите информацию о студенте через пробел\n'
 #                     '(имя, фамилия, город, место учебы, оценки): '
