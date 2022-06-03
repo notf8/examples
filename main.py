@@ -3708,9 +3708,10 @@ print(phone_book['Имя'])
 
 Сортировка словаря по значениям: "На месте" сортировать дневник нельзя, потому создаем новый (пустой) дневник
 # player_list = {'qwerty': [95715, 0], 'Jack': [69485, 2],  'Alex': [95715, 1]}
+# sorted_values = sorted(player_list.values)
 # sorted_dict = {}
-#
-# for i in sorted(player_list.values()): # Внешний цикл идет по значениям, так как сортируем по значениям
+
+# for i in sorted_values: # Внешний цикл идет по значениям, так как сортируем по значениям
 #     for k in player_list.keys():
 #         if player_list[k] == i:
 #             sorted_dict[k] = player_list[k]
