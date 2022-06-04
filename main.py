@@ -4859,49 +4859,49 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     print(f'({score_list[winners][1][0]})', sep='')
 
 2) Решение - помог куратор, оно попалов практическую работу
-def find_winners(players_scores):
-    best_results = players_scores
-    winners = dict()
-    place = 1
-
-    while place <= 3: # Таким образом определяем длину списка победителей
-        max_from_players = max((score_info[0]) for score_info in best_results.values()) # Тут смотрим максимум
-        pretendents = [[player, score_info]
-                       for player, score_info in best_results.items() if score_info[0] == max_from_players]
-
-        if len(pretendents) == 1: # Если максимум один, вносим его в список победителей
-            winners[place] = pretendents[0] # Вносим в список победителей
-            best_results.pop(pretendents[0][0]) # Удаляем из списка результатов, т.к. только внесли его в список победителей и он уже не нужен для сравнения
-            place += 1 # Увеличиваем место в списке победителей для следующего участника
-        else:
-            min_date_created = min([pretendent[1][1] for pretendent in pretendents]) # Если несколько одинаковых результатов, смотри на порядо очереди, когда получил очки
-            for pretendent in pretendents:
-                if pretendent[1][1] == min_date_created: # Ищем порядок очереди в списке претендентов
-                    winners[place] = pretendent # Заносим найденного претендента в список победителей
-                    best_results.pop(pretendent[0]) # Удаляем из писка результатов, так как он уже в списке победителей
-                    break
-            place += 1
-    return winners
-
-
-player_list = {}
-rec_quantity = int(input('Сколько записей вносится в протокол? '))
-print('Введите через пробел результаты и имя игрока.'
-      ' Имя не должно содержать пробелов ')
-print('\nЗаписи (результат и имя):')
-
-for first in range(rec_quantity):
-    score, name = list(input(f'{first + 1}-я запись: ').split())
-    score = int(score)
-    if name in player_list:
-        if score > player_list[name][0]:
-            player_list[name][0] = score
-            player_list[name][1] = first
-    else:
-        player_list[name] = [score, first]
-
-winners = find_winners(player_list)
-print('\nИтоги соревнований:')
-for i_win in winners:
-    print(f'{i_win}-e место. {winners[i_win][0]}', end=' ')
-    print(f'({winners[i_win][1][0]})', sep='')
+# def find_winners(players_scores):
+#     best_results = players_scores
+#     winners = dict()
+#     place = 1
+#
+#     while place <= 3: # Таким образом определяем длину списка победителей
+#         max_from_players = max((score_info[0]) for score_info in best_results.values()) # Тут смотрим максимум
+#         pretendents = [[player, score_info]
+#                        for player, score_info in best_results.items() if score_info[0] == max_from_players]
+#
+#         if len(pretendents) == 1: # Если максимум один, вносим его в список победителей
+#             winners[place] = pretendents[0] # Вносим в список победителей
+#             best_results.pop(pretendents[0][0]) # Удаляем из списка результатов, т.к. только внесли его в список победителей и он уже не нужен для сравнения
+#             place += 1 # Увеличиваем место в списке победителей для следующего участника
+#         else:
+#             min_date_created = min([pretendent[1][1] for pretendent in pretendents]) # Если несколько одинаковых результатов, смотри на порядо очереди, когда получил очки
+#             for pretendent in pretendents:
+#                 if pretendent[1][1] == min_date_created: # Ищем порядок очереди в списке претендентов
+#                     winners[place] = pretendent # Заносим найденного претендента в список победителей
+#                     best_results.pop(pretendent[0]) # Удаляем из писка результатов, так как он уже в списке победителей
+#                     break
+#             place += 1
+#     return winners
+#
+#
+# player_list = {}
+# rec_quantity = int(input('Сколько записей вносится в протокол? '))
+# print('Введите через пробел результаты и имя игрока.'
+#       ' Имя не должно содержать пробелов ')
+# print('\nЗаписи (результат и имя):')
+#
+# for first in range(rec_quantity):
+#     score, name = list(input(f'{first + 1}-я запись: ').split())
+#     score = int(score)
+#     if name in player_list:
+#         if score > player_list[name][0]:
+#             player_list[name][0] = score
+#             player_list[name][1] = first
+#     else:
+#         player_list[name] = [score, first]
+#
+# winners = find_winners(player_list)
+# print('\nИтоги соревнований:')
+# for i_win in winners:
+#     print(f'{i_win}-e место. {winners[i_win][0]}', end=' ')
+#     print(f'({winners[i_win][1][0]})', sep='')
