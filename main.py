@@ -4950,3 +4950,38 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # int_num = int(input('Введите степень числа: '))
 #
 # print(float_num, '**', int_num, '=', power(float_num, int_num))
+
+Задача 3. Поиск элемента Ищем значения ключей в словаре (сруктуре) с помощью рекрсии
+# site = {
+#     'html': {
+#         'head': {
+#             'title': 'Мой сайт'
+#         },
+#         'body': {
+#             'h2': 'Здесь будет мой заголовок',
+#             'div': 'Тут, наверное, какой-то блок',
+#             'p': 'А вот здесь новый абзац'
+#         }
+#     }
+# }
+# def find_key(some_dict, key):
+#     if key in some_dict:
+#         return some_dict[key]  # Если ключ оказался в самом начале, сразу возвращаем его
+#
+#     for sub_dict in some_dict.values():
+#         if isinstance(sub_dict, dict): # А вот тут нужна проверка на тип данных, если значение окажется не словарем, вылетит ошибка
+#             result = find_key(sub_dict, key) # Тут результат рекурсии присваиваем переменной
+#             if result:
+#                 break # И прирываем рекурсию, что бы не сделать ее бесконечной
+#     else:
+#         result = None
+#
+#     return result
+#
+# user_key = input('Искомый ключ: ')
+#
+# value = find_key(site, user_key)
+# if value:
+#     print(value)
+# else:
+#     print('Такого ключа в структуре сайта нет')
