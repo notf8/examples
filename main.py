@@ -5007,3 +5007,19 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #
 # change_dict(common_dict)
 # print(common_dict)
+
+Задача Непонятно. Функция получает данные, и возвращает тип данных (класс)б изменяемые они или нет + id объекта
+# def data_is(some_data):
+#     if isinstance(x, (str, int, float, tuple)):
+#         print('Тип данных:', type(some_data))
+#         print('Неизменяемый (immutable)')
+#         print('Id объекта:', id(some_data))
+#     else:
+#         print('Тип данных:', type(some_data))
+#         print('Изменяемый (mutable)')
+#         print('Id объекта:', id(some_data))
+#
+# # data = input('Введите данные: ')
+# x = {'a': 10, 'b': 20}
+#
+# data_is(x)
