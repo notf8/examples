@@ -5057,3 +5057,34 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # print(add_num(5))
 # print(add_num(10))
 # print(add_num(15))
+
+Задача 3. Помощь другу - на вход принимает список всякого мусора. Если в списке встретился словарь, то оставляем его
+Если в списке встретилась строка, то из неё нужно сделать словарь и положить его в итоговый список, например  “abc” → {“abc”: “abc”}
+С числами нужно сделать то же самое, что и со строками. Всё остальное выкидываем из нашего списка
+# def create_dict(some_data, template=None): # Не забываем про None в аргументе по умолчанию, для изменяемого типа данных
+#     if isinstance(some_data, dict):
+#         return some_data
+#     if isinstance(some_data, list):
+#         return None
+#     if isinstance(some_data, set):
+#         return None
+#     if isinstance(some_data, int) or isinstance(some_data, float) or isinstance(some_data, str):
+#         if template is None:
+#             template = {}
+#             template[some_data] = some_data
+#         return template
+#
+#
+# def data_preparation(old_list):
+#     new_list = []
+#     for i_element in old_list:
+#         if create_dict(i_element) is None: # Тут проверяем, не являются ли данные из старого списка list или set
+#             pass                           # Если являются, тупо ничего не делаем, для этого подходит заглушка pass
+#         else:
+#             new_list.append(create_dict(i_element)) # Если нет, то добавляем в наш новый список словари из функции create_dict
+#     return new_list
+#
+# data = ['sad', {'ads': 23}, {43}, [12, 42, 1], 2323]
+# new_data = data_preparation(data)
+#
+# print(new_data)
