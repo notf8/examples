@@ -4905,3 +4905,24 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # for i_win in winners:
 #     print(f'{i_win}-e место. {winners[i_win][0]}', end=' ')
 #     print(f'({winners[i_win][1][0]})', sep='')
+
+Задача 10. Своя функция zip аны строка и кортеж из чисел. Напишите программу, которая создаёт генератор из пар кортежей
+«символ — число». Затем выведите на экран сам генератор и кортежи
+# def min_range(some_data1, some_data2):
+#     return min(len(some_data1), len(some_data2))
+#
+# def my_zip(some_data1, some_data2):
+#     if isinstance(some_data1, dict) or isinstance(some_data2, dict):
+#         return ((list(some_data1)[i_elem], list(some_data2)[i_elem])
+#             for i_elem in range(min_range(some_data1, some_data2)))
+#     else:
+#         return ((some_data1[i_elem], some_data2[i_elem])
+#             for i_elem in range(min_range(some_data1,some_data2)))
+#
+# data1 = 'abcde'
+# data2 = {10: 2, 20: 3, 30: 4, 40: 5}
+#
+# print('Результат:')
+# print(my_zip(data1, data2))
+# for i_elem in my_zip(data1, data2):
+#     print(i_elem)
