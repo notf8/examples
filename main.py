@@ -5105,3 +5105,14 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #
 # my_tax = int(input('Введите сумму налога: '))
 # print_tax_document(my_tax, 1000, 950, 880, 920, 990, year=1997, doc_type='Report', operation_id=11102398)
+
+Задача 1. Challenge 2 написать функцию, которая выводит все числа от 1 до num без использования циклов.(рекурсия)
+# def func_cycle(number):
+#     if number == 0:
+#         return 1
+#     func_cycle(number - 1)
+#     print(number)
+#
+# num = int(input('Введите num: '))
+#
+# func_cycle(num)
