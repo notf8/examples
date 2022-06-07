@@ -5116,3 +5116,32 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # num = int(input('Введите num: '))
 #
 # func_cycle(num)
+
+Задача 2. Свой zip 2 Улучшеный zip. Работает со всеми типами данных (без проверки данных) Второе решение на неограниченное
+Кол-во аргументов Используется map
+# def my_zip(some_data1, some_data2):
+#     tpl_list = [(tuple(some_data1)[i_elem], list(some_data2)[i_elem])
+#         for i_elem in range(min(len(some_data1), len(some_data2)))]
+#     return tpl_list
+#
+# data1 = 'abcde'
+# data2 = {10: 2, 20: 3, 30: 4, 40: 5}
+#
+# print('Результат:')
+# print(my_zip(data1, data2))
+#
+# ## Сначала написал как в задании, потом в чате увидел, что вроде как нужно на неограниченное количество аргументов
+# ## Потому ниже код с *args (не знаю какой нужен, потому оставил оба)
+#
+# def my_zip(*args):
+#     length = min(len(element) for element in args)
+#     tpl_list = [tuple(i_elem[index] for i_elem in map(list, args))
+#                 for index in range(length)]
+#     return tpl_list
+#
+# data1 = 'abcde'
+# data2 = {10: 2, 20: 3, 30: 4, 40: 5}
+# data3 = {1: 's', 2: 'n', 3: 4}
+#
+# print('Результат:')
+# print(my_zip(data1, data2, data3))
