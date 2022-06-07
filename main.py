@@ -5145,3 +5145,18 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #
 # print('Результат:')
 # print(my_zip(data1, data2, data3))
+## Есть и третья версия ,с рекрсией, но в ней куча того ,что еще не проходили, типа Try, except, -> и прочих фишек
+# def analog_zip_2(*args: iter, count=0, zip_list=[]) -> list[tuple]:
+#     try:
+#         zip_list.append(tuple(list(i)[count] for i in args))
+#         analog_zip_2(*args, count=count + 1, zip_list=zip_list)
+#     except IndexError:
+#         return zip_list
+#     return zip_list
+#
+# data1 = 'abcde'
+# data2 = {10: 2, 20: 3, 30: 4, 40: 5}
+# data3 = {1: 's', 2: 'n', 3: 4}
+#
+# analog_zip_2(data3, data2, data1)
+# print(analog_zip_2(data3, data2, data1))
