@@ -5223,3 +5223,23 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     print('Значение ключа:', find_key(site, key, some_depth=depth))
 # else:
 #     print('Значение ключа:', find_key(site, key))
+
+Задача 5. Ускоряем работу функции
+Оптимизируйте функцию так, чтобы высчитывать факториал для одного и того же числа только один раз.
+# def calculating_math_func(data):
+#     if data in factorials:
+#         result = factorials[data]
+#     else:
+#         result = max(factorials.values())  # Берем самое последнее вычисленное и начинаем отсюда
+#         for index in range(max(factorials.keys()) + 1, data + 1):
+#             result *= index
+#             factorials[index] = result  # Заполняем словарь всем, что вычислили
+#     result /= data ** 3
+#     result = result ** 10
+#     return result
+#
+#
+# factorials = {1: 1}
+# while True:
+#     print(calculating_math_func(int(input('Введите число: '))))
+#     print(sorted(factorials.items()))  # Проверка самого себя
