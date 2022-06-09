@@ -4939,7 +4939,7 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # num_fact = factorial(5)
 # print(num_fact)
 
-Возведение в степень без циклов и модуля .math Только репкурсия
+Возведение в степень без циклов и модуля .math Только рекурсия
 # def power(a, n):
 #     if n == 1: # Это является флагом для прирывания рекурсии
 #         return a
@@ -5186,3 +5186,40 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     print('Строка является полиндромом')
 # else:
 #     print('Строка не является полиндромом')
+
+Задача 4. Поиск элемента 2 Пользователь вводит искомый ключ. Если он хочет, то может ввести максимальную глубину —
+уровень, до которого будет просматриваться структура
+# site = {
+# 	'html': {
+# 		'head': {
+# 			'title': 'Мой сайт'
+# 		},
+# 		'body': {
+# 			'h2': 'Здесь будет мой заголовок',
+# 			'div': 'Тут, наверное, какой-то блок',
+# 			'p': 'А вот здесь новый абзац'
+# 		}
+# 	}
+# }
+#
+# def find_key(data,some_key, some_depth=996):
+#     while some_depth != 0:
+#         if some_key in data:
+#             return data[key]
+#         for sub_data in data.values():
+#             if isinstance(sub_data, dict):
+#                 result = find_key(sub_data, some_key, some_depth - 1)
+#                 if result:
+#                     break
+#         else:
+#             result = None
+#
+#         return result
+#
+# key = input('\nВведите искомый ключ: ')
+# question = input('Хотите ввести максимальную глубину? Y/N: ')
+# if question == 'y'.lower():
+#     depth = int(input('Введите максимальную глубину: '))
+#     print('Значение ключа:', find_key(site, key, some_depth=depth))
+# else:
+#     print('Значение ключа:', find_key(site, key))
