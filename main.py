@@ -5279,3 +5279,21 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     print('site = {')
 #     structure(site)
 #     print('}')
+
+Задача 7. Продвинутая функция sum, которая должна быть более гибкой, чем стандартная функция sum. Она должна уметь:
+складывать числа из списка списков;складывать числа из набора параметров. Говоря иначе - должна работать с агрументами
+типа *args (т.к. они передаются кортежем, есть особенности реализации суммирования, если в кортеже список списков)
+# def sum(*args, result=0):
+#     for i_elem in args:
+#         if isinstance(i_elem, int):
+#             result += i_elem
+#         else:
+#             for j_elem in i_elem:
+#                 if isinstance(j_elem, int):
+#                     result += j_elem
+#                 else:
+#                     result += sum(j_elem)
+#     return result
+#
+# print(sum([[1, 2, [3]], [1], 3]))
+# print(sum(1, 2, 3, 4, 5))
