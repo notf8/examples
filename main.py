@@ -5356,3 +5356,15 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # for i_project in projects_list:
 #     path_to_project = os.path.abspath(os.path.join('..',  '..', i_project)) # точки('..') нужны что бы указать уровень вложенности нашего списка папок
 #     print_dir(path_to_project) # В эту ф-ю передадим наши пути
+
+Задача 1. Сисадмин Если нужен путь до этого файла, причём как относительный, так и абсолютный
+# import os
+#
+# folder_name = 'acces'
+# file_name = 'admin.bat'
+#
+# abs_bath = os.path.abspath(os.path.join(folder_name, file_name))
+# rel_path = os.path.join('Test area', folder_name, file_name)
+#
+# print('\nАбсолютный путь до файла:', abs_bath)
+# print('Относительный путь до файла:', rel_path)
