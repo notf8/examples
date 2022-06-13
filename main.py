@@ -5334,9 +5334,25 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 Работа с ОС.
 Генерация путей (модуль .path - нужен именно для генерации!!!!)
 # import os # OS - модуль для работы с ОС соответсвенно))
-#
+## abspath - по умолчанию идет от корня системы
+## os.path.join - используется для генерации путей относительных (то есть путь относительно той папки, в которой находимся)
 # print(os.path.abspath('new_folder')) # Сгененрировать абсолютный путь к папке (используем модуль .abspth() )
 # print(os.path.abspath('../new_folder')) # Подняться на одну папку выше (с помощью " ../ ") - сработатет только у нас на компе
 # print(os.path.abspath(os.path.join('..', 'new_folder'))) # Подняться на одну папку выше (с помощью " .join ") - сработатет на любом компе
 # print(os.path.abspath('/new_folder')) # Положить папку в корень диска С (с помощью " / ") - сработатет только у нас на компе
 # print(os.path.abspath(os.path.join(os.path.sep, 'new_folder' ))) # Положить папку в корень диска С (с помощью модуля .sep (то же что и слэш)) - сработатет на любом компе
+
+Перебор элементов из списка в указанной директории
+# import os
+#
+# projects_list = ['PycharmProjects', 'Saved games']
+#
+# def print_dir(project):
+#     print('\nСодержимое директории', project)
+#     for i_elem in os.listdir(project): # цикл нужен, что бы пройтись по директории с помощью модуля os.listdir
+#         path = os.path.join(project, i_elem) # формируем пути из переменных project и i_elem
+#         print('    ', path)
+#
+# for i_project in projects_list:
+#     path_to_project = os.path.abspath(os.path.join('..',  '..', i_project)) # точки('..') нужны что бы уазать уровень вложенности нашего списка папопок
+#     print_dir(path_to_project) # В эту ф-ю передадим наши пути
