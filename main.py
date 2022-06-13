@@ -5354,5 +5354,5 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #         print('    ', path)
 #
 # for i_project in projects_list:
-#     path_to_project = os.path.abspath(os.path.join('..',  '..', i_project)) # точки('..') нужны что бы уазать уровень вложенности нашего списка папопок
+#     path_to_project = os.path.abspath(os.path.join('..',  '..', i_project)) # точки('..') нужны что бы указать уровень вложенности нашего списка папок
 #     print_dir(path_to_project) # В эту ф-ю передадим наши пути
