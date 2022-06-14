@@ -5525,6 +5525,9 @@ for i_line in speakers_file:
 #                 'r', encoding='utf-8')
 #     data = file.read()
 #     print(data)
+###   или
+    # for i_line in file:
+    #     print(i_line, end='')
 #     file.close()
 # else:
 #     print('<Файлы отсутствуют>')
