@@ -5465,6 +5465,9 @@ print(data)
 speakers_file.close()
 for i_line in speakers_file:
     print(i_line, end='')
+3) Запись файла: для записи используется режим 'w'(write) - важно! При таком режиме файл полность перезависывается
+Если нужно дополнять файл, используется режим "а".
+4) В файл данные всегда записываются в формате str (потому не забываем преобразовывать в строку, все что сохраняем)
 
 Задача 1. Результаты
 На экран нужно было вывести сумму очков первой группы, затем разность очков опять же первой группы и напоследок —
@@ -5531,3 +5534,17 @@ for i_line in speakers_file:
 #     file.close()
 # else:
 #     print('<Файлы отсутствуют>')
+
+Записать в тхт файл длину строк из другого файла
+# file = open(r"C:\Users\notf8\Desktop\task\group_1.txt", 'r', encoding='utf-8')
+# sym_count = []
+# for i_line in file:
+#     print(i_line, end='')
+#     sym_count.append(str(len(i_line)))
+# sym_count_str = '\n'.join(sym_count)
+# file.close()
+#
+# count_file = open('sym_count_str', 'w') # Открываем новый файл. Если такого файла еще нет, питон сам его создаст
+# count_file.write(sym_count_str) # ну а тут записываем в него полученную строку из списка sym_count
+# count_file.write('\n'.join(str(50)))
+# count_file.close()
