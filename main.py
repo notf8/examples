@@ -5507,14 +5507,24 @@ for i_line in speakers_file:
 #             result = find_file(path, file)
 #             path_list.extend(result)
 #     return path_list
+#
 # file_path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic"
 # file_name = 'main.py'
 #
 # print('Найдены следующие пути:')
-# for i_list in find_file(file_path, file_name):
-#     print(i_list)
+# if find_file(file_path, file_name):
+#     for i_list in find_file(file_path, file_name):
+#         print(i_list)
+# else:
+#     print('<Указанные файлы отсутствуют в каталоге>')
 #
-# file = open(find_file(file_path, file_name)[random.randint(0, len(find_file(file_path, file_name)))], 'r', encoding='utf-8')
-# data = file.read()
-# print(data)
-# file.close()
+# print('\nРандомно выбранный файл:')
+# if find_file(file_path, file_name):
+#     file = open(find_file(file_path, file_name)
+#                 [random.randint(0, len(find_file(file_path, file_name)))],
+#                 'r', encoding='utf-8')
+#     data = file.read()
+#     print(data)
+#     file.close()
+# else:
+#     print('<Файлы отсутствуют>')
