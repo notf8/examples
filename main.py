@@ -5345,13 +5345,16 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 Перебор элементов из списка в указанной директории
 # import os
 #
-# projects_list = ['PycharmProjects', 'Saved games']
+# projects_list = ['X-mas', 'PycharmProjects', 'Saved games']
 #
 # def print_dir(project):
 #     print('\nСодержимое директории', project)
-#     for i_elem in os.listdir(project): # цикл нужен, что бы пройтись по директории с помощью модуля os.listdir
-#         path = os.path.join(project, i_elem) # формируем пути из переменных project и i_elem
-#         print('    ', path)
+#     if os.path.exists(project): # Проверяем, существует ли в списке указанный путь
+#         for i_elem in os.listdir(project): # цикл нужен, что бы пройтись по директории с помощью модуля os.listdir
+#             path = os.path.join(project, i_elem) # формируем пути из переменных project и i_elem
+#             print('    ', path)
+#     else:
+#         print('Указанного каталога не существует')
 #
 # for i_project in projects_list:
 #     path_to_project = os.path.abspath(os.path.join('..',  '..', i_project)) # точки('..') нужны что бы указать уровень вложенности нашего списка папок
