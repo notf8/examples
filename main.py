@@ -5408,5 +5408,6 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #                       'm3_05_winter.player')
 # if file_path:
 #     print('Абсолютный путь к файлу:', file_path)
+#     print('Размер файла:', os.path.getsize(file_path), 'байт') # Возвращаем размер файла
 # else:`
 #     print('Файл не найден')
