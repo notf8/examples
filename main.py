@@ -5411,3 +5411,22 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #     print('Размер файла:', os.path.getsize(file_path), 'байт') # Возвращаем размер файла
 # else:`
 #     print('Файл не найден')
+
+Задача 1. Иконки по заданному абсолютному пути определяет, на что указывает этот путь (на директорию, файл, или же путь
+является ссылкой), и выведите соответствующее сообщение. Если путь указывает на файл, то также выведите его размер
+(сколько он весит в байтах). Обеспечьте контроль ввода: проверка пути на существование
+# path_to_file = r"C:\Users\notf8\Saved Games\m3_07_yamantau.player" # Нужно ставить 'r' в начале строки, что бы питон
+# # не читал \notf8 - как литерал \n
+#
+# if os.path.exists(path_to_file):
+#     print('\nПуть:', path_to_file)
+#     if os.path.isfile(path_to_file):
+#         print('Это файл')
+#         print('Размер файла:', os.path.getsize(path_to_file), 'Байт')
+#     elif os.path.isdir(path_to_file):
+#         print('Это папка')
+#         print('Размер папки:', os.path.getsize(path_to_file), 'Байт')
+#     elif os.path.islink(path_to_file):
+#         print('Это ссылка')
+# else:
+#     print('Указанного пути не существует')
