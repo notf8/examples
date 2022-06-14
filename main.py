@@ -5592,3 +5592,47 @@ for i_line in speakers_file:
 # sum_file.write(str(summ))
 # file.close()
 # sum_file.close()
+
+Задача 2. Всё в одном Напишите программу, которая копирует код каждого скрипта в папке проекта python_basic в файл
+scripts.txt, разделяя код строкой из 40 символов *
+# import os
+# import platform
+# import sys
+#
+# info = 'OS info is \n{}\n\nPython version is {} {}'.format(
+#     platform.uname(),
+#     sys.version,
+#     platform.architecture(),
+# )
+#
+# print(info)
+#
+# with open('os_info.txt', 'w', encoding='utf8') as file:
+#     file.write(info)
+#
+# def find_file(cur_path, file, path_list=None):
+#     if path_list == None:
+#         path_list = []
+#     for i_elem in os.listdir(cur_path):
+#         path = os.path.join(cur_path, i_elem)
+#         if file == i_elem:
+#             path_list.append(path)
+#         if os.path.isdir(path):
+#             result = find_file(path, file)
+#             path_list.extend(result)
+#     return path_list
+#
+# file_path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic"
+# file_name = 'main.py'
+#
+# for i in find_file(file_path, file_name):
+#     file = open(i, 'r', encoding='utf-8')
+#     file_script = open('scripts.txt', 'a', encoding='utf-8')
+#     for i_line in file:
+#         print(i_line, end='')
+#         file_script.write(i_line + '\n')
+#     file_script.write('*' * 40 + '\n')
+#     file.close()
+#     file_script.close()
+# else:
+#     print('<Файлы отсутствуют>')
