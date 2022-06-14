@@ -5436,19 +5436,23 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 Задача 2. Поиск файла В уроке мы написали функцию, которая ищет нужный нам файл во всех подкаталогах указанной директории
 Однако, как мы понимаем, файлов с таким названием может быть несколько
 # import os
-# def find_file(cur_path, file):
+# def find_file(cur_path, file, path_list=None):
+#     if path_list == None:
+#         path_list = []
 #     for i_elem in os.listdir(cur_path):
 #         path = os.path.join(cur_path, i_elem)
 #         if file == i_elem:
-#             print(path)
+#             path_list.append(path)
 #         if os.path.isdir(path):
-#             find_file(path, file)
-#
+#             result = find_file(path, file)
+#             path_list.extend(result)
+#     return path_list
 # file_path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic"
 # file_name = 'main.py'
 #
 # print('Найдены следующие пути:')
-# find_file(file_path, file_name)
+# for i_list in find_file(file_path, file_name):
+#     print(i_list)
 ========================================================================================================================
 Работа с файлами:
 Чтение:
