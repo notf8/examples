@@ -5464,3 +5464,27 @@ print(data)
 speakers_file.close()
 for i_line in speakers_file:
     print(i_line, end='')
+
+Задача 1. Результаты
+На экран нужно было вывести сумму очков первой группы, затем разность очков опять же первой группы и напоследок —
+произведение очков уже второй группы.
+# file = open(r"C:\Users\notf8\Desktop\task\group_1.txt", 'r', encoding='utf-8')
+# summa = 0
+# diff = 0
+# for i_line in file:
+#     info = i_line.split()
+#     summa += int(info[2])
+#     diff -= int(info[2])
+#
+# print('Сумма очков первой группы:', summa)
+# print('Разность очков первой группы:', diff)
+# file.close()
+#
+# file_2 = open(r"C:\Users\notf8\Desktop\task\Additional_info\group_2.txt", 'r', encoding='utf-8')
+# compose = 1
+# for i_line in file_2:
+#     info = i_line.split()
+#     compose *= int(info[2])
+#
+# print('Произведение очков второй группы:', compose)
+# file_2.close()
