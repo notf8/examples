@@ -5548,3 +5548,34 @@ for i_line in speakers_file:
 # count_file.write(sym_count_str) # ну а тут записываем в него полученную строку из списка sym_count
 # count_file.write('\n'.join(str(50)))
 # count_file.close()
+
+Поиск файла и запись в файл истории поиска
+# import os
+# def find_file(cur_path, file_name):
+#     print('Переходим', cur_path)
+#     for i_elem in os.listdir(cur_path):
+#         path = os.path.join(cur_path, i_elem)
+#         print('Смотрим', path)
+#         if file_name == i_elem:
+#             return path
+#         if os.path.isdir(path):
+#             print('Это директория')
+#             result = find_file(path, i_elem)
+#             if result:
+#                 break
+#     else:
+#         result = None
+#     return result
+#
+# file_path = find_file(os.path.abspath
+#                       (os.path.join('..', '..', 'Saved Games')),
+#                       'm3_05_winter.player')
+#
+# history_fail = open('search_history.txt', 'a') # Открываем файл истории поиска, в переменной history_fail
+# if file_path:
+#     print('Абсолютный путь к файлу:', file_path)
+#     print('Размер файла:', os.path.getsize(file_path), 'байт') # Возвращаем размер файла
+#     history_fail.write(file_path + '\n') # Записываем историю в файл, для новой строки добавляем литерал через + '\n'
+# else:
+#     print('Файл не найден')
+# history_fail.close()
