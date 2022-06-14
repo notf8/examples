@@ -5492,3 +5492,32 @@ for i_line in speakers_file:
 #
 # print('Произведение очков второй группы:', compose)
 # file_2.close()
+
+Задача 2. Поиск файла 2
+Используя функцию поиска файла из предыдущего урока, реализуйте программу, которая находит внутри указанного пути все
+файлы с искомым названием и выводит на экран текст одного из них (выбор можно сгенерировать случайно)
+Подсказка: можно использовать, например, список для сохранения найденного пути
+# import random
+# import os
+# def find_file(cur_path, file, path_list=None):
+#     if path_list == None:
+#         path_list = []
+#     for i_elem in os.listdir(cur_path):
+#         path = os.path.join(cur_path, i_elem)
+#         if file == i_elem:
+#             path_list.append(path)
+#         if os.path.isdir(path):
+#             result = find_file(path, file)
+#             path_list.extend(result)
+#     return path_list
+# file_path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic"
+# file_name = 'main.py'
+#
+# print('Найдены следующие пути:')
+# for i_list in find_file(file_path, file_name):
+#     print(i_list)
+#
+# file = open(find_file(file_path, file_name)[random.randint(0, len(find_file(file_path, file_name)))], 'r', encoding='utf-8')
+# data = file.read()
+# print(data)
+# file.close()
