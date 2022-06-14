@@ -5579,3 +5579,16 @@ for i_line in speakers_file:
 # else:
 #     print('Файл не найден')
 # history_fail.close()
+
+Задача 1. Сумма чисел Во входном файле numbers.txt записано N целых чисел, каждое в отдельной строке. Напишите программу,
+ которая выводит их сумму в выходной файл answer.txt
+# file = open('sym_count_str', 'r', encoding='utf-8')
+# sum_file = open('answer.txt', 'a', encoding='utf-8')
+# summ = 0
+#
+# for i_line in file:
+#     print(i_line, end='')
+#     summ += int(i_line)
+# sum_file.write(str(summ))
+# file.close()
+# sum_file.close()
