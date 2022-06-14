@@ -5626,9 +5626,9 @@ scripts.txt, разделяя код строкой из 40 символов *
 # file_name = 'main.py'
 #
 # for i in find_file(file_path, file_name):
-#     file = open(i, 'r', encoding='utf-8')
+#     file = open(i, 'r', encoding='utf-8') # каждый элемент полученного списка открываем в новом файле
 #     file_script = open('scripts.txt', 'a', encoding='utf-8')
-#     for i_line in file:
+#     for i_line in file: # В уже открытом файле берем инфу построчно (i) и записываем в новый файл
 #         print(i_line, end='')
 #         file_script.write(i_line + '\n')
 #     file_script.write('*' * 40 + '\n')
