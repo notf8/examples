@@ -5384,3 +5384,29 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 # p_project = 'Python_Basic'
 # path_to_project = os.path.abspath(os.path.join('..', p_project, p_project))
 # print_dir(path_to_project)
+
+Поиск файла по названию  в каталогах папок ОС
+# import os
+# def find_file(cur_path, file_name):
+#     print('Переходим', cur_path)
+#     for i_elem in os.listdir(cur_path):
+#         path = os.path.join(cur_path, i_elem)
+#         print('Смотрим', path)
+#         if file_name == i_elem:
+#             return path
+#         if os.path.isdir(path):
+#             print('Это директория')
+#             result = find_file(path, i_elem)
+#             if result:
+#                 break
+#     else:
+#         result = None
+#     return result
+#
+# file_path = find_file(os.path.abspath
+#                       (os.path.join('..', '..', 'Saved Games')),
+#                       'm3_05_winter.player')
+# if file_path:
+#     print('Абсолютный путь к файлу:', file_path)
+# else:`
+#     print('Файл не найден')
