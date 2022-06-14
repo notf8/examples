@@ -5368,3 +5368,16 @@ print([{0: 0, 1: 100, 2: 144, 3: 20, 4: 19}[i_key] for i_key in {0: 0, 1: 100, 2
 #
 # print('\nАбсолютный путь до файла:', abs_bath)
 # print('Относительный путь до файла:', rel_path)
+
+Задача 2. Содержимое ыберите любую директорию на своём диске и затем напишите программу, выводящую на экран абсолютные
+пути к файлам и папкам, которые находятся внутри этой директории
+# import os
+#
+# def print_dir(project):
+#     for i_elem in os.listdir(project):
+#         path = os.path.join(project, i_elem)
+#         print(path)
+#
+# p_project = 'Python_Basic'
+# path_to_project = os.path.abspath(os.path.join('..', p_project, p_project))
+# print_dir(path_to_project)
