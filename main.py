@@ -5656,7 +5656,7 @@ file.close()
 #
 # sum_file = 0
 # for i_line in file:
-#     data = i_line.strip() # С помощью метода .strip удаляем литералы в строках, что бы можно было суммировать цифры
+#     data = i_line.strip() # С помощью метода .strip удаляем литералы (пробелы) в строках, что бы можно было суммировать цифры
 #     if data.isdigit():
 #         sum_file += int(data)
 # answer_file.write(str(sum_file))
