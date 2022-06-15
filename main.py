@@ -5651,16 +5651,16 @@ file.close()
 Задача 1. Сумма чисел 2
 Во входном файле numbers.txt записано N целых чисел, которые могут быть разделены пробелами и концами строк. Напишите
 программу, которая выводит сумму чисел в выходной файл answer.txt
-answer_file = open('answer.txt', 'w', encoding='utf-8')
-file = open('numbers.txt', 'r', encoding='utf-8')
-
-sum_file = 0
-for i_line in file:
-    data = i_line.strip() # С помощью метода .strip удаляем литералы в строках, что бы можно было суммировать цифры
-    if data.isdigit():
-        sum_file += int(data)
-answer_file.write(str(sum_file))
-
-print('Содержимое файла', sum_file)
-file.close()
-answer_file.close()
+# answer_file = open('answer.txt', 'w', encoding='utf-8')
+# file = open('numbers.txt', 'r', encoding='utf-8')
+#
+# sum_file = 0
+# for i_line in file:
+#     data = i_line.strip() # С помощью метода .strip удаляем литералы в строках, что бы можно было суммировать цифры
+#     if data.isdigit():
+#         sum_file += int(data)
+# answer_file.write(str(sum_file))
+#
+# print('Содержимое файла', sum_file)
+# file.close()
+# answer_file.close()
