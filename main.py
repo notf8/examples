@@ -5666,6 +5666,6 @@ file.close()
 # answer_file.close()
 
 Задача 2. Дзен Пайтона Напишите программу, которая выводит на экран все строки этого файла('zen.txt') в обратном порядке
-# with open('zen.txt') as file:
+# with open('zen.txt') as file: # Важно! при использовании оператора with - закрывать файл не нужно!
 #     for i_line in file:
 #         print(i_line[::-1], end='')
