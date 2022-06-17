@@ -5742,7 +5742,7 @@ file.close()
 # def save_files(string):
 #     way = input('Куда хотите сохранить документ? Введите последовательность папок (через пробел): ')
 #     filename = input('Введите имя файла: ')
-#     r_path = way.replace(" ", "/")
+#     r_path = way.replace(" ", "/") # Здесь заменяем пробел на '/', с помощью replace
 #     real_path = os.path.join(r_path, filename)
 #     path = 'C:/' + real_path
 #     check_file = os.path.exists(path)
