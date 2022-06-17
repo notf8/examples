@@ -5742,7 +5742,7 @@ file.close()
 # def save_files(string):
 #     way = input('Куда хотите сохранить документ? Введите последовательность папок (через пробел): ')
 #     filename = input('Введите имя файла: ')
-#     r_path = way.replace(" ", "/") # Здесь заменяем пробел на '/', с помощью replace
+#     r_path = way.replace(" ", "/") # С помощью replace меняем пробел на '/'
 #     real_path = os.path.join(r_path, filename)
 #     path = 'C:/' + real_path
 #     check_file = os.path.exists(path)
@@ -5750,16 +5750,15 @@ file.close()
 #         print('Файл с таким именем уже существует!')
 #         answer = input('Вы действительно хотите перезаписать файл? ').lower()
 #         if answer == 'да' or answer == 'yes':
-#             file = open(path, 'w', encoding='utf-8')
-#             file.write(string)
-#             file.close()
+#             with open(path, 'w', encoding='utf-8') as file:
+#                 file.write(string)
 #             print('Файл успешно перезаписан!')
 #         else:
 #             print('Файл не перезаписан')
 #     else:
-#         file = open(path, 'w', encoding='utf-8')
-#         file.write(string)
-#         file.close()
+#         with open(path, 'w', encoding='utf-8') as file:
+#             file.write(string)
 #         print('Файл успешно сохранён!')
+#
 #
 # save_files(str(input('Введите строку: ')))
