@@ -5705,3 +5705,30 @@ file.close()
 #     info = file_info(file)[0]
 #     for i_keys in sorted(info.keys()):
 #         print(i_keys, ':', info[i_keys])
+
+Задача 4. Файлы и папки на вход путь до каталога (это может быть и просто корень диска) и выводит общее количество файлов
+и подкаталогов в нём. Также выведите на экран размер каталога в килобайтах (1 килобайт = 1024 байт)
+# import os
+# def directory_info(cur_path):
+#     directory_size = 0
+#     sub_directory = 0
+#     files_quantity = 0
+#     for i_elem in os.listdir(cur_path): # Не забываем присваивать путь к обнаруженному элементу
+#         path = os.path.join(cur_path, i_elem) # Берем переменную для полученного пути
+#         if not os.path.isdir(path):
+#             directory_size += os.path.getsize(path) # Напрямую нельзя запросить размер 'i_elem', потому подставляем путь
+#             files_quantity += 1
+#         else:
+#             sub_directory += 1
+#             result = directory_info(path) # Присваиваем рекурсии переменную, что бы через нее забирать выходные данные
+#             directory_size += result[0] # Не забываем, что нужно вернуть из рекурсии полученные данные в общую функцию
+#             files_quantity += result[2] # Для этого срезами указываем, какие выходные данные нужно прибавлять к основным
+#
+#     return directory_size, sub_directory, files_quantity
+#
+#
+# path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic\Module22"
+#
+# print('Размер каталога (в Кб):', (directory_info(path)[0]) / 1024)
+# print('Количество подкаталогов:', directory_info(path)[1])
+# print('Количество файлов:', directory_info(path)[2])
