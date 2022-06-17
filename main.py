@@ -5732,3 +5732,34 @@ file.close()
 # print('Размер каталога (в Кб):', (directory_info(path)[0]) / 1024)
 # print('Количество подкаталогов:', directory_info(path)[1])
 # print('Количество файлов:', directory_info(path)[2])
+
+Задача 5. Сохранение Пользователь вводит строку text. Реализуйте функцию, которая запрашивает у пользователя, куда он
+хочет сохранить эту строку: вводится последовательность папок и имя файла (расширение .txt). Затем в этот файл сохраняется
+значение переменной text. Если этот файл уже существует, то нужно спросить у пользователя, действительно ли он хочет
+перезаписать его
+# import os
+#
+# def save_files(string):
+#     way = input('Куда хотите сохранить документ? Введите последовательность папок (через пробел): ')
+#     filename = input('Введите имя файла: ')
+#     r_path = way.replace(" ", "/")
+#     real_path = os.path.join(r_path, filename)
+#     path = 'C:/' + real_path
+#     check_file = os.path.exists(path)
+#     if check_file:
+#         print('Файл с таким именем уже существует!')
+#         answer = input('Вы действительно хотите перезаписать файл? ').lower()
+#         if answer == 'да' or answer == 'yes':
+#             file = open(path, 'w', encoding='utf-8')
+#             file.write(string)
+#             file.close()
+#             print('Файл успешно перезаписан!')
+#         else:
+#             print('Файл не перезаписан')
+#     else:
+#         file = open(path, 'w', encoding='utf-8')
+#         file.write(string)
+#         file.close()
+#         print('Файл успешно сохранён!')
+#
+# save_files(str(input('Введите строку: ')))
