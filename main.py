@@ -5669,3 +5669,39 @@ file.close()
 # with open('zen.txt') as file: # Важно! при использовании оператора with - закрывать файл не нужно!
 #     for i_line in file:
 #         print(i_line[::-1], end='')
+
+Задача 3. Дзен Пайтона 2 Нужно в файле посчитать кол-во: букв, слов, строк и найти самую редкую букву (тут как раз придется
+доставать из словаря ключ по значению - мое любимое))) По сути это та-жегистограмма
+# def file_info(data):
+#     sym_dict = dict()
+#     string_quantity = 0
+#     word_quantity = 0
+#     sym_quantity = 0
+#     for i_string in data:
+#         string_quantity += 1
+#         for i_word in i_string.split():
+#             word_quantity += 1
+#             for i_sym in i_word.lower():
+#                 if i_sym.isalpha():
+#                     sym_quantity += 1
+#                     if i_sym in sym_dict:
+#                         sym_dict[i_sym] += 1
+#                     else:
+#                         sym_dict[i_sym] = 1
+#     return sym_dict, sym_quantity, word_quantity, string_quantity
+#
+#
+# with open('zen.txt') as file:
+#     file_data = file_info(file)
+#     print('Количество букв в файле:', file_data[1])
+#     print('Количество слов в файле:', file_data[2])
+#     print('Количество строк в файле:', file_data[3])
+#     print('Наиболее редкая буква:',
+#           *[key for key, value in file_data[0].items() if value == min(file_data[0].values())], # Тут достаем ключ из словаря по значению с помощью comprehension
+#           '(Встречается в тексте: {} раза)'.format(min(file_data[0].values())))
+
+# # Для проверки минимального значения словаря
+# with open('zen.txt') as file:
+#     info = file_info(file)[0]
+#     for i_keys in sorted(info.keys()):
+#         print(i_keys, ':', info[i_keys])
