@@ -5837,7 +5837,7 @@ Vasiliev Maxim 78
 #
 # with open("second_tour.txt", "w", encoding='utf-8') as f_out:
 #     f_out.write(count + '\n')
-#     string = '\n'.join(out_lst)
+#     string = '\n'.join(out_lst) # Тут соединяем список в строку с литералом между элементами списка
 #     f_out.write(string)
 #
 # ## Для проверки:
