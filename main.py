@@ -5805,4 +5805,43 @@ Hello
 # #     for i_line in file:
 # #         print(i_line, end='')
 
+Задача 7. Турнир В первой строке нужно вывести в файл second_tour.txt количество участников второго тура. Затем программа
+должна вывести фамилии, инициалы и количество баллов всех участников, прошедших во второй тур, с нумерацией. Имя нужно
+сократить до одной буквы. Список должен быть отсортирован по убыванию набранных баллов
+Содержимое файла first_tour.txt:
+80
+Ivanov Serg 80
+Sergeev Petr 92
+Petrov Vasiliy 98
+Vasiliev Maxim 78
+# new_file = open("first_tour.txt", "r", encoding="utf8")
+# k = int(new_file.readline())
+#
+# new_list = []
+# for line in new_file:
+#     new_line = line.split()
+#     if new_line != [] and int(new_line[-1]) > k:
+#         new_list.append(new_line)
+# new_file.close()
+#
+# s_tour_list = sorted(new_list)
+# count = str(len(s_tour_list))
+#
+# out_lst = []
+# n = 1
+# for i in s_tour_list:
+#     short_name = str(i[1][0]) + '.'
+#     win_line = str(n) + ') ' + short_name + ' ' + i[0] + ' ' + i[-1]
+#     out_lst.append(win_line)
+#     n += 1
+#
+# with open("second_tour.txt", "w", encoding='utf-8') as f_out:
+#     f_out.write(count + '\n')
+#     string = '\n'.join(out_lst)
+#     f_out.write(string)
+#
+# ## Для проверки:
+# # print('\nСодержимое файла second_tour.txt:')
+# # for i_line in out_lst:
+# #     print(f'{i_line}')
 
