@@ -5762,3 +5762,47 @@ file.close()
 #
 #
 # save_files(str(input('Введите строку: ')))
+
+Задача 6. Паранойя Напишите программу, которая шифрует содержимое текстового файла text.txt шифром Цезаря, при этом
+символы первой строки файла должны циклически сдвигаться на один, второй строки — на два, третьей строки — на три и так
+Содержимое файла text.txt:
+Hello
+Hello
+Hello
+Hello
+# def decryption(messenge):
+#     translated = ''
+#     line_count = 0
+#     for i_word in messenge:
+#         line_count += 1
+#         for i_letter in i_word:
+#             if i_letter in letters:
+#                 num_index = letters.find(i_letter)
+#                 translated += letters[num_index + line_count]
+#             else:
+#                 translated += i_letter # тут тупо ничего не меняем, цикл сам добавит литерал в конец строки
+#     return translated
+#
+#
+# letters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+#
+#
+# with open('text.txt', 'r', encoding='utf-8') as file:
+#     text_decryption = decryption(file)
+#
+# with open('cipher_text.txt', 'w', encoding='utf-8') as file2:
+#     file2.write(text_decryption)
+#
+#
+# ## Для проверки
+# # print('\nСодержимое файла text.txt:')
+# # with open('text.txt', 'r', encoding='utf-8') as s_file:
+# #     for i_line in s_file:
+# #         print(i_line, end='')
+# # print()
+# # print('\nСодержимое файла cipher_text.txt:')
+# # with open('cipher_text.txt', 'r', encoding='utf-8') as file:
+# #     for i_line in file:
+# #         print(i_line, end='')
+
+
