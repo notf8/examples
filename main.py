@@ -5845,3 +5845,30 @@ Vasiliev Maxim 78
 # # for i_line in out_lst:
 # #     print(f'{i_line}')
 
+Задача 8. Частотный анализ В файл analysis.txt выводится доля каждой буквы, встречающейся в тексте, с тремя знаками в
+дробной части. Буквы должны быть отсортированы по убыванию их доли. Буквы с равной долей должны следовать в алфавитном
+порядке
+Важно! Метод .sort() - только для списков! А вот функция sorted() - подходит для всех итерируемых объектов
+# def get_value(item): # Создаем функцию для ключа сортировки (она тупо указывает, по какому элементу списка сортируем [0] или [1]
+#     return item[1]  # В функцию не передаем ничего, так как она используется внутри метода sort, сама заберет элемент
+# def get_key(item):
+#     return item[0]
+#
+# str = open("text.txt", "r").read().lower()
+# sym_dict = {}
+# quantity = 0
+# for i_sym in str:
+#    if i_sym.isalpha():
+#        value = sym_dict.get(i_sym, 0) # Здесь обращаемся к словарю, и если там нет символа, значение по умолчанию равно 0
+#        sym_dict[i_sym] = value + 1
+#        quantity += 1
+# l_out = [(k, "{:5.3f}".format(sym_dict[k]/quantity)) for k in sym_dict.keys()]
+#
+# l_out.sort(key=get_key) # Здесь с помощью созданной функции указываем, по какому элементу списка сортируем
+# # print(l_out)
+# l_out.sort(key=get_value, reverse=True) # Здесь с помощью созданной функции указываем, по какому элементу списка сортируем
+# # print(l_out)
+#
+# s_out = "\n".join([i[0] + " " + i[1] for i in l_out])
+# with open("analysis.txt", "w") as file:
+#     file.write(s_out)
