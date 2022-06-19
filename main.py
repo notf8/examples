@@ -5872,3 +5872,51 @@ Vasiliev Maxim 78
 # s_out = "\n".join([i[0] + " " + i[1] for i in l_out])
 # with open("analysis.txt", "w") as file:
 #     file.write(s_out)
+
+Задача 9. Война и мир Все та же гистограма (частота повтора букв), только на этот раз много важных моментов: изучаеми zip
+Изучаем: OrderedDict(), плюс фишечки с плэйсхолдерами
+# import collections
+# import zipfile
+#
+# def unzip(archive):
+#     zfile = zipfile.ZipFile(archive, 'r') # Для чтения архива одноименный мтод, только с большой буквы
+#     for i_file_name in zfile.namelist(): # .namelist(), то же самое, что и .listdir() для ОС (проверяет список файлов внутри)
+#         zfile.extract(i_file_name) # Извлекаем с помощью .extract
+#     zfile.close() # Так же нужно закрывать, как и обычный файл
+#
+# def collect_stats(file_name):
+#     result = {}
+#     if file_name.endswith('.zip'):
+#         unzip(file_name)
+#         file_name = ''.join((file_name[:-3], 'txt'))
+#     text_file = open(file_name, 'r', encoding='utf-8')
+#     for i_line in text_file:
+#         for j_char in i_line:
+#             if j_char.isalpha():
+#                 x = result.get(j_char, 0)
+#                 result[j_char] = x + 1
+#     text_file.close()
+#
+#     return result
+#
+# def print_stats(stats):
+#     print("+{:-^19}+".format('+')) # знак ^ в плэйсхолдере означает выравнивание по центру
+#     print("|{: ^9}|{: ^9}|".format('Буква', 'Частота'))
+#     print("+{:-^19}+".format('+')) # Т.е. мы хотим вывести 19 знаков '-', с + по центру
+#     for char, count in stats.items():
+#         print("|{: ^9}|{: ^9}|".format(char, count))
+#     print("+{:-^19}+".format('+'))
+#
+# def sort_by_frequency(stats_dict):
+#     sorted_values = sorted(stats_dict.values(), reverse=True)
+#     sorted_dict = collections.OrderedDict() # Эта коллекция (нужно предварительно импортировать) создает дневник,
+#     for i_value in sorted_values:           # который запоминает позиции и позволяет работать с сортировкой
+#         for j_key in stats_dict.keys():
+#             if stats_dict[j_key] == i_value:
+#                 sorted_dict[j_key] = stats_dict[j_key]
+#     return sorted_dict
+#
+# file_name = 'voyna-i-mir.zip'
+# stats = collect_stats(file_name)
+# stats = sort_by_frequency(stats)
+# print_stats(stats)
