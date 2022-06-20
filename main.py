@@ -6064,3 +6064,46 @@ nums_count = 0
 # finally:
 #     result.close()
 #     print(result.closed)
+
+Подсчет суммы символов в строке с использованием rise
+# sym_sum = 0
+# line_count = 0
+# try:
+#     names_file = open('answer.txt', 'r')
+#     for i_line in names_file:
+#         length = len(i_line.strip())
+#         line_count += 1
+#         if length < 3: # Здесь сами вводим условие для ошибки
+#             raise BaseException('Длина {} строки мене 3 символов'.format(line_count))
+#         sym_sum += length
+#     names_file.close()
+#
+# except FileExistsError:
+#     print('Файл не найден')
+# finally:
+#     print('Найденная сумма символов равна:', sym_sum)
+
+Проброс ошибки с использование rise.Используется для зачистки порушенных данных и/или для логирования ошибки
+# names_list = []
+# while True:
+#     try:
+#         name = input('Введите имя: ')
+#         if name.lower() == 'error':
+#             raise BaseException('Ты сломал программу!') # Сначала предупреждаем цикл что в конце будет rise
+#         if not name.isalpha():
+#             raise TypeError
+#         names_list.append(name)
+#         if len(names_list) == 5:
+#             print('Место закончилось')
+#             break
+#     except TypeError:
+#         print('Ты чего ввел?!')
+#     except BaseException: # А вот здесь уже обнуляем список и прописываем причины остановки
+#         names_list = []
+#         print('Введено стоп-слово')
+#         raise ValueError('Пожалуйста не вводите стоп-слово') # Здесь тоже можно оставить свое сообщение (не обязательно)
+#
+# names_file = open('answer.txt', 'w')
+# names_file.write('\n'.join(names_list))
+# names_file.close()
+# print('Программа закончена, запись завершена!')
