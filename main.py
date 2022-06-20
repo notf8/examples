@@ -6107,3 +6107,37 @@ nums_count = 0
 # names_file.write('\n'.join(names_list))
 # names_file.close()
 # print('Программа закончена, запись завершена!')
+
+Задача 2. Логирование Дан файл words.txt, в котором построчно записаны слова. Необходимо определить количество слов, из
+которых можно получить палиндром (привет предыдущим модулям). Если в строке встречается число, то программа выдаёт ошибку
+ValueError и записывает эту ошибку в файл errors.log
+# def polindrom(string):
+#     sym_dict = {}
+#     try:
+#         for i_sym in string:
+#             if not i_sym.isalpha():
+#                 raise ValueError
+#             sym_dict[i_sym] = sym_dict.get(i_sym, 0) + 1
+#             # Идем по ключам дневника, и если символ не встретили, возвращаем 0
+#             # и сразу прибавляем 1, так как только встретили его
+#     except ValueError:
+#         with open('errors.log', 'a', encoding='utf-8') as file:
+#             file.write('\nОшибка: В строке "{}" найдены цифры {}....'.format(string, i_sym))
+#
+#     odd_sym_count = 0
+#     for i_value in sym_dict.values():
+#         if i_value % 2 != 0:
+#             odd_sym_count += 1
+#
+#     return odd_sym_count <= 1 # Возвращаем odd_sym_count только если он не больше 1
+# # Для того, что бы получить палиндром, нужно, что бы нечетное количество символов встречалось
+# # не больше одного раза
+#
+# words_file = open('answer.txt', 'r', encoding='utf-8')
+#
+# poli_wors = 0
+# for i_line in words_file:
+#     if polindrom(i_line.strip()):
+#         poli_wors += 1
+#
+# print('Кол-во слов из которых можно получить палиндром:', poli_wors)
