@@ -6039,4 +6039,28 @@ nums_count = 0
 # except FileExistsError:
 #     print('Вы пытаетесь создать файл, который ужe существует')
 
-
+Задача 1. Простая программа Напишите программу, которая открывает файл и записывает туда введённую пользователем строку.
+Используйте операторы try except else finally. Обработайте возможные ошибки
+# import os
+#
+# file_path = os.path.abspath('Python_basic')
+# try:
+#     file = open('numbers.txt', 'r', encoding='utf-8')
+# except FileNotFoundError:
+#     print('Входной файл данных не найден')
+#
+# result = open('result.txt', 'w', encoding='utf-8')
+# try:
+#     for i_line in file:
+#         result.write(str(i_line))
+# except TypeError:
+#     print('Ошибка записи: Данные не строка')
+#
+# except NameError:  # Это исключение для не найденной переменной (или заблоченой прошлым try)
+#     print('Не удалось открыть файл для записи')
+#
+# else:
+#     print('Программа выполнена успешно!')
+# finally:
+#     result.close()
+#     print(result.closed)
