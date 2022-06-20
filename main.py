@@ -5984,3 +5984,47 @@ nums_count = 0
 #     print(f'- Leeloo Dallas! Multi-pass № {result}!')
 # except ValueError:
 #     print('Невозможно преобразовать к числу полученный результат')
+
+Задача 2. Возраст дан файл (ages.txt)Программа читывает файл, даёт имя для каждого возраста (можно просто использовать
+буквы алфавита) и выводит результат в новый файл result.txt в формате «имя — возраст». Программа должна обрабатывать
+следующие ошибки и выводить сообщение на экран
+# import os
+#
+# def find_file(cur_path, file, path_list=None):
+#     if path_list == None:
+#         path_list = []
+#     for i_elem in os.listdir(cur_path):
+#         path = os.path.join(cur_path, i_elem)
+#         if file == i_elem:
+#             path_list.append(path)
+#             break
+#         if os.path.isdir(path):
+#             result = find_file(path, file)
+#             path_list.extend(result)
+#     return path_list
+#
+# path = r'C:\Users\notf8\PycharmProjects\Test area'
+# path_file = os.path.abspath('ages.txt')
+#
+# file = open(path_file, 'r')
+# leter = 0
+# wright_list = []
+# for i_line in file:
+#     try:
+#         if i_line.strip().isdigit():
+#             wright_list.append(chr(ord('a') + leter) + ':' + i_line)
+#             leter += 1
+#         else:
+#             raise TypeError
+#     except TypeError:
+#         print('Неверный тип данных')
+# file.close()
+#
+# try:
+#     with open('result.txt', 'x', encoding='utf-8') as file: # Режим 'x', создает новый файл не перезаписывая старый
+#         wright_str = ''.join(i for i in wright_list)
+#         file.write(wright_str)
+# except FileExistsError:
+#     print('Вы пытаетесь создать файл, который ужe существует')
+
+
