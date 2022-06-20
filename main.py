@@ -5937,3 +5937,28 @@ nums_count = 0
 # except ValueError: # А здесь обрабатываем вариант, если в данных не только цифры
 #     print('Нельзя преобразовать данные в целое число')
 
+Задача Сумма делений. В диапазоне двух чисел программа делит каждое число на 10 и потом складываеть результаты
+# def divaide(number): # Эта функция возвращает результат деления 10 на number
+#     return 10 / number
+#
+# def summ_of_divided(left, right): # Эта функция возвращает сумму результата делений
+#     div_sum = 0
+#     for i_num in range(left, right):
+#         try:                          # Тело цикла оборачиваем в try, что бы в случае ошибки, сообщить про нее и продолжить цикл
+#             div_sum += divaide(i_num)
+#             print(div_sum)
+#         except ZeroDivisionError: # Это тип ошибки при делении на ноль
+#             print('На ноль делить нельзя!')
+#     return div_sum
+#
+# Total = 0
+# try:
+#     number_file = open('numbers.txt', 'r')
+#     for i_line in number_file:
+#         num_list = i_line.split()
+#         first_num = int(num_list[0])
+#         second_num = int(num_list[1])
+#         Total += summ_of_divided(first_num, second_num)
+#     print('Общая сумма:', Total)
+# except FileNotFoundError: # Это тип ошибки, в случае отсутсвия файла
+#     print('Файл не найден!')
