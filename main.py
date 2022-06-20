@@ -6049,7 +6049,8 @@ nums_count = 0
 #         length = len(i_line.strip())
 #         line_count += 1
 #         if length < 3: # Здесь сами вводим условие для ошибки
-#             raise BaseException('Длина {} строки мене 3 символов'.format(line_count))
+#             raise BaseException('Длина {} строки мене 3 символов'.format(line_count)) # Если не добавить в конце except
+#                                                                                       - программа закроется на этом шаге
 #         sym_sum += length
 #     names_file.close()
 #
