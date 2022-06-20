@@ -5951,17 +5951,29 @@ nums_count = 0
 #             print('На ноль делить нельзя!')
 #     return div_sum
 #
-# Total = 0
+# total = 0
 # try:
 #     number_file = open('numbers.txt', 'r')
 #     for i_line in number_file:
 #         num_list = i_line.split()
 #         first_num = int(num_list[0])
 #         second_num = int(num_list[1])
-#         Total += summ_of_divided(first_num, second_num)
-#     print('Общая сумма:', Total)
-# except FileNotFoundError: # Это тип ошибки, в случае отсутсвия файла
+#         total += summ_of_divided(first_num, second_num)
+#     print('Общая сумма:', total)
+# except FileNotFoundError: # Это тип ошибки, в случае отсутствия файла
 #     print('Файл не найден!')
+#
+# answer_fail = open('answer.txt', 'w')
+# try:
+#     answer_fail.write('The answer is: ')
+#     answer_fail.write(str(total)) # Не забываем обернуть в str
+# except TypeError:
+#     print('Ошибка записи: Тип данных не строка')
+# else:
+#     print('Программа выполнилась без ошибок!') # Опертор else выполниться только если не было ошибок (не сработалиtry\except)
+# finally:
+#     answer_fail.close() # Оператор finaly выполняется всегда, не зависимо от того, были ошибки или нет!!! Им подчищаем
+#     print(answer_fail.closed) #.closed отличается от .close() Эта функция возвращает True/False
 
 Задача 1. Пятый элемент В курсе по программированию студенту дали простую задачу: умножить константу (число 42) на пятый
 элемент строки, введённой пользователем
