@@ -5963,17 +5963,17 @@ nums_count = 0
 # except FileNotFoundError: # Это тип ошибки, в случае отсутствия файла
 #     print('Файл не найден!')
 #
-# answer_fail = open('answer.txt', 'w')
+# answer_file = open('answer.txt', 'w')
 # try:
 #     answer_fail.write('The answer is: ')
 #     answer_fail.write(str(total)) # Не забываем обернуть в str
 # except TypeError:
 #     print('Ошибка записи: Тип данных не строка')
 # else:
-#     print('Программа выполнилась без ошибок!') # Опертор else выполниться только если не было ошибок (не сработалиtry\except)
+#     print('Программа выполнилась без ошибок!') # Оператор else выполниться только если не было ошибок (не сработалиtry\except)
 # finally:
-#     answer_fail.close() # Оператор finaly выполняется всегда, не зависимо от того, были ошибки или нет!!! Им подчищаем
-#     print(answer_fail.closed) #.closed отличается от .close() Эта функция возвращает True/False
+#     answer_file.close() # Оператор finaly выполняется всегда, не зависимо от того, были ошибки или нет!!! Им подчищаем
+#     print(answer_file.closed) #.closed отличается от .close() Эта функция возвращает True/False
 
 Задача 1. Пятый элемент В курсе по программированию студенту дали простую задачу: умножить константу (число 42) на пятый
 элемент строки, введённой пользователем
