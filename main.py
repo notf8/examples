@@ -5920,3 +5920,20 @@ Vasiliev Maxim 78
 # stats = collect_stats(file_name)
 # stats = sort_by_frequency(stats)
 # print_stats(stats)
+========================================================================================================================
+Обработка исключений (Try и Except). При использовании обработки, код не вывваливается в ошибку, она просто обрабатывается
+и продолжается выполнение кода
+#num_summ = 0
+nums_count = 0
+# try:
+#     numbers_file = open('numbers.txt', 'r')
+#     for i_line in numbers_file:
+#         nums_count += 1
+#         num_summ += int(i_line)
+#     print('Среднеарифметическое:', num_summ / nums_count)
+#     numbers_file.close()
+# except FileNotFoundError: # Тут прям прописываем, что именно за исключение может быть
+#     print('Файл не обнаружен')
+# except ValueError: # А здесь обрабатываем вариант, если в данных не только цифры
+#     print('Нельзя преобразовать данные в целое число')
+
