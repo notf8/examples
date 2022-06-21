@@ -6119,3 +6119,25 @@ ValueError и записывает эту ошибку в файл errors.log
 #         poli_wors += 1
 #
 # print('Кол-во слов из которых можно получить палиндром:', poli_wors)
+
+Задача 1. Имена 2 Есть файл people.txt, в котором построчно хранится N имён пользователей.
+
+Напишите программу, которая берёт количество символов в каждой строке файла и в качестве ответа выводит общую сумму.
+Если в какой-либо строке меньше трёх символов (не считая литерала \n), то вызывается ошибка и сообщение, в какой именно
+строке возникла ошибка
+# with open('people.txt', 'r', encoding='utf-8') as names_file:
+#     line_count = 0
+#     sym_summ = 0
+#     for i_line in names_file:
+#         try:
+#             line_count += 1
+#             if len(i_line.strip()) < 3:
+#                 raise ValueError
+#         except ValueError:
+#             with open('errors.log', 'a', encoding='utf-8') as file:
+#                 file.write('\nОшибка: менее трёх символов в строке {}'.format(line_count))
+#                 print('Ошибка: менее трёх символов в строке {}'.format(line_count))
+#         finally:
+#             sym_summ += len(i_line.strip()) # Что бы программа не завершилась(не прервала цикл), иcпользуем оператор finaly
+#
+# print('Общее количество символов:', sym_summ)
