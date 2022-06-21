@@ -6187,30 +6187,30 @@ X на Y. Затем эти же координаты передаются во 
 Напишите программу, которая запрашивает у пользователя число до тех пор, пока сумма этих чисел не станет больше либо
 равна 777. Каждое введённое число при этом дозаписывается в файл out_file.txt. Сделайте так, чтобы перед дозаписью
 программа с вероятностью 1 к 13 выбрасывала пользователю случайное исключение и завершалась
-import random
-errors = [ArithmeticError, AttributeError, ZeroDivisionError,
-          ValueError, NameError, IndexError, RuntimeError, TypeError]
-
-num_summ = 0
-while num_summ < 777:
-    try:
-        num = int(input('Введите число: '))
-        # num = 25 # Для тестирования
-        num_summ += num
-        if random.choices((0, 1), (1-1/13, 1/13))[0]:
-            raise random.choice(errors)
-        with open('out_file.txt', 'a') as file:
-            file.write(''.join(str(num)) + '\n')
-    except Exception:                             # Exception лови все ошибки
-        print('Вас постигла неудача!')
-        break                                     # Цикл нужно обязательно прервать, иначe сработает else
-else:        # else выносим за пределы цикла, что бы он отработал, если цикл завершен успешно (try отработал без ошибок)
-    print('Вы успешно выполнили условие для выхода из порочного цикла!')
-
-print('\nСодержимое файла out_file.txt:')
-try:
-    with open('out_file.txt', 'r') as file:
-        for i_line in file:
-            print(i_line, end='')
-except FileNotFoundError:
-    print('Вот это непруха, ни одного числа в файле)))')
+# import random
+# errors = [ArithmeticError, AttributeError, ZeroDivisionError,
+#           ValueError, NameError, IndexError, RuntimeError, TypeError]
+#
+# num_summ = 0
+# while num_summ < 777:
+#     try:
+#         num = int(input('Введите число: '))
+#         # num = 25 # Для тестирования
+#         num_summ += num
+#         if random.choices((0, 1), (1-1/13, 1/13))[0]: # Вероятность срабатывания rise - 1 к 13
+#             raise random.choice(errors)
+#         with open('out_file.txt', 'a') as file:
+#             file.write(''.join(str(num)) + '\n')
+#     except Exception:                             # Exception лови все ошибки
+#         print('Вас постигла неудача!')
+#         break                                     # Цикл нужно обязательно прервать, иначe сработает else
+# else:        # else выносим за пределы цикла, что бы он отработал, если цикл завершен успешно (try отработал без ошибок)
+#     print('Вы успешно выполнили условие для выхода из порочного цикла!')
+#
+# print('\nСодержимое файла out_file.txt:')
+# try:
+#     with open('out_file.txt', 'r') as file:
+#         for i_line in file:
+#             print(i_line, end='')
+# except FileNotFoundError:
+#     print('Вот это непруха, ни одного числа в файле)))')
