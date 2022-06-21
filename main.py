@@ -6132,7 +6132,7 @@ ValueError и записывает эту ошибку в файл errors.log
 #         try:
 #             line_count += 1
 #             if len(i_line.strip()) < 3:
-#                 raise ValueError
+#                 raise ValueError(f'Ошибка: менее трёх символов в строке {line_count}')
 #         except ValueError:
 #             with open('errors.log', 'a', encoding='utf-8') as file:
 #                 file.write('\nОшибка: менее трёх символов в строке {}'.format(line_count))
@@ -6141,3 +6141,43 @@ ValueError и записывает эту ошибку в файл errors.log
 #             sym_summ += len(i_line.strip()) # Что бы программа не завершилась(не прервала цикл), иcпользуем оператор finaly
 #
 # print('Общее количество символов:', sym_summ)
+
+Задача 2. Координаты Есть файл coordinates.txt, в котором хранится N пар из чисел X и Y. Оба числа передаются в первую
+функцию, где к каждой координате прибавляется случайное число (от 0 до 5 и от 0 до 10) и возвращается результат деления
+X на Y. Затем эти же координаты передаются во вторую функцию, где уже отнимается случайное число и возвращается Y / X.
+После этого формируется случайное число от 0 до 100, затем в файл result.txt в каждую строку записывается
+список, состоящий из этого случайного числа и двух полученных результатов
+# import random
+#
+# def f(x, y):
+#     x += random.randint(0, 10)
+#     y += random.randint(0, 5)
+#     return x / y
+#
+# def f2(x, y):
+#     x -= random.randint(0, 10)
+#     y -= random.randint(0, 5)
+#     return y / x
+#
+# with open('coordinates.txt', 'r') as file:
+#     for line in file:
+#         nums_list = line.split()
+#         try:
+#             res1 = f(float(nums_list[0]), float(nums_list[1]))
+#             res2 = f2(float(nums_list[0]), float(nums_list[1]))
+#             number = random.randint(0, 100)
+#             my_list = sorted([res1, res2, number])
+#             print(my_list)
+#         except ZeroDivisionError:
+#             print("В одной из функций произошло деление на ноль")
+#             print('На ноль делить нельзя')
+#
+#         except ValueError:
+#             print(" В файле 'coordinates.txt' не корректные данные")
+#         finally:
+#             with open('result.txt', 'a') as file_2:
+#                 try:
+#                     file_2.write(' '.join(str(i_list) for i_list in my_list) + '\n')
+#                 except NameError:
+#                     print(" Из за сбоя одной из функций "
+#                           "элемент списка 'my_list' не сформирован")
