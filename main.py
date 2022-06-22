@@ -6304,7 +6304,6 @@ registrations_bad.log — для ошибочных, записывать стр
 #             answer = input().lower()
 #             if answer == 'да' or answer == 'yes':
 #                 i_line = input('Введите исправленную строку: ')
-#                 string_info(i_line.strip().split())
 #         finally:
 #             operation_summ += operation(i_line.strip().split())
 # print('Сумма результатов:', operation_summ)
