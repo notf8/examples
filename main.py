@@ -6201,7 +6201,7 @@ X на Y. Затем эти же координаты передаются во 
 #             raise random.choice(errors)
 #         with open('out_file.txt', 'a') as file:
 #             file.write(''.join(str(num)) + '\n')
-#     except Exception:                             # Exception лови все ошибки
+#     except Exception:                             # Exception ловит все ошибки
 #         print('Вас постигла неудача!')
 #         break                                     # Цикл нужно обязательно прервать, иначe сработает else
 # else:        # else выносим за пределы цикла, что бы он отработал, если цикл завершен успешно (try отработал без ошибок)
@@ -6264,3 +6264,48 @@ registrations_bad.log — для ошибочных, записывать стр
 #         file2.close()
 # print('Программа завершена')
 # print(file2.closed)
+
+Задача 5. Текстовый калькулятор Напишите программу, которая вычисляет все эти операции и находит сумму их результатов.
+Пропишите обработку возможных ошибок. Программа не должна завершаться при первой же ошибке, она учитывает все верные
+строки и выводит найденный ответ. После успешного выполнения задания, попробуйте модифицировать задачу. Теперь
+пользователю на экран должно выводиться сообщение с ошибочной строкой и предложением её исправить
+# def string_info(string):
+#     sym_count = 0
+#     for _ in string[1]:
+#         sym_count += 1
+#         if sym_count > 1:
+#             raise ValueError
+#     if not string[0].isdigit() or not string[2].isdigit():
+#         raise ValueError
+#
+# def operation(string):
+#     result = 0
+#     if string[1] == '+':
+#         result = float(string[0]) + float(string[2])
+#     elif string[1] == '-':
+#         result = float(string[0]) - float(string[2])
+#     elif string[1] == '*':
+#         result = float(string[0]) * float(string[2])
+#     elif string[1] == '/':
+#         result = float(string[0]) / float(string[2])
+#     else:
+#         print('Арифметическое действие не опознано')
+#     return result
+#
+#
+# operation_summ = 0
+# with open('calc.txt', 'r', encoding='utf-8') as file:
+#     for i_line in file:
+#         try:
+#             string_info(i_line.strip().split())
+#         except Exception:
+#             print(f'Обнаружена ошибка в строке: {i_line}',
+#                   'Хотите исправить?', end=' ')
+#             answer = input().lower()
+#             if answer == 'да' or answer == 'yes':
+#                 i_line = input('Введите исправленную строку: ')
+#                 string_info(i_line.strip().split())
+#         finally:
+#             operation_summ += operation(i_line.strip().split())
+# print('Сумма результатов:', operation_summ)
+
