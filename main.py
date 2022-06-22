@@ -6280,17 +6280,17 @@ registrations_bad.log — для ошибочных, записывать стр
 #
 # def operation(string):
 #     result = 0
-#     if string[1] == '+':
-#         result = float(string[0]) + float(string[2])
-#     elif string[1] == '-':
-#         result = float(string[0]) - float(string[2])
-#     elif string[1] == '*':
-#         result = float(string[0]) * float(string[2])
-#     elif string[1] == '/':
-#         result = float(string[0]) / float(string[2])
-#     else:
-#         print('Арифметическое действие не опознано')
-#     return result
+#     try:
+#         if string[1] == '+':
+#             result = float(string[0]) + float(string[2])
+#         elif string[1] == '-':
+#             result = float(string[0]) - float(string[2])
+#         elif string[1] == '*':
+#             result = float(string[0]) * float(string[2])
+#         elif string[1] == '/':
+#             result = float(string[0]) / float(string[2])
+#     except Exception:
+#         print('Арифметическое действие может быть выполнено')
 #
 #
 # operation_summ = 0
