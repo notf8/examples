@@ -6243,10 +6243,10 @@ registrations_bad.log — для ошибочных, записывать стр
 # with open('registrations.txt', 'r', encoding='utf-8') as file:
 #     for i_line in file:
 #         file2 = open('registrations_bad.log', 'a', encoding='utf-8')
+#         print('Программа выполняется.....')
 #         try:
 #             line_check(i_line.strip())
 #         except IndexError:
-#             print('Программа выполняется.....')
 #             file2.write(i_line.strip() + (' ' * 20) + 'НЕ присутствуют все три поля\n'
 #                         + '"' * 10 + '\n')
 #         except NameError:
