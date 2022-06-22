@@ -6214,3 +6214,53 @@ X на Y. Затем эти же координаты передаются во 
 #             print(i_line, end='')
 # except FileNotFoundError:
 #     print('Вот это непруха, ни одного числа в файле)))')
+
+Задача 4. Регистрация У вас есть файл с протоколом регистраций пользователей на сайте — registrations.txt. Каждая строка
+содержит имя, емейл и возраст, разделённые пробелами. Например: Василий test@test.ru 27. Напишите программу, которая
+проверяет данные из файла для каждой строки:
+Присутствуют все три поля.
+Поле «Имя» содержит только буквы.
+Поле «Имейл» содержит @ и . (точку).
+Поле «Возраст» является числом от 10 до 99.
+В результате проверки сформируйте два файла:
+
+registrations_good.log — для правильных данных, записывать строки в том виде, как есть;
+registrations_bad.log — для ошибочных, записывать строку и вид ошибки
+# def line_check(string):
+#     if len(string.split()) < 3:
+#         raise IndexError
+#     for i_char in string.split()[0]:
+#         if not i_char.isalpha():
+#             raise NameError
+#     if '@' not in string.split()[1] and '.' not in string.split()[1]:
+#         raise SyntaxError
+#     if 10 <= int(string.split()[2]) <= 99:
+#         return True
+#     else:
+#         raise ValueError
+#
+#
+# with open('registrations.txt', 'r', encoding='utf-8') as file:
+#     for i_line in file:
+#         file2 = open('registrations_bad.log', 'a', encoding='utf-8')
+#         try:
+#             line_check(i_line.strip())
+#         except IndexError:
+#             print('Программа выполняется.....')
+#             file2.write(i_line.strip() + (' ' * 20) + 'НЕ присутствуют все три поля\n'
+#                         + '"' * 10 + '\n')
+#         except NameError:
+#             file2.write(i_line.strip() + (' ' * 20) + 'Поле «Имя» содержит НЕ только буквы\n'
+#                         + '"' * 10 + '\n')
+#         except SyntaxError:
+#             file2.write(i_line.strip() + (' ' * 20) + 'Поле «Имейл» НЕ содержит @ и . (точку)\n'
+#                         + '"' * 10 + '\n')
+#         except ValueError:
+#             file2.write(i_line.strip() + (' ' * 20) + 'Поле «Возраст» НЕ является числом от 10 до 99\n'
+#                         + '"' * 10 + '\n')
+#         else:
+#             with open('registrations_good.log', 'a', encoding='utf-8') as file:
+#                 file.write(i_line)
+#         file2.close()
+# print('Программа завершена')
+# print(file2.closed)
