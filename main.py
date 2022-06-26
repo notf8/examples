@@ -6351,20 +6351,29 @@ user1.user_name = 'Tom'
 # class Toyota:
 #     color = 'red'
 #     price = 1000000
-#     msx_speed = 200
+#     max_speed = 200
 #     cur_speed = 0
+#
+#     def info(self): # Метод для вывода инфо о машине
+#         print(
+#             'Car color: {}\nCar price: {}\nMax speed: {}\nCurrent speed: {}\n'.format(
+#                 self.color, self.price, self.max_speed, self.cur_speed
+#             )
+#         )
+#
+#     def speed_set(self, speed): # Метод для установки текущей скорости
+#         self.cur_speed = speed
 #
 # car_1 = Toyota()
 # car_2 = Toyota()
 # car_3 = Toyota()
 #
-# car_1.cur_speed = random.randrange(0, 200)
+# car_1.cur_speed = random.randrange(0, 200) # Установка текущей скорости с помощью рандома
 # car_2.cur_speed = random.randrange(0, 200)
 # car_3.cur_speed = random.randrange(0, 200)
 #
-# print('Текущая скорость car1:', car_1.cur_speed)
-# print('Текущая скорость car1:', car_2.cur_speed)
-# print('Текущая скорость car1:', car_3.cur_speed)
+# car_2.speed_set(150)
+# car_2.info()
 
 Задача 2. Однотипные объекты  В офис заказали небольшую партию из четырёх мониторов и трёх наушников. У монитора есть
 четыре характеристики: название производителя, матрица, разрешение и частота обновления экрана. Все четыре монитора
