@@ -6334,7 +6334,7 @@ registrations_bad.log — для ошибочных, записывать стр
 Классы (формальное описание объекта) - Объектно Ориентиролванное Програмирование
 Названия классов пишутся с большой буквы (cammoncase или camelcase - не понятно сказано))
 class User: # Название класса
-    user_name = 'Admin' # В теде находятся статические атрибуты класса
+    user_name = 'Admin' # В теле находятся статические атрибуты класса
     password = 'qwerty'
     is_banned = False
 user1 = User() # присваиваем переменной наш класс. user1(переменная) - это инстанс класса (или экземпляр класса User)
@@ -6392,4 +6392,31 @@ user1.user_name = 'Tom'
 # headphones_1.headphones_micro = False
 # headphones_2 = Headphones()
 # headphones_3 = Headphones()
-
+========================================================================================================================
+Матоды класов и агрументы .self
+# class User:
+#     user_name = 'Admin'
+#     password = 'qwerty'
+#     is_banned = False
+#     friends = []
+#
+#     def print_info(self): # Первым аргументом обязательно должен идти self, т.к. этофункция класса. Саму функцию для класса пишем внутри класса
+#         print(
+#             'Name: {}\nPassword: {}\nBan_status: {}\nFriends: {}'.format( # Внутри функции так же обращаемся к атрибутам через self.
+#                 self.user_name, self.password, self.is_banned, self.friends
+#             )
+#         )
+#
+#     def add_friends(self, friend): # Опять же первый аргумент обязательно self, второй тот, который будет передаваться в функцию
+#         if isinstance(friend, User): # Тут проверка, является ли friend-атрибутом user_name, другого инстанса класса User
+#             self.friends.append(friend.user_name) # Тут уже указываем куда именно добавляем атрибут класса
+#             # А раз мы обращаемся за атрибутом к классу, то добавление начинается с self
+#         else:
+#             User.friends.append(friend) # Если же это не экземпляр класса User, просто добавляем имя в список(метод так же append)
+#
+# user1 = User()
+# user2 = User()
+# user2.user_name = 'Alina'
+# user1.add_friends('Bob') # Так просто добавляем имя через функцию
+# user1.add_friends(user2) # Для того что бы добавить атрибут с именем другого инстанса, нужно дописать функцию
+# user1.print_info() # Что бы использовать функцию класса, обращаемся к ней так же через точку.
