@@ -6394,6 +6394,9 @@ user1.user_name = 'Tom'
 # headphones_3 = Headphones()
 ========================================================================================================================
 Матоды класов и агрументы .self
+self - это ссылка на сам объект (класс)
+функции внутри классов - называются методами классов. Функции могут содержать именованные аргументы и возвращать
+значения с помощью Return
 # class User:
 #     user_name = 'Admin'
 #     password = 'qwerty'
@@ -6419,4 +6422,43 @@ user1.user_name = 'Tom'
 # user2.user_name = 'Alina'
 # user1.add_friends('Bob') # Так просто добавляем имя через функцию
 # user1.add_friends(user2) # Для того что бы добавить атрибут с именем другого инстанса, нужно дописать функцию
-# user1.print_info() # Что бы использовать функцию класса, обращаемся к ней так же через точку.
+# user1.print_info() # Что бы использовать функцию класса, обращаемся к ней так же через точку (не через = как в коллекциях.
+
+Задача Покупка дома для семьи
+# class Family: # Тут просто определили класс семья
+#     surname = 'Common Family'
+#     money = 100000
+#     have_a_house = False
+#
+#     def info(self): # Это метод для вывода инфо о семье
+#         print(
+#           'Family name: {}\nFamily found: {}\nHaving a house: {}\n'.format(
+#               self.surname, self.money, self.have_a_house
+#           )
+#         )
+#
+#     def earn_money(self, amount): # Это метод для увеличения бюджета семьи
+#         self.money += amount # Здесь увеличиваем бюджет семьи прибавля доход
+#         print('Earned {} money! Current value {}'.format(amount, self.money))
+#
+#     def buy_house(self, house_price, discount=0): # А вот это метод для покупки дома
+#         house_price -= house_price * discount / 100 # здесь формируем стоимость дома со скидкой (по умолчанию она 0)
+#         if self.money >= house_price:
+#             self.money -= house_price
+#             self.have_a_house = True
+#             print('House purchased! Current money: {}\n'.format(self.money))
+#         else:
+#             print('Not enough money!\n')
+#
+# my_family = Family()
+# my_family.info()
+#
+# print('Try to buy house')
+# my_family.buy_house(10 ** 6) # Тут передаем стоимость дома в функцию
+#
+# if not my_family.have_a_house: # Проверяем флаг have_a_house = True/False
+#     my_family.earn_money(800000) # Тут передаем заработанные деньги, для увеличения бюджета семьи
+#     print('Try to buy house again')
+#     my_family.buy_house(10 ** 6, 10) # Тут снова передаем стоимость дома в функцию, но уже со скидкой 10%
+#
+# my_family.info()
