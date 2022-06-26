@@ -6362,3 +6362,31 @@ User.user_name = 'Noname' # Что бы изменить атрибут клас
 # print('Текущая скорость car1:', car_1.cur_speed)
 # print('Текущая скорость car1:', car_2.cur_speed)
 # print('Текущая скорость car1:', car_3.cur_speed)
+
+Задача 2. Однотипные объекты  В офис заказали небольшую партию из четырёх мониторов и трёх наушников. У монитора есть
+четыре характеристики: название производителя, матрица, разрешение и частота обновления экрана. Все четыре монитора
+отличаются только частотой. У наушников три характеристики: название производителя, чувствительность и наличие микрофона
+Отличие только в наличии микрофона. Переписать код используя классы
+# class Monitor:
+#     name = 'Samsung'
+#     m_matrix = 'VA'
+#     m_res = 'WQHD'
+#     m_freq = 60
+#
+# monitor_1 = Monitor()
+# monitor_2 = Monitor()
+# monitor_2.m_freq = 144
+# monitor_3 = Monitor()
+# monitor_3.m_freq = 70
+# monitor_4 = Monitor
+#
+# class Headphones:
+#     Headphones_name = 'Sony'
+#     headphones_sensitivity = 108
+#     headphones_micro = True
+#
+# headphones_1 = Headphones()
+# headphones_1.headphones_micro = False
+# headphones_2 = Headphones()
+# headphones_3 = Headphones()
+
