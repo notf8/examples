@@ -6549,3 +6549,31 @@ __init__ - это конструктор класса. Вызывается ав
 # for _ in range(3):
 #     my_garden.grow_all()
 #     my_garden.are_all_ripe()
+
+Задача 1. Машина 3 Теперь все четыре атрибута должны инициализироваться при создании экземпляра класса
+(то есть передаваться в init). Реализуйте такое изменение класса Два метода: Отображение информации об объекте класса
+и Метод, который позволяет устанавливать текущую скорость машины
+# class Toyota:
+#
+#     def __init__(self): # Последний аргумент передаем с помощью рандом
+#         self.color = 'Red'
+#         self.price = 1000000
+#         self.max_speed = 200
+#         self.cur_speed = self.speed_set() # Тут методом устанавливаем рандомную скорость
+#
+#     def info(self): # Метод для вывода инфо о машине
+#         print(
+#             'Car color: {}\nCar price: {}\nMax speed: {}\nCurrent speed: {}\n'.format(
+#                 self.color, self.price, self.max_speed, self.cur_speed
+#             )
+#         )
+#
+#     def speed_set(self): # Метод для установки текущей скорости
+#         self.cur_speed = random.randrange(0, 200)
+#         return self.cur_speed
+#
+# car_1 = Toyota()
+# car_2 = Toyota()
+# car_3 = Toyota()
+#
+# car_3.info()
