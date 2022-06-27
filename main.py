@@ -6614,3 +6614,45 @@ __init__ - это конструктор класса. Вызывается ав
 #     except KeyboardInterrupt:
 #         print('\nПрограмма завершена!')
 
+
+
+import random
+
+
+class Warrior:
+    def __init__(self, name, health=100):
+        self.name = name
+        self.health = health
+
+    def hit(self, target, attacker):
+        if target.health > 0:
+            target.health -= 20
+        # if attacker == warrior1:
+            # attacker = "Warrior1"
+            # self.info(target, self.name)
+        # if attacker == warrior2:
+            # attacker = "Warrior2"
+            self.info(target, self.name)
+        if target.health == 0:
+            print(self.name, 'Победил')
+
+    def info(self, target, name):
+        print(
+            'Проводит атаку {}. У противника осталось {} очков здоровья'.format(
+               self.name, target.health
+            )
+        )
+
+
+warrior1 = Warrior('warrior1')
+warrior2 = Warrior('warrior2')
+
+
+while True:
+    who_hit = random.randint(1, 10)
+    if who_hit > 5:
+        warrior1.hit(warrior2, warrior1)
+    else:
+        warrior2.hit(warrior1, warrior2)
+    if warrior1.health <= 0 or warrior2.health <= 0:
+        break
