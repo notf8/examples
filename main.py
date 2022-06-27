@@ -6614,45 +6614,38 @@ __init__ - это конструктор класса. Вызывается ав
 #     except KeyboardInterrupt:
 #         print('\nПрограмма завершена!')
 
-
-
-import random
-
-
-class Warrior:
-    def __init__(self, name, health=100):
-        self.name = name
-        self.health = health
-
-    def hit(self, target, attacker):
-        if target.health > 0:
-            target.health -= 20
-        # if attacker == warrior1:
-            # attacker = "Warrior1"
-            # self.info(target, self.name)
-        # if attacker == warrior2:
-            # attacker = "Warrior2"
-            self.info(target, self.name)
-        if target.health == 0:
-            print(self.name, 'Победил')
-
-    def info(self, target, name):
-        print(
-            'Проводит атаку {}. У противника осталось {} очков здоровья'.format(
-               self.name, target.health
-            )
-        )
-
-
-warrior1 = Warrior('warrior1')
-warrior2 = Warrior('warrior2')
-
-
-while True:
-    who_hit = random.randint(1, 10)
-    if who_hit > 5:
-        warrior1.hit(warrior2, warrior1)
-    else:
-        warrior2.hit(warrior1, warrior2)
-    if warrior1.health <= 0 or warrior2.health <= 0:
+Задача 1. Драка Есть два юнита, каждый из них называется «Воин». Каждому устанавливается здоровье в 100 очков. Они бьют
+друг друга в случайном порядке. Тот, кто бьёт, здоровье не теряет. У того, кого бьют, оно уменьшается на 20 очков от
+одного удара. После каждого удара надо выводить сообщение, какой юнит атаковал и сколько у противника осталось здоровья.
+Как только у кого-то заканчивается ресурс здоровья, программа завершается сообщением о том, кто одержал победу
+# import random
+# class Warrior:
+#     def __init__(self, name, health=100):
+#         self.name = name  # Не забыть про этот параметр, иначе на экран проблемно выводить имя объекта (нужны будут переменные)
+#         self.health = health
+#
+#     def hit(self, target): # Нужно передавать только жертву, так как всего 2 участника, атакующим автоматически становится второй!!!
+#         if target.health > 0:
+#             target.health -= 20
+#             self.info(target) # Опять же передаем только жертву, так как она меняется, для инфы про атакующего идем в self.name
+#         if target.health == 0:
+#             print(self.name, 'Победил')
+#
+#     def info(self, target):
+#         print(
+#             'Проводит атаку {}. У противника осталось {} очков здоровья'.format(
+#                self.name, target.health # Здесь обращаемся к параметру здоровья таргета, а атакующий будет автоматом второй юнит
+#             )
+#         )
+#
+# warrior1 = Warrior('warrior1') # Обязательно нужно передать строковое значение имени, что бы не делать потом млн переменных
+# warrior2 = Warrior('warrior2')
+#
+# while True:
+#     who_hit = random.randint(1, 10) # Такой рандом нужен, что бы была больше вариативность(иначе может выбирать одну и ту же цифру)
+#     if who_hit > 5:
+#         warrior1.hit(warrior2) # Здесь передаем того, кто будет жертвой
+#     else:
+#         warrior2.hit(warrior1)
+#     if warrior1.health <= 0 or warrior2.health <= 0: # Не забыть прирвать цикл ,что бы не идти ниже 0
         break
