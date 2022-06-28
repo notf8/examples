@@ -6648,4 +6648,44 @@ __init__ - это конструктор класса. Вызывается ав
 #     else:
 #         warrior2.hit(warrior1)
 #     if warrior1.health <= 0 or warrior2.health <= 0: # Не забыть прирвать цикл ,что бы не идти ниже 0
-        break
+#         break
+
+Задача 2. Студенты Что нужно сделать
+Реализуйте модель с именем Student, содержащую поля: «ФИ», «Номер группы», «Успеваемость» (список из пяти элементов).
+Затем создайте список из десяти студентов (данные о студентах можете придумать свои или запросить их у пользователя) и
+отсортируйте его по возрастанию среднего балла. Выведите результат на экран
+# from operator import attrgetter
+#
+# class Student:
+#
+#     def __init__(self, name_surname, g_number, academic_performance):
+#         self.name_surname = name_surname
+#         self.g_number = g_number
+#         self.academic_performance = academic_performance
+#         self.score = self.average_score()
+#
+#     def average_score(self):
+#         return sum(self.academic_performance) / len(academic_performance)
+#
+#     def print_info(self):
+#         print('\nФамилия, Имя: {}\nНомер группы: {}\nОценки: {}\nСредний балл: {}'.format(
+#             self.name_surname, self.g_number, self.academic_performance, self.score
+#             )
+#         )
+#
+#
+# students = []
+# for _ in range(10):
+#     name_surname = input('\nВведите Имя и Фамилию через пробел: ').split()
+#     g_number = int(input('Введите номер группы: '))
+#     academic_performance = [int(input('Введите оценку: ')) for score in range(5)]
+#     student = Student(name_surname, g_number, academic_performance)
+#     students.append(student)
+#
+# # sorted_list = sorted(students, key=lambda student: student.average_score(), reverse=True) # Лямбду еще не проходили, но вроде понятно как работает)))
+# sorted_list = sorted(students, key=attrgetter('score'), reverse=True) # Тут атрибутгеттером забираем ключ, т.к. это объект класса
+#
+# print('\nОтсортированный список студентов: ')
+# for i in sorted_list:
+#     print(i.print_info()) # для печати така же используем функцию печати из класса, т.к. в списке лежат экземпляры класса,
+#     # по другому просто не распечатать
