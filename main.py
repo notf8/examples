@@ -6724,3 +6724,91 @@ __init__ - это конструктор класса. Вызывается ав
 # print(f'Круг увеличенный в 2 раза: {circle1.scale(2)}')
 # print(f'Возможное пересечение: {circle1.is_intersect(circle2)}')
 
+Задача 4. Отцы, матери и дети Реализуйте два класса: «Родитель» и «Ребёнок». У родителя есть:
+Имя.Возраст.Список детей. И он может:Сообщить информацию о себе. Успокоить ребёнка. Покормить ребёнка. У ребёнка есть:
+Имя.Возраст (должен быть меньше возраста родителя хотя бы на 16 лет).Состояние спокойствия.Состояние голода
+# import random
+# class Parent:
+#     children_list = []
+#
+#     def __init__(self, name, age):
+#         self.name = name
+#         self.age = age
+#
+#     def info(self):
+#         print('\nИмя: {}\nВозраст: {}:'.format(
+#             self.name, self.age
+#         )
+#               )
+#
+#     def add_children(self):
+#         c_quantity = int(input('Сколько будет детей? '))
+#         check_age = Parent.__getattribute__(parent_list[0], 'age') #Здесь забираем возраст родителей в переменную для сверки
+#         for i_quantity in range(c_quantity):
+#             c_name = input(f'Введите имя {i_quantity + 1}-го ребенка: ')
+#             c_age = int(input(f'Введите возраст {i_quantity + 1}-го ребенка: '))
+#             if c_age < (check_age - 16):
+#                 child = Child(c_name, c_age)
+#                 Parent.children_list.append(child)
+#             else:
+#                 print('Ошибка: Возраст должен быть меньше возраста родителя хотя бы на 16 лет')
+#                 c_age = int(input(f'Введите возраст {i_quantity + 1}-го ребенка: '))
+#                 child = Child(c_name, c_age) #Делаем экземпляром класса
+#                 Parent.children_list.append(child) # Здесь после сбора инфы циклом, добавляем в список родителей
+#
+#
+# class Child:
+#     state = ['hunger', 'calmness', 'nervous']
+#
+#     def __init__(self, name, age):
+#         self.name = name
+#         self.age = age
+#         self.state = random.choice(self.state) # Тут рандомом выбираем состояние ребенка
+#
+#     def info(self):
+#         print('Имя: {}, возраст: {}'.format(self.name, self.age)) # Это нужно для вывода инфы о детях т.к. это экземпляры
+#
+#     def s_state(self): # Тут тупо возвращаем состояние ребенка
+#         return self.state
+#
+# parent_list = []
+# parent_list.append(Parent('Bob', 48))
+# parent_list.append(Parent('Jane', 48))
+#
+#
+# Parent.add_children(Parent)
+#
+# print('\nРодители:')
+# for i_parent in parent_list:
+#     i_parent.info() # Через метод выводим инфу о родителях
+#
+# while True:
+#     print('\nЧто хотите сделать?\n1 = Получить информацию о детях'
+#           '\n2 = Проверить состояние детей\n3 = Завершить программу')
+#     answer = int(input('\nВведите 1 2 ил 3 для выбора действия: '))
+#     if answer == 1:
+#         n = 1 # Это нужно что бы тупо нумеровать детей, т.к. i_child это не счетчик а экземпляр класса из списка, его как номер не поюзаешь
+#         for i_child in Parent.children_list: # Здесь идем за объектами из списка
+#             print(f'\n{n}-й ребенок')
+#             n += 1
+#             Child.info(i_child) # Выводим инфу по каждому ребенку
+#     elif answer == 2:
+#         for i_child in Parent.children_list:
+#             name = Child.__getattribute__(i_child, 'name') #Тут забираем имя ребенка, иначе его из объекта не достать
+#             if Child.s_state(i_child) == 'nervous': # Тут проверяем состояние ребенка
+#                 print(f'\nРебенок {name} нервничает, нужно срочно его успокоить')
+#             elif Child.s_state(i_child) == 'hunger':
+#                 print(f'\nРебенок {name} голоден, нужно срочно покормить')
+#             else:
+#                 print(f'\nРодители могут отдыхать, ребенок {name} спокоен')
+#     elif answer == 3:
+#         print('Программа завершена!')
+#         break
+#     else:
+#         print('Ошибка ввода! Введите 1, 2 или 3')
+
+
+
+
+
+
