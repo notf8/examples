@@ -6689,3 +6689,38 @@ __init__ - это конструктор класса. Вызывается ав
 # for i in sorted_list:
 #     i.print_info() # для печати така же используем функцию печати из класса, т.к. в списке лежат экземпляры класса,
 #     # по другому просто не распечатать
+
+Задача 3. Круг На координатной плоскости рисуются круги, у каждого круга следующие параметры: координаты X и Y центра
+круга и значение R ― радиус круга. По умолчанию центр находится в (0, 0), а радиус равен 1 Реализуйте класс «Круг»,
+который инициализируется по этим параметрам. Круг также может:
+Находить и возвращать свою площадь, Находить и возвращать свой периметр, Увеличиваться в K раз, Определять, пересекается
+ли он с другой окружностью.
+# import math
+#
+# class Circle:
+#     pi = math.pi
+#
+#     def __init__(self, x=0, y=0, r=1):
+#         self.x = x
+#         self.y = y
+#         self.r = r
+#
+#     def get_area(self):
+#         return self.r * self.r * self.pi
+#
+#     def get_perimeter(self):
+#         return 2 * self.r * self.pi
+#
+#     def scale(self, k):
+#         return self.get_area() * 2
+#
+#     def is_intersect(self, other):
+#         return (self.x - other.x) ** 2 + (self.y - other.y) ** 2 <= (self.r + other.r) ** 2
+#
+# circle1 = Circle()
+# circle2 = Circle()
+# print(f'Площадь круга: {circle1.get_area()}')
+# print(f'Периметр круга: {circle1.get_perimeter()}')
+# print(f'Круг увеличенный в 2 раза: {circle1.scale(2)}')
+# print(f'Возможное пересечение: {circle1.is_intersect(circle2)}')
+
