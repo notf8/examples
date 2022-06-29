@@ -7200,5 +7200,101 @@ print(c.answer)
 #         print(cat)
 #         print(my_home)
 
+Задача 7. Совместное проживание
+Что нужно сделать
+Чтобы понять, стоит ли ему жить с кем-то или всё же лучше остаться в гордом одиночестве, Артём решил провести довольно
+необычное исследование. Для этого он реализовал модель человека и модель дома. Человек может:
+Есть (+ сытость, − еда). Работать (− сытость, + деньги). Играть (− сытость). Ходить в магазин за едой (+ еда, − деньги).
+У человека есть имя, степень сытости (изначально 50) и дом. В доме есть холодильник с едой (изначально 50 еды) и тумбочка
+с деньгами (изначально 0 денег). Если сытость человека становится меньше нуля, то человек умирает.
+Логика действий человека определяется следующим образом:
+1. Генерируется число кубика от 1 до 6.
+2. Если сытость < 20, то поесть.
+3. Иначе, если еды в доме < 10, то сходить в магазин.
+4. Иначе, если денег в доме < 50, то работать.
+5. Иначе, если кубик равен 1, то работать.
+6. Иначе, если кубик равен 2, то поесть.
+7. Иначе играть
+# from random import randint
+#
+# class Man:
+#     # класс людей
+#     def __init__(self, name, fullness=50):
+#         self.name = name
+#         self.fullness = fullness
+#
+#     def __str__(self):
+#         return f"{self.name}, сытость: {self.fullness}"  # будет использоваться для printa
+#
+#     def eat(self):
+#         # прием пищи (еда) для восcтановления fullnes
+#         print(f'{self.name} поел')
+#         self.fullness += 1
+#         my_home.food -= 1
+#
+#
+#     def work(self):
+#         # Поход на работу
+#         print(f'{self.name} сходил на работу')
+#         my_home.money += 1
+#         self.fullness -= 1
+#
+#     def playing(self):
+#         # поиграть
+#         print(f'{self.name} поиграл')
+#         self.fullness -= 10
+#
+#
+#     def shopping(self):
+#         # поход в магазин за продуктами
+#         print(f'{self.name} сходил в магазин за едой')
+#         my_home.money -= 1
+#         my_home.food += 1
+#         if my_home.money <= 0:
+#             print(f'{self.name} деньги кончились!')
+#
+#
+# class House:  # инфа о наличии денег и еды
+#     def __init__(self, food=50, money=0):
+#         self.food = food
+#         self.money = money
+#
+#     def __str__(self):
+#         return f'В доме еды: {self.food}, денег: {self.money}'
+#
+#
+# def people_daily_act(man):
+#     # Ежедневные действия класса Man отдельной ф-ей, т.к. они индивидуальны для каждого человека.
+#     if man.fullness <= 0:
+#         print(f'{man.name} умер...')
+#         return
+#     action = randint(1, 6)
+#     if man.fullness < 20:
+#         man.eat()
+#     elif my_home.food < 10:
+#         man.shopping()
+#     elif my_home.money < 50:
+#         man.work()
+#     elif action == 1:
+#         man.work()
+#     elif action == 2:
+#         man.eat()
+#     else:
+#         man.playing()
+#
+#
+# man_1 = Man('Артём')  # человек Артём
+# man_2 = Man('Виртуальный сожитель Артёма))')
+# my_home = House()  # Виртуальный дом Артёма
+#
+#
+# for day in range(1, 366):
+#     print(f'================ день {day} ==================')
+#     people_daily_act(man_1)
+#     people_daily_act(man_2)
+#     print('-{:-^42}-'.format('В конце дня'))
+#     print(man_1)
+#     print(man_2)
+#     print(my_home)
 
 
