@@ -6844,6 +6844,127 @@ __init__ - это конструктор класса. Вызывается ав
 #     else:
 #         print('Ошибка ввода! Введите 1, 2 или 3')
 
+Задача 6. Магия У нас есть четыре базовых элемента: «Вода», «Воздух», «Огонь», «Земля». Из них как раз и получаются новые:
+«Шторм», «Пар», «Грязь», «Молния», «Пыль», «Лава». Каждый элемент необходимо организовать как отдельный класс.
+Если результат не определён, то возвращается None. Примечание: сложение объектов можно реализовывать через магический
+метод __add__, вот пример использования: class Example_1:
+    def __add__(self, other):
+        return Example_2()
+class Example_2:
+    answer = 'сложили два класса и вывели'
+a = Example_1()
+b = Example_2()
+c = a + b
+print(c.answer)
+# class Fire:
+#     title = 'Огонь'
+#
+#     def __add__(self, other):
+#         if isinstance(other, Air):
+#             return Lightning()
+#         elif isinstance(other, Water):
+#             return Steam()
+#         elif isinstance(other, Earth):
+#             return Lava()
+#         elif isinstance(other, Ice):
+#             return Water()
+#         elif isinstance(other, Snow):
+#             return Water()
+#         else:
+#             return Undetermined()
+#
+#
+# class Air:
+#     title = 'Воздух'
+#
+#     def __add__(self, other):
+#         if isinstance(other, Water):
+#             return Storm()
+#         elif isinstance(other, Fire):
+#             return Lightning()
+#         elif isinstance(other, Earth):
+#             return Dust()
+#         elif isinstance(other, Cold):
+#             return Snow()
+#         else:
+#             return Undetermined()
+#
+#
+# class Water:
+#     title = 'Вода'
+#
+#     def __add__(self, other):
+#         if isinstance(other, Air):
+#             return Storm()
+#         elif isinstance(other, Fire):
+#             return Steam()
+#         elif isinstance(other, Earth):
+#             return Dirt()
+#         elif isinstance(other, Cold):
+#             return Ice()
+#         else:
+#             return Undetermined()
+#
+#
+# class Earth:
+#     title = 'Земля'
+#     def __add__(self, other):
+#         if isinstance(other, Water):
+#             return Dirt()
+#         elif isinstance(other, Fire):
+#             return Lava()
+#         elif isinstance(other, Air):
+#             return Dust()
+#         else:
+#             return Undetermined()
+#
+#
+# class Storm:
+#     title = 'Шторм'
+#
+#
+# class Steam:
+#     title = 'Пар'
+#
+#
+# class Ice:
+#     title = 'Лёд'
+#
+#
+# class Dirt:
+#     title = 'Грязь'
+#
+#
+# class Lightning:
+#     title = 'Молния'
+#
+#
+# class Dust:
+#     title = 'Пыль'
+#
+#
+# class Lava:
+#     title = 'Лава'
+#
+#
+# class Snow:
+#     title = 'Снег'
+#
+#
+# class Cold:
+#     title = 'Холод'
+#
+#
+# class Undetermined:
+#     title = 'None'
+#
+#
+# first = Fire()
+# second = Snow()
+#
+# result = first + second
+#
+# print(f"Смешиваем '{first.title}' и '{second.title}' и получаем '{result.title}'")
 
 
 
