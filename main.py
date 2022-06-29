@@ -6857,7 +6857,8 @@ b = Example_2()
 c = a + b
 print(c.answer)
 # class Fire:
-#     title = 'Огонь'
+#     def __str__(self):
+#         return 'Огонь'
 #
 #     def __add__(self, other):
 #         if isinstance(other, Air):
@@ -6875,7 +6876,8 @@ print(c.answer)
 #
 #
 # class Air:
-#     title = 'Воздух'
+#     def __str__(self):
+#         return 'Воздух'
 #
 #     def __add__(self, other):
 #         if isinstance(other, Water):
@@ -6891,7 +6893,8 @@ print(c.answer)
 #
 #
 # class Water:
-#     title = 'Вода'
+#     def __str__(self):
+#         return 'Вода'
 #
 #     def __add__(self, other):
 #         if isinstance(other, Air):
@@ -6902,12 +6905,16 @@ print(c.answer)
 #             return Dirt()
 #         elif isinstance(other, Cold):
 #             return Ice()
+#         elif isinstance(other, Ice):
+#             return Water()
 #         else:
 #             return Undetermined()
 #
 #
 # class Earth:
-#     title = 'Земля'
+#     def __str__(self):
+#         return 'Земля'
+#
 #     def __add__(self, other):
 #         if isinstance(other, Water):
 #             return Dirt()
@@ -6920,53 +6927,278 @@ print(c.answer)
 #
 #
 # class Storm:
-#     title = 'Шторм'
+#     def __str__(self):
+#         return 'Шторм'
 #
 #
 # class Steam:
-#     title = 'Пар'
+#     def __str__(self):
+#         return 'Пар'
 #
 #
 # class Ice:
-#     title = 'Лёд'
+#     def __str__(self):
+#         return 'Лёд'
 #
 #
 # class Dirt:
-#     title = 'Грязь'
+#     def __str__(self):
+#         return 'Грязь'
 #
 #
 # class Lightning:
-#     title = 'Молния'
+#     def __str__(self):
+#         return 'Молния'
 #
 #
 # class Dust:
-#     title = 'Пыль'
+#     def __str__(self):
+#         return 'Пыль'
 #
 #
 # class Lava:
-#     title = 'Лава'
+#     def __str__(self):
+#         return 'Лава'
 #
 #
 # class Snow:
-#     title = 'Снег'
+#     def __str__(self):
+#         return 'Снег'
 #
 #
 # class Cold:
-#     title = 'Холод'
+#     def __str__(self):
+#         return 'Холод'
 #
 #
 # class Undetermined:
-#     title = 'None'
+#     def __str__(self):
+#         return 'None'
 #
 #
-# first = Fire()
-# second = Snow()
+# first = Air()
+# second = Ice()
 #
 # result = first + second
 #
-# print(f"Смешиваем '{first.title}' и '{second.title}' и получаем '{result.title}'")
+# print(f"Смешиваем '{first}' и '{second}' и получаем '{result}'")
 
-
+Прожить 365 дней с котом)))
+# from random import randint
+#
+#
+# class Man:
+#     # класс людей
+#     def __init__(self, name, fullness=50, house=None):
+#         self.name = name
+#         self.fullness = fullness  # сытость-показывает запас здоровья
+#         self.house = house  # дом (экземпляр класса)
+#
+#     def __str__(self):
+#         return f"{self.name}, сытость: {self.fullness}"  # будет использоваться для print(inst)
+#         # где inst, является экземпляром класса
+#
+#     def eat(self):
+#         # прием пищи (еда) для востановления сытости
+#         if self.house.food >= 10:
+#             print(f'{self.name} поел')
+#             self.fullness += 10
+#             self.house.food -= 10
+#         else:
+#             print(f'{self.name} нет еды')
+#
+#     def work(self):
+#         # выполнение работы (при наличии постоянной работы)
+#         print(f'{self.name} сходил на работу')
+#         self.house.money += 150
+#         self.fullness -= 10
+#
+#     def watch_tv(self):
+#         # просмотр телевизора
+#         print(f'{self.name} смотрел телевизор')
+#         self.house.money -= 10
+#         self.fullness -= 10
+#
+#     def clean(self):
+#         # уборка в доме
+#         print(f'{self.name} убрал грязь в доме')
+#         self.house.mud = 0
+#         self.fullness -= 10
+#
+#     def shopping(self):
+#         # поход в магазин за продуктами
+#         if self.house.money >= 50:
+#             print(f'{self.name} сходил в магазин за едой')
+#             self.house.money -= 50
+#             self.house.food += 50
+#         else:
+#             print(f'{self.name} деньги кончились!')
+#
+#     def go_to_the_house(self, house):
+#         # заселение в дом
+#         self.house = house
+#         self.fullness -= 10
+#         print(f'{self.name} въехал в дом номер {self.house.number}')
+#
+#
+# class House:  # дом хранит информацию о наличие ресурсов
+#     def __init__(self, number, food=0, money=0, mud=0):
+#         self.number = number
+#         self.food = food
+#         self.money = money
+#         self.mud = mud
+#
+#     def __str__(self):
+#         return f'В доме номер "{self.number}" еды: {self.food}, денег: {self.money}, грязь: {self.mud}'
+#
+#
+# class Cat:  # класс котов
+#     def __init__(self, name, cat_fullness=50, house=None):
+#         self.name = name
+#         self.cat_fullness = cat_fullness  # сытость (здоровье кота)
+#         self.house = house  # дом домашнего кота
+#
+#     def __str__(self):
+#         return f"{self.name}, сытость: {self.cat_fullness}"
+#
+#     def scratch_walls(self):
+#         print(f'{self.name} поцарапал стены')
+#         self.house.mud += 50
+#         self.cat_fullness -= 20
+#
+#     def sleep(self):
+#         print(f'{self.name} поспал')
+#         self.cat_fullness -= 10
+#
+#     def eat(self):
+#         if self.house.cat_food >= 10:
+#             print(f'{self.name} поел')
+#             self.cat_fullness += 20
+#             self.house.cat_food -= 10
+#         else:
+#             self.cat_fullness -= 10
+#             print(f'{self.name} нет еды')
+#
+#
+# class Man_with_cat(Man):  # класс людей имеющих котов
+#
+#     def __str__(self):
+#         return f"{self.name}, сытость: {self.fullness}"
+#
+#     def cat_shopping(self):
+#         if self.house.money >= 50:
+#             print(f'{self.name} сходил в магазин за едой для котов')
+#             self.house.money -= 50
+#             self.house.cat_food += 100
+#         else:
+#             print(f'{self.name} деньги кончились!')
+#
+#     def take_cat_in_the_house(self, cat):
+#         cat.house = self.house
+#         print(f'{self.name} взял в дом номер {self.house.number} кота {cat.name}')
+#
+#
+# class House_with_cat(House):
+#     def __init__(self, number, food, money, mud, cat_food=30):
+#         House.__init__(self, number, food, money, mud)
+#         self.cat_food = cat_food
+#
+#     def __str__(self):
+#         return f'В доме номер "{self.number}" еды: {self.food}, еды для кота: {self.cat_food}, денег: {self.money}, грязь: {self.mud}'
+#
+#
+# def citizen_daily_act():
+#     # распорядок дня вынесен за пределы класса Man, так как распорядок индивидуален для каждого человека.
+#     if citizen.fullness <= 0:
+#         print(f'{citizen.name} умер...')
+#         return
+#     action = randint(1, 3)
+#     while citizen.house.food >= 10 and citizen.fullness < 50:
+#         citizen.eat()
+#     citizen.work()
+#     if citizen.house.food < 10:
+#         citizen.shopping()
+#     action = randint(1, 2)
+#     if action == 1:
+#         citizen.clean()
+#     else:
+#         citizen.watch_tv()
+#
+#
+# def citizen_daily_act_with_cat():
+#     # распорядок дня при наличие кота
+#     if citizen.fullness <= 0:
+#         print(f'{citizen.name} умер...')
+#         return
+#     while citizen.house.food >= 10 and citizen.fullness < 50:
+#         citizen.eat()
+#     citizen.work()
+#     if citizen.house.food < 10:
+#         citizen.shopping()
+#     if citizen.house.cat_food <= 20:
+#         citizen.cat_shopping()
+#     action = randint(1, 2)
+#     if action == 1:
+#         citizen.clean()
+#     else:
+#         citizen.watch_tv()
+#
+#
+# def cat_daily_act():  # события у кота в течение дня
+#     if cat.cat_fullness <= 0:
+#         print(f'{self.name} сдох...')
+#         return
+#     # action = randint(1, 2)
+#     while cat.house.cat_food >= 10 and cat.cat_fullness < 50:
+#         cat.eat()
+#     action = randint(1, 2)
+#     if action == 1:
+#         cat.sleep()
+#     elif action == 2:
+#         cat.scratch_walls()
+#
+#
+# if __name__ == '__main__':
+#
+#     citizen = Man(name='Петя')  # человек Петя
+#     my_home = House(771)  # Пете дали дом
+#     citizen.go_to_the_house(my_home)  # Петя заселился в дом
+#     setattr(citizen, 'act', citizen_daily_act)  # установлен атрибут act (без кота)
+#
+#     for day in range(1, 4):
+#         print(f'================ день {day} ==================')
+#         citizen.act()
+#         print('--- в конце дня ---')
+#         print(citizen)
+#         print(my_home)
+#
+#     # Петя решил стать кошатником. Сохраняем текущие данные.
+#     # Создаем экземпляр класса кошатников и заносим текущие данные в новый экземпляр
+#     name, fullness, house = citizen.name, citizen.fullness, citizen.house  # текущая информация
+#     # о Пете
+#     citizen = Man_with_cat(name, fullness, house)  # теперь Петя относится к тем, кто держит кота
+#     setattr(citizen, 'act', citizen_daily_act_with_cat)  # установлен атрибут act (с котом)
+#
+#     # Сохраняем текущие данные экземпляра класса House.
+#     # Создаем экземпляр класса House_with_cat и заносим текущие данные в новый экземпляр
+#     number, food, money, mud = my_home.number, my_home.food, my_home.money, my_home.mud
+#     my_home = House_with_cat(number, food, money, mud)
+#     citizen.house = my_home  # оборудуем дом Пети для проживания кота,
+#     # (значением citizen.house становится экземпляр класса House_with_cat)
+#
+#     cat = Cat(name="Пушок")  # Петя нашел кота и назвал его Пушок
+#
+#     citizen.take_cat_in_the_house(cat)
+#     setattr(cat, 'act', cat_daily_act)
+#
+#     for day in range(1, 366):
+#         print(f'================ день {day} ==================')
+#         citizen.act()
+#         cat.act()
+#         print('--- в конце дня ---')
+#         print(citizen)
+#         print(cat)
+#         print(my_home)
 
 
 
