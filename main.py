@@ -6498,7 +6498,7 @@ __init__ - это конструктор класса. Вызывается ав
 # emp_1.info()
 # emp_2.info()
 
-Задача грядка/картошка. Есть катрошкеа со следующими хар-ми:
+Задача Happy Farm грядка/картошка. Есть катрошкеа со следующими хар-ми:
 1. Номер картошки в грядке (индекс)
 2. Стадия зрелости (стадии: Отсутствует, Росток, Зеленая, Зрелая)
 Картошка может:
@@ -6509,6 +6509,12 @@ __init__ - это конструктор класса. Вызывается ав
 И может:
 1. Взращивать кеартошку
 2. Передавать информацию о зрелости всей картошки
+Садовник:
+Передавать информацию о себе
+Грядка с растением, за которым он ухаживает (в нашем случае пока только грядка с картошкой).
+И он может:
+Ухаживать за грядкой.
+Собирать с неё урожай (количество картошки ― пустой список).
 # class Potato:
 #     states = {0: 'Отсутствует', 1: 'Росток', 2: 'Зеленая', 3: 'Зрелая'} #Прописываем в статитку уровни зрелости в словаре
 #
@@ -6531,6 +6537,7 @@ __init__ - это конструктор класса. Вызывается ав
 #             self.index, Potato.states[self.state] # Обращаемся к словарю states в классе Potato по ключу из метода grow
 #         ))
 #
+#
 # class PotatoGarden:
 #
 #     def __init__(self, count): # Формируем список картошки на грядке
@@ -6548,11 +6555,41 @@ __init__ - это конструктор класса. Вызывается ав
 #         else:
 #             print('Вся картошка созрела, можно собирать!')
 #
+#
+# class Gardener:
+#     def __init__(self, name, collected_potatoes):
+#         self.name, self.collected_potatoes = name, collected_potatoes
+#
+#     def gardener_info(self):
+#         print('Имя садовника: {}\nСколько собрал картошки: {}\n'.format(self.name, self.collected_potatoes))
+#
+#     def tend(self, my_garden):
+#         if all([i_potato.is_ripe() for i_potato in my_garden.potatoes]): # Проверяем, не созрела ли картошка
+#             question = int(input('Собрать картошку? \n1 - да, 2 - нет\n'))
+#             if question == 1:
+#                 potato_count = 0
+#                 for i_potato in my_garden.potatoes: # Собираем картошку в цикле
+#                     worker.collected_potatoes += 1
+#                     potato_count += 1
+#                     i_potato.state = 0 # Обнуляем статус каждой (так как собрали ее)
+#                 print('{} собрал {} картофелин!'.format(worker.name, potato_count))
+#                 worker.gardener_info()
+#             else:
+#                 print('Картошка пропадает! Может все таки соберем?')
+#         else:
+#             question = int(input('Отправить {}а ухаживать за картошкой? \n 1 - да, 2 - нет\n'.format(worker.name)))
+#             if question == 1: # Если статус картошки не созревшый, с каждым циклом отправляем ухаживать за грядкой
+#                 my_garden.grow_all()
+#                 my_garden.are_all_ripe()
+#
 # my_garden = PotatoGarden(5)
-# my_garden.are_all_ripe()
-# for _ in range(3):
-#     my_garden.grow_all()
-#     my_garden.are_all_ripe()
+# worker = Gardener('Михалыч', 0)
+# print('\nКартошку посадили, теперь за ней нужно ухаживать!\n')
+# while True:
+#     try:
+#         Gardener.tend(worker, my_garden)
+#     except KeyboardInterrupt:
+#         print('Программа завершена')
 
 Задача 1. Машина 3 Теперь все четыре атрибута должны инициализироваться при создании экземпляра класса
 (то есть передаваться в init). Реализуйте такое изменение класса Два метода: Отображение информации об объекте класса
