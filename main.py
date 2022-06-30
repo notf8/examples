@@ -7311,5 +7311,19 @@ print(c.answer)
 #         print(f'{man_1.name} умер...')
 #         break
 
+class Card:
+    def __int__(self, lear, rank):
+        #  Карта, у которой есть значения
+        self.lear = lear
+        self.rank = rank
+        #   - ранг/принадлежность 2, 3, 4, 5, 6, 7 и так далее
+    pass
 
+class Deck:
+    #  Колода создаёт у себя объекты карт
+    pass
+
+class Player:
+    #  Игрок, у которого есть имя и какие-то карты на руках
+    pass
 
