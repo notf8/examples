@@ -7244,7 +7244,8 @@ print(c.answer)
 #     def playing(self):
 #         # поиграть
 #         print(f'{self.name} поиграл')
-#         self.fullness -= 10
+#         self.fullness -= 20
+#
 #
 #
 #     def shopping(self):
@@ -7267,14 +7268,19 @@ print(c.answer)
 #
 # def people_daily_act(man):
 #     # Ежедневные действия класса Man отдельной ф-ей, т.к. они индивидуальны для каждого человека.
-#     if man.fullness <= 0:
-#         print(f'{man.name} умер...')
-#         return
+#     # if man.fullness <= 0:
+#     #     print(f'{man.name} умер...')
 #     action = randint(1, 6)
 #     if man.fullness < 20:
-#         man.eat()
+#         if my_home.food > 0:
+#             man.eat()
+#         else:
+#             pass
 #     elif my_home.food < 10:
-#         man.shopping()
+#         if my_home.money > 0:
+#             man.shopping()
+#         else:
+#             pass
 #     elif my_home.money < 50:
 #         man.work()
 #     elif action == 1:
@@ -7298,5 +7304,12 @@ print(c.answer)
 #     print(man_1)
 #     print(man_2)
 #     print(my_home)
+#     if man_2.fullness <= 0:
+#         print(f'{man_2.name} умер...')
+#         break
+#     if man_1.fullness <= 0:
+#         print(f'{man_1.name} умер...')
+#         break
+
 
 
