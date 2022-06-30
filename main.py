@@ -1,3 +1,5 @@
+git config --global http.sslbackend schannel - для настройки клонирования по https
+
 import fileinput
 
 Применение INT к кривой формуле
