@@ -6412,6 +6412,11 @@ user1.user_name = 'Tom'
 self - это ссылка на сам объект (класс) В других языках .self называется this
 функции внутри классов - называются методами классов. Функции могут содержать именованные аргументы и возвращать
 значения с помощью Return
+Методы бывают: классовые, статитчески и обычны
+для вызова классового и статического не нужны объекты: some_classmethod() или some_stat_metod()
+А вот для вызова обычного метода класса требуется объект: m = some_classmethod(), при попытке вызвать без объекта выскочит ошибка
+(missing 1 required positional argument: 'self')
+
 # class User:
 #     user_name = 'Admin'
 #     password = 'qwerty'
@@ -7025,7 +7030,7 @@ print(c.answer)
 #         # уборка в доме
 #         print(f'{self.name} убрал грязь в доме')
 #         self.house.mud = 0
-#         self.fullness -= 10
+#         self.fullness -= 1
 #
 #     def shopping(self):
 #         # поход в магазин за продуктами
