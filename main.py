@@ -7316,19 +7316,131 @@ print(c.answer)
 #         print(f'{man_1.name} умер...')
 #         break
 
-class Card:
-    def __int__(self, lear, rank):
-        #  Карта, у которой есть значения
-        self.lear = lear
-        self.rank = rank
-        #   - ранг/принадлежность 2, 3, 4, 5, 6, 7 и так далее
-    pass
-
-class Deck:
-    #  Колода создаёт у себя объекты карт
-    pass
-
-class Player:
-    #  Игрок, у которого есть имя и какие-то карты на руках
-    pass
-
+Блэк-джэк. Этим все сказано)) Из особенностей, колода формируется сама, какрты не повторяются (реализовано в классах)
+# import random
+# class Card:
+#
+#     def __init__(self, rank, lear):
+#         self.rank = rank
+#         self.lear = lear
+#
+#     def __str__(self):
+#         return f'Карта: {self.rank} {self.lear}'
+#
+#
+# class Deck:
+#     rank_list = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'Jack of', 'Queen of', 'king of', 'Ace of']
+#     lear_list = ['spades', 'hearts', 'clubs', 'Diamonds']
+#     dec_dict = {}
+#
+#     def make_a_deck(self):
+#         for i_rank in self.rank_list:
+#             for i_lear in self.lear_list:
+#                 rank = i_rank
+#                 lear = i_lear
+#                 card = Card(rank, lear)
+#                 self.dec_dict[card] = 1
+#     # # Для проверки работы функции сбора колоды карт
+#     # def dict_view(self):
+#     #     for i_dict in self.dec_dict.keys():
+#     #         print(i_dict)
+#
+#
+# class Player:
+#
+#     def __init__(self, name):
+#         self.name = name
+#         self.card_list = []
+#
+#     def get_gard(self):
+#         nex_card = random.choice(list(Deck.dec_dict.keys()))
+#         self.card_list.append(str(nex_card).split())
+#         Deck.dec_dict.pop(nex_card)
+#
+#     def card_list_view(self):
+#         for i_card in self.card_list:
+#             print(*i_card)
+#
+#     def sum_card(self):
+#         summ = 0
+#         for i_card in self.card_list:
+#             if i_card[1] == 'king' or i_card[1] == 'Queen' or i_card[1] == 'Jack':
+#                 summ += 10
+#             elif i_card[1] == 'Ace' and summ <= 10:
+#                 summ += 11
+#             elif i_card[1] == 'Ace' and summ > 10:
+#                 summ += 1
+#             else:
+#                 summ += int(i_card[1])
+#         return summ
+#
+#
+# new_deck = Deck()
+# new_deck.make_a_deck()
+# # new_deck.dict_view() # Проверка колоды
+#
+# print('Сыграем в Блэк-джек...')
+# pc_player = Player('PC_player')
+# # name = input('Как Вас зовут? ')
+# player = Player('Игрок')
+# print('\nКоличество карт в колоде:', len(Deck.dec_dict))
+#
+# for _ in range(2):
+#     pc_player.get_gard()
+#     player.get_gard()
+# print(f'\nУ игрока {pc_player.name} на руках карты:\n')
+# pc_player.card_list_view()
+# print('Сумма карт:', pc_player.sum_card())
+# print(f'\nУ Вас на руках карты:\n')
+# player.card_list_view()
+# print('Сумма карт:', player.sum_card())
+#
+# while True:
+#     print('\nКоличество карт в колоде:', len(Deck.dec_dict))
+#
+#     answer = int(input('\n1 = Взять карту, 2 = Открыть карты, 3 = Пропустить ход: '))
+#     if answer == 1:
+#         player.get_gard()
+#         print('\nУ вас на руках карты:')
+#         player.card_list_view()
+#         print('Сумма карт:', player.sum_card())
+#         if player.sum_card() > 21:
+#             print(f'\nУ Вас перебор!!! Победил игрок {pc_player.name}')
+#             break
+#         else:
+#             pass
+#     elif answer == 3:
+#         print('\nВы пропускаете ход')
+#         pass
+#     elif answer == 2:
+#         print(f'\nУ игрока {pc_player.name} на руках карты:\n')
+#         pc_player.card_list_view()
+#         print('Сумма карт:', pc_player.sum_card())
+#         print(f'\nУ Вас на руках карты:\n')
+#         player.card_list_view()
+#         print('Сумма карт:', player.sum_card())
+#         if player.sum_card() > pc_player.sum_card():
+#             print('\nУра!! Вы побели!')
+#             break
+#         elif player.sum_card() < pc_player.sum_card():
+#             print('\nК сожалению вы проиграли')
+#             break
+#         else:
+#             print('\nНичья')
+#             break
+#     else:
+#         print('Ошибка ввода! Введите 1, 2 или 3', end=' ')
+#         answer = int(input())
+#
+#     if pc_player.sum_card() < 18:
+#         print(f'\nИгрок {pc_player.name} берет карту....')
+#         pc_player.get_gard()
+#         print(f'\nУ игрок {pc_player.name} на руках карты:')
+#         pc_player.card_list_view()
+#         print('Сумма карт:', pc_player.sum_card())
+#         if pc_player.sum_card() > 21:
+#             print(f'У игрока {pc_player.name} перебор! Вы победили!!!')
+#             break
+#     else:
+#         print(f'\nИгрок {pc_player.name} пропускает ход')
+#         pass
