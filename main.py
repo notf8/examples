@@ -7356,6 +7356,9 @@ print(c.answer)
 #         nex_card = random.choice(list(Deck.dec_dict.keys()))
 #         self.card_list.append(str(nex_card).split())
 #         Deck.dec_dict.pop(nex_card)
+#         print(f'\nУ {self.name} на руках карты:')
+#         self.card_list_view()
+#         print('Сумма карт:', self.sum_card())
 #
 #     def card_list_view(self):
 #         for i_card in self.card_list:
@@ -7374,6 +7377,10 @@ print(c.answer)
 #                 summ += int(i_card[1])
 #         return summ
 #
+#     def info(self):
+#         print(f'\nУ игрока {self.name} на руках карты:\n')
+#         self.card_list_view()
+#         print('Сумма карт:', self.sum_card())
 #
 # new_deck = Deck()
 # new_deck.make_a_deck()
@@ -7381,19 +7388,13 @@ print(c.answer)
 #
 # print('Сыграем в Блэк-джек...')
 # pc_player = Player('PC_player')
-# # name = input('Как Вас зовут? ')
-# player = Player('Игрок')
+# name = input('Как Вас зовут? ')
+# player = Player(name)
 # print('\nКоличество карт в колоде:', len(Deck.dec_dict))
 #
 # for _ in range(2):
 #     pc_player.get_gard()
 #     player.get_gard()
-# print(f'\nУ игрока {pc_player.name} на руках карты:\n')
-# pc_player.card_list_view()
-# print('Сумма карт:', pc_player.sum_card())
-# print(f'\nУ Вас на руках карты:\n')
-# player.card_list_view()
-# print('Сумма карт:', player.sum_card())
 #
 # while True:
 #     print('\nКоличество карт в колоде:', len(Deck.dec_dict))
@@ -7401,9 +7402,6 @@ print(c.answer)
 #     answer = int(input('\n1 = Взять карту, 2 = Открыть карты, 3 = Пропустить ход: '))
 #     if answer == 1:
 #         player.get_gard()
-#         print('\nУ вас на руках карты:')
-#         player.card_list_view()
-#         print('Сумма карт:', player.sum_card())
 #         if player.sum_card() > 21:
 #             print(f'\nУ Вас перебор!!! Победил игрок {pc_player.name}')
 #             break
@@ -7413,12 +7411,8 @@ print(c.answer)
 #         print('\nВы пропускаете ход')
 #         pass
 #     elif answer == 2:
-#         print(f'\nУ игрока {pc_player.name} на руках карты:\n')
-#         pc_player.card_list_view()
-#         print('Сумма карт:', pc_player.sum_card())
-#         print(f'\nУ Вас на руках карты:\n')
-#         player.card_list_view()
-#         print('Сумма карт:', player.sum_card())
+#         Player.info(pc_player)
+#         Player.info(player)
 #         if player.sum_card() > pc_player.sum_card():
 #             print('\nУра!! Вы побели!')
 #             break
@@ -7435,12 +7429,10 @@ print(c.answer)
 #     if pc_player.sum_card() < 18:
 #         print(f'\nИгрок {pc_player.name} берет карту....')
 #         pc_player.get_gard()
-#         print(f'\nУ игрок {pc_player.name} на руках карты:')
-#         pc_player.card_list_view()
-#         print('Сумма карт:', pc_player.sum_card())
 #         if pc_player.sum_card() > 21:
 #             print(f'У игрока {pc_player.name} перебор! Вы победили!!!')
 #             break
 #     else:
 #         print(f'\nИгрок {pc_player.name} пропускает ход')
 #         pass
+
