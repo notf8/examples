@@ -7324,7 +7324,7 @@ print(c.answer)
 #         self.rank = rank
 #         self.lear = lear
 #
-#     def __str__(self):
+#     def __str__(self): # Это для печати инфы о каждой карте в словаре
 #         return f'Карта: {self.rank} {self.lear}'
 #
 #
@@ -7333,13 +7333,13 @@ print(c.answer)
 #     lear_list = ['spades', 'hearts', 'clubs', 'Diamonds']
 #     dec_dict = {}
 #
-#     def make_a_deck(self):
-#         for i_rank in self.rank_list:
-#             for i_lear in self.lear_list:
+#     def make_a_deck(self): # Заполняем колоду двумя циклами
+#         for i_rank in self.rank_list: # Внешний для всего списка карт
+#             for i_lear in self.lear_list: # внутренний для списка мастей
 #                 rank = i_rank
 #                 lear = i_lear
 #                 card = Card(rank, lear)
-#                 self.dec_dict[card] = 1
+#                 self.dec_dict[card] = 1 # ну и собираем составной ключ из card, а значение у всех 1 (оно в принципе не потребуется дальше)
 #     # # Для проверки работы функции сбора колоды карт
 #     # def dict_view(self):
 #     #     for i_dict in self.dec_dict.keys():
@@ -7353,16 +7353,16 @@ print(c.answer)
 #         self.card_list = []
 #
 #     def get_gard(self):
-#         nex_card = random.choice(list(Deck.dec_dict.keys()))
-#         self.card_list.append(str(nex_card).split())
-#         Deck.dec_dict.pop(nex_card)
+#         nex_card = random.choice(list(Deck.dec_dict.keys())) # Тут нужно превратить в список все ключи, иначе получим ошибку диопазона
+#         self.card_list.append(str(nex_card).split()) # полученный ключ нужно превратить в строку, что бы можно было сверять его значения с условиями по срезу строки
+#         Deck.dec_dict.pop(nex_card) # Удаляем из колоды карту, которую отдали игроку (что бы они не повторялись)
 #         print(f'\nУ {self.name} на руках карты:')
 #         self.card_list_view()
 #         print('Сумма карт:', self.sum_card())
 #
 #     def card_list_view(self):
 #         for i_card in self.card_list:
-#             print(*i_card)
+#             print(*i_card) # выводим список карт без кавычек и значков списка (для этого просто добавляем '*')
 #
 #     def sum_card(self):
 #         summ = 0
@@ -7374,7 +7374,7 @@ print(c.answer)
 #             elif i_card[1] == 'Ace' and summ > 10:
 #                 summ += 1
 #             else:
-#                 summ += int(i_card[1])
+#                 summ += int(i_card[1]) # тут как раз по срезу превращаем значение в цифру, если это не картинка
 #         return summ
 #
 #     def info(self):
