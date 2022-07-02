@@ -7448,8 +7448,8 @@ print(c.answer)
 #     def display_board(self):
 #         print('-' * 13)
 #         for i_cell in range(3):
-#             print('|', self.board[0 + i_cell * 3],
-#                   '|', self.board[1 + i_cell * 3],
+#             print('|', self.board[0 + i_cell * 3], # Тут умножаем индекс из цикла на 3 - так он будет соот-ть индексу цифры из списка board
+#                   '|', self.board[1 + i_cell * 3], # Ну и т.к. в ряду всего три клетки, прибавляем умноженный индекс к 0, 1, 2
 #                   '|', self.board[2 + i_cell * 3], '|')
 #             print('-' * 13)
 #
@@ -7461,17 +7461,17 @@ print(c.answer)
 #
 #     def make_a_move(self):
 #         valid = False
-#         while not valid:
+#         while not valid: # False до тех пор, пока корректность ввода не подтверждена
 #             player_answer = input(f'Куда поставим {self.symbol} ? ')
 #             try:
-#                 player_answer = int(player_answer)
+#                 player_answer = int(player_answer) # Тут хитро проверяем, является ли введенная инфа цифрой с помощью try
 #             except:
 #                 print('Не корректный ввод. Нужно ввести число')
 #                 continue
 #             if 1 <= player_answer <= 9:
-#                 if str(Board.board[player_answer - 1]) not in 'X0':
-#                     Board.board[player_answer - 1] = self.symbol
-#                     valid = True
+#                 if str(Board.board[player_answer - 1]) not in 'X0': # Тут проверяем, не стоит ли уже в списке board 'Х' или '0'
+#                     Board.board[player_answer - 1] = self.symbol # Если нет, то меняем элемент списка board на 'Х' или '0'
+#                     valid = True # Подтверждаем корректность замены
 #                 else:
 #                     print('Эта клетка уже занята')
 #             else:
@@ -7488,10 +7488,10 @@ print(c.answer)
 #         )
 #
 #     def check_win(self):
-#         for each in self.win_seq:
-#             if Board.board[each[0]] == Board.board[each[1]] == Board.board[each[2]]:
-#                 return Board.board[each[0]]
-#         return False
+#         for each in self.win_seq: # Тут сверяем каждую комбинацию из win_seq и если значения каждого индекса в board из комбинации
+#             if Board.board[each[0]] == Board.board[each[1]] == Board.board[each[2]]: # например (0, 1, 2) заполнены одним символом (равны друг другу)
+#                 return Board.board[each[0]] # то возвращаем символ, которым они заполнены, например Board.board[each[0]] - заполнен "Х"
+#         return False # что бы понять, кто выиграл. Если все три элемента не равны друг другу, то возвращаем False
 #
 # def game():
 #     display_instruction()
@@ -7499,19 +7499,20 @@ print(c.answer)
 #     result = Victories()
 #     counter = 0
 #     win = False
-#     while not win:
+#     while not win: # Пока флаг вин не сработал, продолжаем играть
 #         board.display_board()
 #         if counter % 2 == 0:
 #             Player('X').make_a_move()
 #         else:
 #             Player('0').make_a_move()
 #         counter += 1
-#         if counter > 4:
+#         if counter > 4: # Проверять возможность выигрыша начинаем после 4-го хода, раньше бессмысленно
 #             tmp = result.check_win()
 #             if tmp:
 #                 print(tmp, 'Выиграл!')
+#                 win = True # переключаем флаг win
 #                 break
-#         if counter == 9:
+#         if counter == 9: # Если после 9 ходов не нашелся победитель, прерываем игру (т.к. клетки пустые уже закончились)
 #             print('Ничья!')
 #     board.display_board()
 #
