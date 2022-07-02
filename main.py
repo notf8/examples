@@ -7436,3 +7436,84 @@ print(c.answer)
 #         print(f'\nИгрок {pc_player.name} пропускает ход')
 #         pass
 
+Задача 9. Крестики-нолики Напишите программу, которая реализует игру «Крестики-нолики». Да, это всё условие задачи
+# def display_instruction():
+#     print(''' \nСыграем в "крестики-нолики". Для того что бы сделать ход, введи номер клетки, '
+#           'в которую хочешь поставить символ (Х или 0)''')
+#
+#
+# class Board:
+#     board = list(range(1, 10))
+#
+#     def display_board(self):
+#         print('-' * 13)
+#         for i_cell in range(3):
+#             print('|', self.board[0 + i_cell * 3],
+#                   '|', self.board[1 + i_cell * 3],
+#                   '|', self.board[2 + i_cell * 3], '|')
+#             print('-' * 13)
+#
+#
+# class Player:
+#
+#     def __init__(self, symbol):
+#         self.symbol = symbol
+#
+#     def make_a_move(self):
+#         valid = False
+#         while not valid:
+#             player_answer = input(f'Куда поставим {self.symbol} ? ')
+#             try:
+#                 player_answer = int(player_answer)
+#             except:
+#                 print('Не корректный ввод. Нужно ввести число')
+#                 continue
+#             if 1 <= player_answer <= 9:
+#                 if str(Board.board[player_answer - 1]) not in 'X0':
+#                     Board.board[player_answer - 1] = self.symbol
+#                     valid = True
+#                 else:
+#                     print('Эта клетка уже занята')
+#             else:
+#                 print('Не корректный ввод. Для хода нужно ввести число от 1 до 9')
+#
+# class Victories:
+#
+#     def __init__(self):
+#         self.win_seq = (
+#             (0, 1, 2), (3, 4, 5),
+#             (6, 7, 8), (0, 3, 6),
+#             (1, 4, 7), (2, 5, 8),
+#             (0, 4, 8), (2, 4, 6)
+#         )
+#
+#     def check_win(self):
+#         for each in self.win_seq:
+#             if Board.board[each[0]] == Board.board[each[1]] == Board.board[each[2]]:
+#                 return Board.board[each[0]]
+#         return False
+#
+# def game():
+#     display_instruction()
+#     board = Board()
+#     result = Victories()
+#     counter = 0
+#     win = False
+#     while not win:
+#         board.display_board()
+#         if counter % 2 == 0:
+#             Player('X').make_a_move()
+#         else:
+#             Player('0').make_a_move()
+#         counter += 1
+#         if counter > 4:
+#             tmp = result.check_win()
+#             if tmp:
+#                 print(tmp, 'Выиграл!')
+#                 break
+#         if counter == 9:
+#             print('Ничья!')
+#     board.display_board()
+#
+# game()
+# input('Нажмите enter для входа')
