@@ -1534,3 +1534,65 @@ print(c.answer)
 # print(my_student)
 # my_employee = Employee(name='Bob', age=25, salary=10000, company='Google') #Более 7 параметров, как правило не передают
 # print(my_employee)
+
+Задача 1. Юниты Есть базовый класс «Юнит», который определяется количеством здоровья (хитпоинты). У Юнита есть действие
+«получить урон» (базовый класс получает 0 урона), солдат - урон = переданному, граждански - урон = переданный х 2
+# class Unit:
+#
+#     def __init__(self, health):
+#         self.__health = health
+#
+#     def take_damage(self, damage=10):
+#         self.__health -= damage
+#
+#     def get_health(self):
+#         return self.__health
+#
+#     def __str__(self):
+#         return 'Состояние здоровья юнита: {}'.format(self.__health)
+#
+#
+# class Soldier(Unit):
+#     def __init__(self, health):
+#         super().__init__(health)
+#
+#     def __str__(self):
+#         info = super().__str__()
+#         info = '\n'.join(
+#             (
+#                 '\nКласс: Солдат, получает урон',
+#                 info
+#             )
+#         )
+#         return info
+#
+#     def take_damage(self, damage=any):# Здесь присваиваем damage значение по умолчанию any. Иначе будет не соответствие родителем
+#         super(Soldier, self).take_damage(damage) # Если использовали инкапсуляцию, то переопределить атрибут метода можно
+#         # так, иначе не получится получить доступ к атрибутам родительского класса
+#
+#
+# class Civilian(Unit):
+#
+#     def __init__(self, health):
+#         super().__init__(health)
+#
+#     def __str__(self):
+#         info = super().__str__()
+#         info = '\n'.join(
+#             (
+#                 '\nКласс: Гражданский, получает двойной урон',
+#                 info
+#             )
+#         )
+#         return info
+#
+#     def take_damage(self, damage=any): # Здесь присваиваем damage значение по умолчанию any. Иначе будет не соответствие родителем
+#         super(Civilian, self).take_damage(damage * 2) # Если использовали инкапсуляцию, то переопределить атрибут метода можно
+#         # так, иначе не получится получить доступ к атрибутам родительского класса
+#
+# my_s = Soldier(100)
+# my_s.take_damage(10)
+# print(my_s)
+# my_c = Civilian(100)
+# my_c.take_damage(10)
+# print(my_c)
