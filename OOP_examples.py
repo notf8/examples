@@ -1446,3 +1446,20 @@ print(c.answer)
 # marineWarRobot = MarineWarRobot('LVC-258', 25)
 # print(marineWarRobot)
 # marineWarRobot.operate()
+
+Задача 3. Кастомные исключения Исключения в Python также являются классами, и все они берут свои истоки от самого
+главного класса — Exception. И для создания своего собственного класса ошибки достаточно написать его дочерний класс.
+Например: '''class MyOwnException(Exception)'''
+# class MyOwnException(Exception):
+#     pass
+#
+# with open('answer.txt', 'r') as file:
+#     for i_line in file:
+#         try:
+#             if i_line.strip().split()[0] < i_line.strip().split()[1]:
+#                 raise MyOwnException()
+#         except MyOwnException:
+#             print('Это моя ошибка!')
+#         finally:
+#             result = round(int(i_line.strip().split()[0]) / int(i_line.strip().split()[1]), 2)
+#             print(result)
