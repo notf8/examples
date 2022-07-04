@@ -7589,9 +7589,6 @@ print(c.answer)
 #     def get_y(self):
 #         return self.__y
 #
-#
-#
-# # while True:
 # action = input('\nХотите ввести координаты? ').lower()
 # if action == 'yes' or action == 'да':
 #     point = Point()
@@ -7605,3 +7602,45 @@ print(c.answer)
 # point.set_coordinates_y(4)
 # print('X:', point.get_x())
 # print('Y:', point.get_y())
+
+Задача 2. Человек Реализуйте класс «Человек», который инициализируется именем (имя должно состоять только из букв) и возрастом
+(должен быть в диапазоне от 0 до 100), а внутри класса считается общее количество инициализированных объектов. Реализуйте
+сокрытие данных для всех атрибутов (как статических, так и динамических), а для изменения и получения данных объекта
+напишите специальные геттеры и сеттеры. При тестировании класса измените приватный атрибут (например, возраст) двумя
+способами: сеттером и «крайне не рекомендуемым», который был показан в уроке
+# class Human:
+#     __count = 0 # __ нужны для защит от изменения случайно (извне класса)
+#
+#     def __init__(self, name, age):
+#         self.set_name(name) #Вместо нижних подчеркиваний ставим функцию (она же сразу проверит введенные данные при инициалихации
+#         self.set_age(age)
+#         Human.__count += 1
+#     def __str__(self):
+#         return 'Имя {}\tВозраст {}'.format(self.__name, self.__age)
+#     def get_count(self): #Что бы получить данные из класса, нужно дописать метод (их называют геттеры):
+#         return self.__count
+#     def get_age(self):
+#         return self.__age
+#     def get_name(self):
+#         return self.__name
+#     def set_age(self, age): # А это метод, что бы установить параметры в классе ,называется сеттер
+#         if age in range(1, 90):
+#             self.__age = age
+#         else:
+#             raise Exception('Недопустимый возраст')
+#     def set_name(self, name):
+#         if name.isalpha():
+#             self.__name = name
+#         else:
+#             raise Exception('Имя должно содержать только буквы')
+#
+#
+# misha = Human('Misha', 20) # Если в Имя добавить цифру, получим ошибку, метод проверит на корректность сам
+# tom = Human('Tom', 25)
+# print(misha.get_count())
+# new_age = 80
+# misha.set_age(new_age)
+# print(misha.get_age())
+# misha._Human__name = 'Vasya' # Это запрещенный прием (sucker_punch)
+# print(misha.get_name())
+
