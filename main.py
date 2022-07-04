@@ -7643,4 +7643,40 @@ print(c.answer)
 # print(misha.get_age())
 # misha._Human__name = 'Vasya' # Это запрещенный прием (sucker_punch)
 # print(misha.get_name())
-
+========================================================================================================================
+Наследование'''''Это подклассы или дочерние классы
+Наследование - это механизм, позволяюший создать новый класс на основе уже существующего. Используется там, где можно
+выделить общие свойства и поведение разных объектов'''''
+# class Pat: # Это родительский класс (базовый или суперкласс)
+#     legs = 4
+#     has_tail = True
+#
+#     def __str__(self):
+#         tail = 'да' if self.has_tail else 'нет'
+#         return 'Всего ног: {legs}\nХвост присутствует - {has_tail}'.format(
+#             legs=self.legs,
+#             has_tail=tail
+#         )
+#
+# class Cat(Pat): # Наследуем атрибуты класса Pat указав его в скобках, что бы не дублировать код
+#     def sound(self):
+#         print('Мяу!')
+#
+# class Dog(Pat):
+#     def sound(self):
+#         print('Гав!')
+#
+# class Frog(Pat):
+#     has_tail = False
+#     def sound(self):
+#         print('Ква!')
+#
+# cat = Cat()
+# dog = Dog()
+# frog = Frog()
+# print(frog)
+# print(cat)
+# print(dog)
+# cat.sound()
+# dog.sound()
+# frog.sound()
