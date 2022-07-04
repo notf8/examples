@@ -1463,3 +1463,74 @@ print(c.answer)
 #         finally:
 #             result = round(int(i_line.strip().split()[0]) / int(i_line.strip().split()[1]), 2)
 #             print(result)
+
+Полиморфизм - принцип предполагающий возможность изменения функционала, унаследованного от базового класса
+# class Human:
+#     __count = 0 # __ нужны для защит от изменения случайно (извне класса)
+#
+#     def __init__(self, name, age):
+#         self.set_name(name) #Вместо нижних подчеркиваний ставим функцию (она же сразу проверит введенные данные при инициалихации
+#         self.set_age(age)
+#         Human.__count += 1
+#
+#     def __str__(self):
+#         return 'Имя {}\tВозраст {}'.format(self.__name, self.__age)
+#
+#     def get_count(self): #Что бы получить данные из класса, нужно дописать метод (их называют геттеры):
+#         return self.__count
+#
+#     def get_age(self):
+#         return self.__age
+#
+#     def get_name(self):
+#         return self.__name
+#
+#     def set_age(self, age): # А это метод, что бы установить параметры в классе ,называется сеттер
+#         if age in range(1, 90):
+#             self.__age = age
+#         else:
+#             raise Exception('Недопустимый возраст')
+#
+#     def set_name(self, name):
+#         if name.isalpha():
+#             self.__name = name
+#         else:
+#             raise Exception('Имя должно содержать только буквы')
+#
+#
+# class Student(Human):
+#     def __init__(self, name, age, university):
+#         super().__init__(name, age)
+#         self.university = university
+#
+#     def __str__(self):
+#         info = super().__str__() # Переопределяем родительскую __str__ для этого класса, что бы вывести инфу и его и родителя
+#         info = '\n'.join(
+#             (
+#                 info,
+#                 'Студент учится в университет {}'.format(self.university)
+#             )
+#         )
+#         return info
+#
+#
+# class Employee(Human):
+#     def __init__(self, name, age, company, salary):
+#         super().__init__(name, age)
+#         self.company = company
+#         self.salary = salary
+#
+#     def __str__(self):
+#         info = super().__str__() # Переопределяем родительскую __str__ для этого класса, что бы вывести инфу и его и родителя
+#         info = '\n'.join(
+#             (
+#                 info,
+#                 'Компания: {}\tЗарплата {}'.format(self.company, self.salary)
+#             )
+#         )
+#         return info
+#
+# my_student = Student(name='Tom', age=25, university='MSU') # Передача именованных аргументов - правила хорошего тона
+# print(my_student)
+# my_employee = Employee(name='Bob', age=25, salary=10000, company='Google') #Более 7 параметров, как правило не передают
+# print(my_employee)
