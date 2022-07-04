@@ -7553,3 +7553,55 @@ print(c.answer)
 # new_age = 80
 # misha.set_age(new_age)
 # print(misha.get_age())
+
+Задача 1. Координаты точки В одной из практик предыдущего модуля была задача на реализацию класса «Точка». Модернизируйте
+класс по следующему условию: объект «Точка» на плоскости имеет координаты x и y; при создании новой точки могут
+передаваться пользовательские значения координат, по умолчанию x = 0, y = 0.
+Предоставление информации о точке (используйте магический метод str). Геттер и сеттер для x. Геттер и сеттер для y
+# class Point:
+#     count = 0
+#
+#     def __init__(self, x=0, y=0):
+#         Point.count += 1 # Если нужно передать счетчик в сам класc, то обращаемся к нему через точку (а не через self к параметру)
+#         self.set_coordinates_y(y)
+#         self.set_coordinates_x(x)
+#
+#
+#     def __str__(self):
+#         return '\nТочка номер: {}\nКоординаты по "X": {}\nКоординаты по "Y": {}'.format(
+#                 self.count, self.__x, self.__y)
+#
+#     def set_coordinates_x(self, x):
+#         if isinstance(x, int):
+#             self.__x = x
+#         else:
+#             raise Exception('Координаты должны быть числом')
+#
+#     def set_coordinates_y(self, y):
+#         if isinstance(y, int):
+#             self.__y = y
+#         else:
+#             raise Exception('Координаты должны быть числом')
+#
+#     def get_x(self):
+#         return self.__x
+#
+#     def get_y(self):
+#         return self.__y
+#
+#
+#
+# # while True:
+# action = input('\nХотите ввести координаты? ').lower()
+# if action == 'yes' or action == 'да':
+#     point = Point()
+#     x = point.set_coordinates_x(int(input('\nВведите координаты точки Х: ')))
+#     y = point.set_coordinates_y(int(input('Введите координаты точки Y: ')))
+# else:
+#     point = Point()
+#
+# print(point)
+# point.set_coordinates_x(6)
+# point.set_coordinates_y(4)
+# print('X:', point.get_x())
+# print('Y:', point.get_y())
