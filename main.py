@@ -7697,9 +7697,9 @@ print(c.answer)
 #
 #
 # class WarShip(Ship):
-#     def __init__(self, model, gun): # Инит нужен что бы инициализировать корабль со втроым атрибутом "gun",  (в супер классе он один "model")
+#     def __init__(self, model, gun): # Инит нужен что бы инициализировать корабль со вторым атрибутом "gun",  (в супер классе он один "model")
 #         super().__init__(model) #Тут вызываем инит родительского(супер класса), правой клавишей по выделению и вызвать context menu, seuper class call
-#         self.gun = gun
+#         self.gun = gun # И только потом дополняем новый объект, нужными нам итрибутами
 #
 #     def attack(self):
 #         print('\nКорабль атакует с помощью оружия', self.gun)
@@ -7728,3 +7728,55 @@ print(c.answer)
 # warship.attack()
 # cargoShip = CargoShip('qwe3')
 # cargoShip.load()
+
+Задача 2. Роботы Три варианта роботов, естьб модель и допы для классов. Одно общее действие
+# class Robot:
+#     def __init__(self, model):
+#         self.model = model
+#
+#     def operate(self):
+#         return self.operate() # Т.к. действие общий метод для всех, просто возвращаем его
+#
+#     def __str__(self):
+#         return "\nМодель робота {model}".format(
+#             model=self.model
+#         )
+#
+#
+# class RobotCleaner(Robot):
+#     def __init__(self, model):
+#         super().__init__(model)
+#         self.dust_bug = 0
+#
+#     def operate(self):
+#         self.dust_bug += 1
+#         print('Пылесосим пол! Заполненность мешка для пыли', self.dust_bug)
+#
+#
+# class WarRobot(Robot):
+#     def __init__(self, model, gun):
+#         super().__init__(model)
+#         self.gun = gun
+#
+#     def operate(self):
+#         print('Защищаяю военный объект с помощью оружия', self.gun)
+#
+#
+# class MarineWarRobot(Robot):
+#     def __init__(self, model, depth):
+#         super().__init__(model)
+#         self.depth = depth
+#
+#     def operate(self):
+#         print('Защищаяю военный объект по водой, на глубине:', self.depth)
+#
+#
+# robotCleaner = RobotCleaner('sad-5')
+# print(robotCleaner)
+# robotCleaner.operate()
+# warRobot = WarRobot('SDF-45', 'Рельсотрон')
+# print(warRobot)
+# warRobot.operate()
+# marineWarRobot = MarineWarRobot('LVC-258', 25)
+# print(marineWarRobot)
+# marineWarRobot.operate()
