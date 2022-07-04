@@ -7680,3 +7680,51 @@ print(c.answer)
 # cat.sound()
 # dog.sound()
 # frog.sound()
+
+Задача 1. Корабли Даны два класса кораблей — грузовой и военный. У каждого из этих кораблей есть своя модель, и каждый
+может сделать два действия: сообщить свою модель и идти по воде
+# class Ship:
+#     def __init__(self, model):
+#         self.__model = model
+#
+#     def __str__(self):
+#         return "\nМодель корабля: {model}".format(
+#             model=self.__model
+#         )
+#
+#     def sail(self):
+#         return "\nКорабль куда-то поплыл!"
+#
+#
+# class WarShip(Ship):
+#     def __init__(self, model, gun): # Инит нужен что бы инициализировать корабль со втроым атрибутом "gun",  (в супер классе он один "model")
+#         super().__init__(model) #Тут вызываем инит родительского(супер класса), правой клавишей по выделению и вызвать context menu, seuper class call
+#         self.gun = gun
+#
+#     def attack(self):
+#         print('\nКорабль атакует с помощью оружия', self.gun)
+#
+#
+# class CargoShip(Ship):
+#     def __init__(self, model):
+#         super().__init__(model) # Обязательно вначале вызвать супер инит(род. класса) и только потом дописывать сэлф
+#         self.tonnage_load = 0 # Т.к. передавать тонаж мы не планируем (в отличи от оружия), просто инциализируем его в инит
+#
+#     def load(self):
+#         print('\nЗагружаем корабль!')
+#         self.tonnage_load += 1
+#         print('Текущая загруженность корабля', self.tonnage_load)
+#
+#     def unload(self):
+#         if self.tonnage_load > 0:
+#             print('\nРазгружаем корабль!')
+#             self.tonnage_load -= 1
+#         else:
+#             print('\nКорабль уже разгружен!')
+#         print('Текущая загруженность корабля', self.tonnage_load)
+#
+#
+# warship = WarShip('zxc2', 'Пушки')
+# warship.attack()
+# cargoShip = CargoShip('qwe3')
+# cargoShip.load()
