@@ -1465,12 +1465,31 @@ print(c.answer)
 #             print(result)
 
 Полиморфизм - принцип предполагающий возможность изменения функционала, унаследованного от базового класса
+Плюс разбор документации
 # class Human:
+#     # Такая документация называется Docstring
+#     """
+#     Базовый класс описывающий человека
+#     __count: общее количество человек
+#
+#     Args:
+#         name (str): Передается имя человека
+#         age (int): Передается возраст
+#
+#     Attributes:
+#         max_count (int): Максимальное количество инстансов
+#         (__скрытые агрументы как правило не описывают)
+#         (есть прям программы для проверки документации - линтеры)
+#     """
 #     __count = 0 # __ нужны для защит от изменения случайно (извне класса)
+#     max_count = 5
 #
 #     def __init__(self, name, age):
 #         self.set_name(name) #Вместо нижних подчеркиваний ставим функцию (она же сразу проверит введенные данные при инициалихации
 #         self.set_age(age)
+#         self.location = 'Moscow'
+#         if self.max_count < self.__count:
+#             raise Exception('Слишком много людей')
 #         Human.__count += 1
 #
 #     def __str__(self):
@@ -1480,12 +1499,22 @@ print(c.answer)
 #         return self.__count
 #
 #     def get_age(self):
+#         """
+#         Геттер для получения возраста
+#         :rtype int
+#         :return: age
+#         """
 #         return self.__age
 #
 #     def get_name(self):
 #         return self.__name
 #
 #     def set_age(self, age): # А это метод, что бы установить параметры в классе ,называется сеттер
+#         """
+#         Сеттер для установки возраста
+#         :param age: int
+#         :raise Exception: Если возраст не в границах от 1 до 90, то вызывается исключение
+#         """
 #         if age in range(1, 90):
 #             self.__age = age
 #         else:
@@ -1515,6 +1544,18 @@ print(c.answer)
 #
 #
 # class Employee(Human):
+#     """
+#     Класс: Работник. Родитель: Person
+#
+#     Args:
+#         name (str): Передается имя человека
+#         age (int): Передается возраст
+#
+#         Attributes:
+#         max_count (int): Максимальное количество инстансов
+#
+#         job (str): Должность работника
+#     """
 #     def __init__(self, name, age, company, salary):
 #         super().__init__(name, age)
 #         self.company = company
@@ -1534,6 +1575,7 @@ print(c.answer)
 # print(my_student)
 # my_employee = Employee(name='Bob', age=25, salary=10000, company='Google') #Более 7 параметров, как правило не передают
 # print(my_employee)
+# print(Human.__doc__) # Распечатка документации
 
 Задача 1. Юниты Есть базовый класс «Юнит», который определяется количеством здоровья (хитпоинты). У Юнита есть действие
 «получить урон» (базовый класс получает 0 урона), солдат - урон = переданному, граждански - урон = переданный х 2
