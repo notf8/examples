@@ -1690,3 +1690,65 @@ print(c.answer)
 # print(my_rocket)
 # my_rocket.landing()
 # print(my_rocket)
+
+Задача 1. Налоги Реализуйте иерархию классов, описывающих имущество налогоплательщиков. Она должна состоять из базового
+класса Property и производных от него классов Apartment, Car и CountryHouse. Каждый дочерний класс должен иметь конструктор
+с одним параметром, передающий свой параметр конструктору базового класса
+# class Property:
+#
+#     def __init__(self, worth):
+#         self.worth = worth
+#
+#     def tax_method(self):
+#         pass
+#
+#
+# class Apartment(Property):
+#
+#     def __init__(self, worth):
+#         super().__init__(worth)
+#
+#     def tax_method(self):
+#         return self.worth / 1000
+#
+#
+# class Car(Property):
+#
+#     def __init__(self, worth):
+#         super().__init__(worth)
+#
+#     def tax_method(self):
+#         return self.worth / 200
+#
+#
+# class CountryHouse(Property):
+#
+#     def __init__(self, worth):
+#         super().__init__(worth)
+#
+#     def tax_method(self):
+#         return self.worth / 500
+#
+#
+# print('\n={:-^45}='.format('Расчет налогов на имущество'))
+# amount_money = int(input('\nВведите количество имеющихся денег: '))
+# print('Введите стоимость имущества: ')
+#
+# my_apartment = Apartment(float(input('\nСтоимость квартиры: ')))
+# print(f'Налог на квартиру {my_apartment.tax_method()}')
+#
+# my_car = Car(float(input('\nСтоимость машины: ')))
+# print(f'Налог на машину {my_car.tax_method()}')
+#
+# my_CH = CountryHouse(float(input('\nСтоимость загородного дома: ')))
+# print(f'Налог на загородный дом {my_CH.tax_method()}')
+#
+# sum_tax = my_apartment.tax_method() + my_car.tax_method() + my_CH.tax_method()
+# if sum_tax > amount_money:
+#     print(f'\nВсего налога на сумму {sum_tax}, у Вас в наличии: {amount_money}')
+#     diff = sum_tax - amount_money
+#     print(f'Для уплаты налогов Вам не хватает: {round(diff, 2)}')
+# else:
+#     print(f'\nВсего налога на сумму {sum_tax}\nУ вас достаточно денег!')
+
+
