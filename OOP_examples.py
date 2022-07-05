@@ -1820,4 +1820,33 @@ print(c.answer)
 #         print(f'День: {count}, совершен проступок, минус в карму!')
 #         karma -= random.randint(1, 7)
 
-
+Задача 3. Свой словарь Реализуйте класс MyDict, который будет вести себя точно так же, как и обычный словарь, за исключением того,
+что метод get по умолчанию будет возвращать не None, а число 0
+# class MyDict(dict):
+#     """
+#     Создаем свой класс дневника. Родитель: Dict
+#     Наследуем методы родителельского класса
+#     """
+#     def get(self, key, default_value=0):
+#         """
+#         Переопределяем родительский метод,
+#         меняем возвращаемое по умолчанию значение
+#
+#         :param key: Type = Any
+#         :param default_value: 0
+#         :return: Value, default_value
+#         :rtype: Value = Any, default_value (int)
+#         """
+#         if key in self:
+#             return self[key]
+#         else:
+#             return default_value
+#
+# new_dict = MyDict()
+# new_dict['A'] = 12
+# new_dict[18] = 5
+# new_dict['IDK'] = 0.35
+#
+# print(new_dict)
+# print(new_dict.get('A'))
+# print(new_dict.get('B'))
