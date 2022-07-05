@@ -1395,7 +1395,7 @@ print(c.answer)
 # cargoShip = CargoShip('qwe3')
 # cargoShip.load()
 
-Задача 2. Роботы Три варианта роботов, естьб модель и допы для классов. Одно общее действие
+Задача 2. Роботы Три варианта роботов, есть модель и допы для классов. Одно общее действие
 # class Robot:
 #     def __init__(self, model):
 #         self.model = model
@@ -1750,5 +1750,74 @@ print(c.answer)
 #     print(f'Для уплаты налогов Вам не хватает: {round(diff, 2)}')
 # else:
 #     print(f'\nВсего налога на сумму {sum_tax}\nУ вас достаточно денег!')
+
+Задача 2. Карма Один буддист-программист решил создать свой симулятор жизни, в котором нужно набрать 500 очков кармы
+(это константа), чтобы достичь просветления. Каждый день вызывается специальная функция one_day(), которая возвращает
+количество кармы от 1 до 7 и может с вероятностью 1 к 10 выкинуть одно из исключений)
+# import random
+#
+# class MyOwnException(Exception):
+#     pass
+#
+#
+# class KillError(MyOwnException):
+#     """
+#     Класс: "Своя ошибка", родитель: MyOwnException
+#     """
+#     def __str__(self):
+#
+#         """
+#         Функция возвращает строковое описание элемента
+#
+#         :return: (text)
+#         :rtype (str)
+#         """
+#
+#         return 'Убил комарика - попортил карму!'
+#
+#
+# class DrunkError(MyOwnException):
+#     def __str__(self):
+#         return 'Перебрал горячительного, недобрал кармы'
+#
+#
+# class CarCrashError(MyOwnException):
+#     def __str__(self):
+#         return 'Покоцал тачку?  Минусим бюджет и карму'
+#
+#
+# class GluttonyError(MyOwnException):
+#     def __str__(self):
+#         return 'Переел? В весе плюс, в карме минус'
+#
+#
+# class DepressionError(MyOwnException):
+#     def __str__(self):
+#         return 'Депрессия заминусила карму'
+#
+#
+# def one_day(count):
+#     if random.choices((0, 1), (1 - 1 / 10, 1 / 10))[0]:
+#         with open('karma.log', 'a', encoding='utf-8') as file:
+#             rand_exc = random.choice(
+#                 [KillError(), DrunkError(), CarCrashError(),
+#                  GluttonyError(), DepressionError()]
+#             )
+#             file.write(f'День: {count}, проступок: {rand_exc}\n')
+#             raise rand_exc
+#     else:
+#         return random.randint(1, 7)
+#
+#
+# count = 1
+# karma = 0
+# while karma < 500:
+#     try:
+#         karma += one_day(count)
+#         print(f'День: {count}, карма: {karma}')
+#         count += 1
+#     except (KillError, DrunkError, CarCrashError, GluttonyError, DepressionError):
+#         print(f'День: {count}, совершен проступок, минус в карму!')
+#         karma -= random.randint(1, 7)
 
 
