@@ -1757,7 +1757,7 @@ print(c.answer)
 # import random
 #
 # class MyOwnException(Exception):
-#     pass
+#     pass                         # Просто заводим род.класс и пасуем (для своих ошибок)
 #
 #
 # class KillError(MyOwnException):
@@ -1798,11 +1798,11 @@ print(c.answer)
 #
 # def one_day(count):
 #     if random.choices((0, 1), (1 - 1 / 10, 1 / 10))[0]:
-#         with open('karma.log', 'a', encoding='utf-8') as file:
+#         with open('karma.log', 'a', encoding='utf-8') as file: # Для выбора ошибки, оборачиваем их все в []
 #             rand_exc = random.choice(
 #                 [KillError(), DrunkError(), CarCrashError(),
 #                  GluttonyError(), DepressionError()]
-#             )
+#             )                                               # Для райза пишем каждую ошибку со скобками
 #             file.write(f'День: {count}, проступок: {rand_exc}\n')
 #             raise rand_exc
 #     else:
@@ -1816,7 +1816,7 @@ print(c.answer)
 #         karma += one_day(count)
 #         print(f'День: {count}, карма: {karma}')
 #         count += 1
-#     except (KillError, DrunkError, CarCrashError, GluttonyError, DepressionError):
+#     except (KillError, DrunkError, CarCrashError, GluttonyError, DepressionError): # А вот в except можно просто писать имена ошибок(без скобкок)
 #         print(f'День: {count}, совершен проступок, минус в карму!')
 #         karma -= random.randint(1, 7)
 
