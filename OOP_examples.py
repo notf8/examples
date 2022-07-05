@@ -1596,3 +1596,55 @@ print(c.answer)
 # my_c = Civilian(100)
 # my_c.take_damage(10)
 # print(my_c)
+
+Задача 2. Полёт Иногда для реализации дочерних классов используется так называемый класс-роль, где также описываются
+общие атрибуты и  методы, но в программе инициализируются объекты только дочерних классов, а базовый класс-роль не трогается.
+ К примеру, что общего у бабочки и ракеты? Они обе могут летать и приземляться
+# class CanFly:
+#     height = 0
+#     speed = 0
+#
+#     def fly_up(self):
+#         pass
+#
+#     def flying(self):
+#         pass
+#
+#     def landing(self):
+#         self.height = 0
+#         self.speed = 0
+#
+#     def __str__(self):
+#         return "Высота: {}\nСкорость: {}".format(self.height, self.speed)
+#
+# class Butterfly(CanFly):
+#     def __init__(self, ):
+#         super().__init__()
+#
+#     def fly_up(self):
+#         self.height = 1
+#         print('Бабочка взлетела!')
+#
+#     def flying(self):
+#         self.speed = 0.5
+#         print('Бабочка летит!')
+#
+#
+# class Rocket(CanFly):
+#     def __init__(self):
+#         super().__init__()
+#
+#     def fly_up(self):
+#         self.height = 500
+#         self.speed = 1000
+#         print('Рокета взлетела!')
+#
+# my_butter = Butterfly()
+# my_butter.fly_up()
+# my_butter.flying()
+# print(my_butter)
+# my_rocket = Rocket()
+# my_rocket.fly_up()
+# print(my_rocket)
+# my_rocket.landing()
+# print(my_rocket)
