@@ -1850,3 +1850,322 @@ print(c.answer)
 # print(new_dict)
 # print(new_dict.get('A'))
 # print(new_dict.get('B'))
+
+Задача 5. А-а-автомобиль! Реализуйте класс автомобиля, а также класс, который будет описывать автобус. У автобуса, кроме
+того, что имеется у автомобиля, должны быть поля, содержащие число пассажиров и количество полученных денег, изначально
+равное нулю. Также должны быть методы «войти» и «выйти», изменяющие число пассажиров. Наконец, метод move должен быть
+переопределён, чтобы увеличивать количество денег в соответствии с количеством пассажиров и пройденным расстоянием
+# import math
+# import random
+#
+#
+# class Car:
+#     """
+#     Базовый класс Car(автомобиль) описывающий движение оного.
+#
+#     Args:
+#     x (int): передаётся координата 'х'
+#     y (int): передаётся координата 'y'
+#
+#     Attributes:
+#     x (int): координата 'x' точки нахождения Car
+#     y (int): координата 'y' точки нахождения Car
+#
+#     """
+#     def __init__(self, x, y):
+#         self.x = x
+#         self.y = y
+#
+#     def move(self, dist, angle):
+#         """
+#         Метод для вычисления точки конечного следования Car(автомобиля)
+#
+#         :param dist: передаётся дистанция на которую движется Car
+#         :rtype: int
+#
+#         :param angle: передаётся угол направления движения Car
+#         :rtype: int
+#
+#         """
+#         self.x = self.x + int(dist * math.cos(angle))
+#         self.y = self.y + int(dist * math.sin(angle))
+#         print('Едем прямо', self.x, self.y, 'дальность пути: ', dist)
+#
+#     def turn(self, dist, angle):
+#         """
+#         Метод для вычисления точки следования Car(автомобиля) при смене движения
+#         (
+#         изменение dist - расстоянии и angle - угла направления движения
+#         )
+#
+#         :param dist: передаётся дистанция на которую движется Car
+#         :rtype: int
+#
+#         :param angle: передаётся угол направления движения Car
+#         :rtype: int
+#
+#         """
+#         self.x = self.x + int(dist * math.cos(angle))
+#         self.y = self.y + int(dist * math.sin(angle))
+#         print('Поворот не туда', self.x, self.y, 'дальность пути: ', dist)
+#
+#
+# class Bus(Car):
+#     """
+#     Класс Bus(автобус). Родитель: Car(автомобиль)
+#
+#     __peoples: количество пассажиров
+#     __many: количество заработанных денег
+#     __places: количество мест в Bus(автобус)
+#
+#     Args:
+#     x (int): передаётся координата 'х'
+#     y (int): передаётся координата 'y'
+#     cost (int): передаётся величина тарифа расчёта стоимости билета
+#
+#     Attributes:
+#     cost (int): тариф для расчёта стоимости поездки
+#
+#     """
+#     __peoples = 0
+#     __many = 0
+#     __places = 24
+#
+#     def __init__(self, x, y, cost):
+#         super().__init__(x, y)
+#         self.cost = cost
+#
+#     def more_passengers(self, entered, dist):
+#         """
+#         Метод запускающий __peoples(пассажир) и собирающий many(деньги) с них.
+#
+#         :param entered: количество вошедших пассажиров
+#         :rtype: int
+#
+#         :param dist: дистанция движения калькуляции вместе с cost
+#         :rtype: int
+#
+#         """
+#         if Bus.__peoples >= Bus.__places:
+#             print('Мест нет')
+#         else:
+#             Bus.__peoples += entered
+#             Bus.__many += (self.cost * dist) * entered
+#             print(f'Зашло {entered}, оплата {Bus.__many}')
+#
+#     def less_passengers(self, people_came_out):
+#         """
+#         Метод для выхода пассажиров.
+#
+#         :param people_came_out: количество вышедших пассажиров.
+#         :rtype: int
+#
+#         """
+#         if Bus.__peoples - people_came_out < 0:
+#             print('Не может выйти больше чем есть пассажиров.')
+#         else:
+#             Bus.__peoples -= people_came_out
+#             print(f'Вышло {people_came_out}')
+#
+#     def get_many(self):
+#         """
+#         Геттер для показа суммы many(заработанных средств) в конце поездки.
+#         :return:__many
+#
+#         """
+#         return self.__many
+#
+#
+# direction = 30
+# distance = 100
+#
+# car = Car(1, 2)
+# bus = Bus(2, 4, 3)
+#
+# route = 0
+# while route != 5:
+#     route += 1
+#     if random.randint(1, 2) == 2:
+#         bus.move(distance, direction)
+#         bus.more_passengers(random.randint(1, 5), distance)
+#         bus.less_passengers(random.randint(1, 5))
+#     else:
+#         bus.turn(random.randint(1, distance), random.randint(1, direction))
+#         bus.more_passengers(random.randint(1, 5), distance)
+#         bus.less_passengers(random.randint(1, 5))
+#
+#         print(f'Заработано {bus.get_many()}')
+
+Задача 4. Компания Реализуйте иерархию классов, описывающих служащих в компании. На самом верху иерархии — класс Person,
+который описывает человека именем, фамилией и возрастом. Все атрибуты этого класса являются приватными. Далее идёт класс
+Employee и производные от него классы Manager, Agent и Worker
+# class Person:
+#     """
+#     Базовый класс описывающий служащего
+#
+#     Args:
+#         name(str): Передается имя служащего
+#         surname(str): Передается фамилия служащего
+#         age(int): Передается возраст служащего
+#     """
+#     def __init__(self, name, surname, age):
+#         self.__name = name
+#         self.__surname = surname
+#         self.set_age(age)
+#
+#     def __str__(self):
+#         return f'Имя: {self.get_name()}\nФамилия: {self.__surname}\nВозраст: {self.get_age()}'
+#
+#     def set_age(self, age):
+#         """
+#         Сеттер для установки возраста
+#         :param age: int
+#         :return: age
+#         """
+#         if age in range(1, 90):
+#             self.__age = age
+#         else:
+#             raise Exception('Недопустимый возраст')
+#
+#     def get_age(self):
+#         """
+#         Геттер для получения возраста
+#         :return: age
+#         :rtype: int
+#         """
+#         return self.__age
+#
+#     def get_name(self):
+#         """
+#         Геттер для получения имени
+#         :return: name
+#         :rtype: str
+#         """
+#         return self.__name
+#
+#     def get_surname(self):
+#         """
+#         Геттер для получения фамилии
+#         :return: surname
+#         :rtype: str
+#         """
+#         return self.__surname
+#
+#
+# class Employee(Person):
+#     """
+#     Класс: Служащий Родитель: Person
+#     Args:
+#         name(str): Передается имя служащего
+#         surname(str): Передается фамилия служащего
+#         age(int): Передается возраст служащего
+#     """
+#     def __init__(self, name, surname, age):
+#         super().__init__(name, surname, age)
+#
+#     def salary_type(self):
+#         """
+#         Базовый метод для определения заработной платы служащего.
+#         :return: None
+#         """
+#         pass
+#
+#
+# class Manager(Employee):
+#     """
+#     Класс: Менеджер  Родитель: Employee
+#     Args:
+#         name(str): Передается имя служащего
+#         surname(str): Передается фамилия служащего
+#         age(int): Передается возраст служащего
+#     """
+#     def __init__(self, name, surname, age):
+#         super().__init__(name, surname, age)
+#
+#     def salary_type(self):
+#         """
+#         Переопределенный метод для расчета ЗП менеджера.
+#         :return: salary
+#         :rtype: int
+#         """
+#         salary = 13000
+#         return salary
+#
+#
+# class Agent(Employee):
+#     """
+#     Класс: Агент  Родитель: Employee
+#     Args:
+#         name(str): Передается имя служащего
+#         surname(str): Передается фамилия служащего
+#         age(int): Передается возраст служащего
+#         volume_of_sales(int): Передается объем продаж
+#     """
+#     def __init__(self, name, surname, age, volume_of_sales):
+#         super().__init__(name, surname, age)
+#         self.volume_of_sales = volume_of_sales
+#
+#     def salary_type(self):
+#         """
+#         Переопределенный метод для расчета ЗП агента.
+#         :return: salary
+#         :rtype: float
+#         """
+#         salary = 5000 + (self.volume_of_sales * (5 / 100))
+#         return salary
+#
+#
+# class Worker(Employee):
+#     """
+#     Класс: Работник  Родитель: Employee
+#     Args:
+#         name(str): Передается имя служащего
+#         surname(str): Передается фамилия служащего
+#         age(int): Передается возраст служащего
+#         hours_worked(int): Передается кол-во отработанных часов.
+#     """
+#     def __init__(self, name, surname, age, hours_worked):
+#         super().__init__(name, surname, age)
+#         self.hours_worked = hours_worked
+#
+#     def salary_type(self):
+#         """
+#         Переопределенный метод для расчета ЗП работника.
+#         :return: salary
+#         :rtype: float
+#         """
+#         salary = self.hours_worked * 100
+#         return salary
+#
+#
+# staff_list = []
+# print('\nВнесите менеджеров в список:')
+# for _ in range(1):
+#     name = input('\nИмя: ')
+#     surname = input('Фамилия: ')
+#     age = int(input('Возраст: '))
+#     manager = Manager(name, surname, age)
+#     staff_list.append(manager)
+#
+# print('\nВнесите агентов в список:')
+# for _ in range(1):
+#     name = input('\nИмя: ')
+#     surname = input('Фамилия: ')
+#     age = int(input('Возраст: '))
+#     volume_of_sales = int(input('Объем продаж: '))
+#     agent = Agent(name, surname, age, volume_of_sales)
+#     staff_list.append(agent)
+#
+# print('\nВнесите работников в список:')
+# for _ in range(1):
+#     name = input('\nИмя: ')
+#     surname = input('Фамилия: ')
+#     age = int(input('Возраст: '))
+#     hours_worked = int(input('Отработано часов: '))
+#     worker = Worker(name, surname, age,hours_worked)
+#     staff_list.append(worker)
+#
+# for i_elem in staff_list:
+#     print(i_elem)
+#     print(f'Заработная плата сотрудника: {i_elem.salary_type()}')
+#     print()
