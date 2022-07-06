@@ -2169,3 +2169,56 @@ Employee и производные от него классы Manager, Agent и 
 #     print(i_elem)
 #     print(f'Заработная плата сотрудника: {i_elem.salary_type()}')
 #     print()
+
+Задача 7. Стек Стек — это абстрактный тип данных, представляющий собой список элементов, организованных по принципу LIFO
+(англ. last in — first out, «последним пришёл — первым вышел»). Напишите класс, который реализует стек и его возможности
+(достаточно будет добавления и удаления элемента). После этого напишите ещё один класс — «Менеджер задач».
+В менеджере задач можно выполнить команду «новая задача», в которую передаётся сама задача (str) и её приоритет (int).
+    Сам менеджер работает на основе стека (не наследование!). При выводе менеджера в консоль все задачи должны быть
+отсортированы по приоритету: чем меньше число, тем выше задача
+# class Stack:
+#     def __init__(self):
+#         self.__my_st = []
+#
+#     def __str__(self):
+#         return '; '.join(self.__my_st)
+#         # return str(self.__my_st)
+#
+#     def ad_elem(self, elem):
+#         self.__my_st.append(elem)
+#
+#     def pop(self):
+#         if len(self.__my_st) == 0:
+#             return None
+#         return self.__my_st.pop() # Метод pop удаляет последний элемент списка, если не добавлять аргументы
+#
+#
+# class TaskManager:
+#
+#     def __init__(self):
+#         self.task = dict()
+#
+#     def __str__(self):
+#         display = []
+#         if self.task:
+#             for i_priority in sorted(self.task.keys()):
+#                 display.append('{prior} {task}\n'.format(
+#                     prior=str(i_priority),
+#                     task=self.task[i_priority]
+#                 )
+#             )
+#         return ''.join(display)
+#
+#     def new_task(self, task, priority):
+#         if priority not in self.task:
+#             self.task[priority] = Stack()
+#         self.task[priority].ad_elem(task)
+#
+#
+# manager = TaskManager()
+# manager.new_task("сделать уборку", 4)
+# manager.new_task("помыть посуду", 4)
+# manager.new_task("отдохнуть", 1)
+# manager.new_task("поесть", 2)
+# manager.new_task("сдать дз", 2)
+# print(manager)
