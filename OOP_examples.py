@@ -2184,7 +2184,7 @@ Employee и производные от него классы Manager, Agent и 
 #         return '; '.join(self.__my_st)
 #         # return str(self.__my_st)
 #
-#     def ad_elem(self, elem):
+#     def push(self, elem):
 #         self.__my_st.append(elem)
 #
 #     def pop(self):
@@ -2212,13 +2212,38 @@ Employee и производные от него классы Manager, Agent и 
 #     def new_task(self, task, priority):
 #         if priority not in self.task:
 #             self.task[priority] = Stack()
-#         self.task[priority].ad_elem(task)
+#         self.task[priority].push(task)
+#         # else:
+#         #     print(f'Задача {task}, с приоритетом {priority} уже есть в списке задач!')
 #
+#     def remove_duplicate(self, priority):
+#         temp_set = set(self.task)
+#         for item in temp_set:
+#             if item in temp_set:
+#                 return item
+#         return None
+#
+#
+#     def remove_task(self, priority):
+#         """
+#         Метод удаляет задачу из указанного приоритета в Stack
+#
+#         :param priority: Передаем приоритет задачи, которую требуется удалить
+#         :return: Stack with removed task
+#         """
+#         return self.task[priority].pop()
 #
 # manager = TaskManager()
 # manager.new_task("сделать уборку", 4)
 # manager.new_task("помыть посуду", 4)
+# manager.new_task("помыть посуду", 4)
 # manager.new_task("отдохнуть", 1)
+# manager.new_task("почитать книгу", 1)
 # manager.new_task("поесть", 2)
 # manager.new_task("сдать дз", 2)
 # print(manager)
+# manager.remove_task(1)
+# print(manager)
+# manager.remove_task(2)
+# print(manager)
+
