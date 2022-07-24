@@ -2312,3 +2312,33 @@ print(next(iterator)) # Альтернативный способ получит
 #
 # for elem in my_iter:
 #     print(elem)
+
+Последовательность фибоначчи с помощью итератора ("lazy evaluation" - ленивые вычисления)
+# class Fibonacci:
+#
+#     def __init__(self, number):
+#         self.counter = 0
+#         self.cur_val = 0
+#         self.next_val = 1
+#         self.number = number
+#
+#     def __iter__(self): # В итераторе обнуляем значения, что бы он не опустошался при следующем цикле
+#         self.counter = 0
+#         self.cur_val = 0
+#         self.next_val = 1
+#         return self # Не забываем вернуть итератор
+#
+#     def __next__(self):
+#         self.counter += 1
+#         if self.counter > 1:
+#             if self.counter > self.number: # Если шаг итерации выходит за диапазон, возвращаме ошибку, что бы цикл ее
+#                 raise StopIteration # обработал и остановился
+#             self.cur_val, self.next_val = self.next_val, self.cur_val + self.next_val # тут реализуем фибоначчи
+#         return self.cur_val # Возвращаем следующее число фибоначчи
+#
+# fib_iterator = Fibonacci(10)
+# for i_value in fib_iterator:
+#     print(i_value)
+# print(8 in fib_iterator) # Так можно проверить, есть ли число в последовательности фибоначчи. Это и есть "ленивые вычисления"
+# # (lazy evaluation) Как только цикл обнарожит число, он остановится, что бы не вычислять последовательность целиком)
+
