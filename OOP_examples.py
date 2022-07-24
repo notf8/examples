@@ -2263,11 +2263,13 @@ print(next(iterator)) # Альтернативный способ получит
 Задача 1. Свой for (ну почти) Дан любой итерируемый объект, например список из N чисел. Реализуйте функцию, которая
 эмулирует работу цикла for с помощью цикла while и проходит во всем элементам итерируемого объекта. Не забудьте про
 исключение «конца итерации»
-# items = [10, 20, 30]
-# my_iterator = iter(items)
+# def self_for(elem):
+#     my_iterator = iter(elem)
+#     while my_iterator:
+#         try:
+#             print(next(my_iterator))
+#         except StopIteration:
+#             break
 #
-# while my_iterator:
-#     try:
-#         print(next(my_iterator))
-#     except StopIteration:
-#         break
+# items = [10, 20, 30]
+# self_for(items)
