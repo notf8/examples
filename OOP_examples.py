@@ -2358,3 +2358,41 @@ print(next(iterator)) # Альтернативный способ получит
 # my_iter = CountIterator()
 # for i_elem in my_iter:
 #     print(i_elem)
+
+Задача 2. Случайная сумма Каждый новый элемент — это сумма случайного вещественного числа от 0 до 1 и предыдущего элемента
+(первый элемент — просто случайное вещественное число от 0 до 1) при каждом новом вызове итератора в цикле значения
+считались заново
+# import random
+# class MyIter:
+#
+#     def __init__(self, number):
+#         self.counter = 0
+#         self.cur_val = random.random()
+#         self.number = number
+#
+#     def __iter__(self): # В итераторе обнуляем значения, что бы он не опустошался при следующем цикле
+#         self.counter = 0
+#         self.cur_val = random.random()
+#         return self
+#
+#     def __next__(self):
+#         self.counter += 1
+#         if self.counter > 1:
+#             if self.counter > self.number:
+#                 raise StopIteration
+#             self.cur_val = self.cur_val + random.random()
+#         return self.cur_val
+#
+# seq = int(input('Кол-во элементов: '))
+# new_iter = MyIter(seq)
+#
+# print('Элементы итератора:')
+# for elem in new_iter:
+#     print(round(elem, 2))
+#
+# seq = int(input('\nНовое кол-во элементов: '))
+# new_iter = MyIter(seq)
+#
+# print('Элементы итератора:')
+# for elem in new_iter:
+#     print(round(elem, 2))
