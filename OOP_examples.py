@@ -2396,3 +2396,35 @@ print(next(iterator)) # Альтернативный способ получит
 # print('Элементы итератора:')
 # for elem in new_iter:
 #     print(round(elem, 2))
+
+Задача 3. Простые числа Реализуйте класс-итератор Primes, который принимает максимальное число N и выдаёт все простые
+числа от 1 до N.
+# class Primes:
+#     def __init__(self, limit):
+#         self.num = 2
+#         self.limit = limit
+#
+#     def __isprime(self, n):
+#         if n % 2 == 0:
+#             return n == 2
+#         d = 3
+#         while d * d <= n and n % d != 0:
+#             d += 2
+#         return d * d > n
+#
+#     def __iter__(self):
+#         return self
+#
+#     def __next__(self):
+#         while self.num < self.limit:
+#             check = self.num
+#             self.num += 1
+#             if self.__isprime(check):
+#                 return check
+#         else:
+#             raise StopIteration
+#
+#
+# prime_nums = Primes(50)
+# for i_elem in prime_nums:
+#     print(i_elem, end=' ')
