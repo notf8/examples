@@ -2471,17 +2471,21 @@ print(next(iterator)) # Альтернативный способ получит
 Задача 1. Бесконечный генератор По аналогии с бесконечным итератором из практики предыдущего урока, реализуйте свой
 счётчик-генератор, который также в цикле будет бесконечно выдавать значения.
 Дополнительно: преобразуйте (или напишите с нуля) итератор простых чисел в функцию-генератор.
-def is_prime(num):
-    if num == 2: return True
-    if num % 2 == 0: return False
-    for _ in range(3, num // 2, 2): # Все то же "Решето Эратосфена". Чистим двойки, начиная с тройки с шагом 2 перебираем числа
-        if num % _ == 0:
-            return False
-    return True
-
-def primes():
-    num = 2
-    while True:
-        if is_prime(num):
-            yield num
-        num += 1
+# def is_prime(num):
+#     if num == 2: return True
+#     if num % 2 == 0: return False
+#     for _ in range(3, num // 2, 2): # Все то же "Решето Эратосфена". Чистим двойки, начиная с тройки с шагом 2 перебираем числа
+#         if num % _ == 0:
+#             return False
+#     return True
+#
+# def primes():
+#     num = 2
+#     while True:
+#         if is_prime(num):
+#             yield num
+#         num += 1
+#
+# my_gen = primes()
+# for elem in my_gen:
+#     print(elem)
