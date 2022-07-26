@@ -2446,8 +2446,24 @@ print(next(iterator)) # Альтернативный способ получит
 #
 #     for _ in range(number):
 #         yield cur_val # Замораживает функцию и воспроизводит вычисление (в отличии от return, который функцию завершает)
-#         cur_val, next_val = next_val, cur_val + next_val # Выдав циклу результат, yield размораживат функцию и продолжает вычисления
+#         cur_val, next_val = next_val, cur_val + next_val
+#         if cur_val > 10 ** 6:
+#             return # Вместо raise StopIteration можно использовать return. Он так же прервет выполнение функции
 #
-# feb_seq = fibonacci(10)
+# def square(nums):
+#     for num in nums:
+#         yield num ** 2
+#
+# feb_seq = fibonacci(10000000000)
 # for elem in feb_seq:
-#     print(elem)
+#     print(elem, end=' ')
+# print('\n')
+#
+# # Генератор от генератора
+# print(sum(square(fibonacci(number=5000)))) # Считаем сумму квадратов чисел fibonacci
+#
+# # Генераторные выражения
+# print()
+# cubes_gen = (num ** 3 for num in range(10))
+# for nums in cubes_gen:
+#     print(nums, end=' ')
