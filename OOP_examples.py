@@ -2440,14 +2440,14 @@ print(next(iterator)) # Альтернативный способ получит
 Внутри используют оператор yield
 Методы __iter__ и __next__ внутри используются автомавтически
 Отличия: Итераторы используются для готовых структур данных, а генераторы для генерации данных "на лету"
-def fibonacci(number):
-    cur_val = 0
-    next_val = 1
-
-    for _ in range(number):
-        yield cur_val # Замораживает функцию и воспроизводит вычисление (в отличии от return, который функцию завершает)
-        cur_val, next_val = next_val, cur_val + next_val # Выдав циклу результат, yield размораживат функцию и продолжает вычисления
-
-feb_seq = fibonacci(10)
-for elem in feb_seq:
-    print(elem)
+# def fibonacci(number):
+#     cur_val = 0
+#     next_val = 1
+#
+#     for _ in range(number):
+#         yield cur_val # Замораживает функцию и воспроизводит вычисление (в отличии от return, который функцию завершает)
+#         cur_val, next_val = next_val, cur_val + next_val # Выдав циклу результат, yield размораживат функцию и продолжает вычисления
+#
+# feb_seq = fibonacci(10)
+# for elem in feb_seq:
+#     print(elem)
