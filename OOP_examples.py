@@ -2511,7 +2511,7 @@ print(next(iterator)) # Альтернативный способ получит
 # def file_summ(nums):
 #     summa = 0
 #     for num in nums:
-#         summa += int(num)
+#         summa += num
 #     return summa
 #
 # new_file = write()
