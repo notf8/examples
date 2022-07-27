@@ -2489,3 +2489,30 @@ print(next(iterator)) # Альтернативный способ получит
 # my_gen = primes()
 # for elem in my_gen:
 #     print(elem)
+
+Задача 2. Очень большой файл В файле numbers.txt есть N чисел, разделённых пробелами и литералом пропуска строки. Напишите
+программу, которая подсчитает общую сумму чисел в файле. Для считывания файла реализуйте специальный генератор
+# import random
+# def write():
+#     with open('numbers.txt', 'w', encoding='utf-8') as file:
+#         for _ in range(1000):
+#             for _ in range(40):
+#                 file.write(str(random.randint(0, 10)) + ' ')
+#             file.write('\n')
+#     return file
+#
+# def read():
+#     with open('numbers.txt', 'r', encoding='utf-8') as file:
+#         for i in file.read():
+#             if i.isdigit():
+#                 yield int(i)
+#         return
+#
+# def file_summ(nums):
+#     summa = 0
+#     for num in nums:
+#         summa += int(num)
+#     return summa
+#
+# new_file = write()
+# print(file_summ(read()))
