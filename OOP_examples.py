@@ -2518,7 +2518,7 @@ print(next(iterator)) # Альтернативный способ получит
 # print(file_summ(read()))
 
 Аннотация типов нужна для читаемости кода и для проверки кода автоматизированныи инструментами
-from collections import Iterable
+from collections.abc import Iterable
 # class Person:
 #     __count = 0
 #
