@@ -2516,3 +2516,26 @@ print(next(iterator)) # Альтернативный способ получит
 #
 # new_file = write()
 # print(file_summ(read()))
+
+Аннотация типов нужна для читаемости кода и для проверки кода автоматизированныи инструментами
+from collections import Iterable
+# class Person:
+#     __count = 0
+#
+#     def __init__(self, name: str, age: int): # Что бы питон предупреждал, что тип данных не соответсвует
+#         self.__name = name
+#         self.set_age(age)
+#         Person.__count += 1
+#
+#     def __str__(self) -> str: # стрелочкой (->) указываем что возвращает функция. Если ничего, пишем None
+#         return 'Имя {}\tВозраст {}'.format(self.__name, self.__age)
+#
+# def fibonacci(number: int) -> Iterable[int]: # Типы можно импортировать из коллекций
+#     result = []
+#     cur_val = 0
+#     next_val = 1
+#
+#     for _ in range(number):
+#         result.append(cur_val)
+#         cur_val, next_val = next_val, cur_val + next_val
+#     return result
