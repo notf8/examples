@@ -2539,3 +2539,48 @@ from collections.abc import Iterable
 #         result.append(cur_val)
 #         cur_val, next_val = next_val, cur_val + next_val
 #     return result
+
+Задача 1. Квадраты чисел Пользователь вводит число N. Напишите программу, которая генерирует последовательность из
+квадратов чисел от 1 до N (1 ** 2, 2 ** 2, 3 ** 2 и так далее). Реализацию напишите тремя способами:
+класс-итератор, функция-генератор и генераторное выражение
+# from collections.abc import Iterable
+# class Squares:
+#     def __init__(self, limit: int):
+#         self.__limit = limit
+#         self.__num = 1
+#
+#     def __iter__(self):
+#         return self
+#
+#     def __next__(self) -> Iterable[int]:
+#         while self.__num <= self.__limit:
+#             i = self.__num ** 2
+#             self.__num += 1
+#             return i
+#         else:
+#             raise StopIteration
+#
+# def my_gen(limit: int) -> Iterable[int]:
+#     for i_elem in range(1, limit + 1):
+#         i = i_elem ** 2
+#         yield i
+#
+# n = int(input('Введите число: '))
+#
+# # Способ 1: Генераторное выражение
+# g_expression = (num ** 2 for num in range(1, n + 1))
+# for elem in g_expression:
+#     print(elem, end=' ')
+#
+# # Способ 2: класс-итератор
+# print()
+# my_iter = Squares(n)
+# for elem in my_iter:
+#     print(elem, end=' ')
+#
+# # Способ 3: функция-генератор
+# print()
+# new_gen = my_gen(n)
+# for elem in new_gen:
+#     print(elem, end=' ')
+
