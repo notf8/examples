@@ -6357,8 +6357,9 @@ registrations_bad.log — для ошибочных, записывать стр
 # a = [i for i in a if a[i] != 0] # Убираем 0 из списка. Можно и через множество их убрать
 # print(*a)
 
-Задача 3. Пути файлов Реализуйте функцию gen_files_path, которая рекурсивно проходит по всем каталогам указанной.
+Задача 3. Пути файлов Реализуйте функцию gen_files_path, которая рекурсивно проходит по всем каталогам указанной
 директории (по умолчанию — корневой диск), находит указанный пользователем каталог и генерирует пути всех встреченных файлов
+
 # from collections.abc import Iterable
 # import os
 #
@@ -6385,3 +6386,9 @@ registrations_bad.log — для ошибочных, записывать стр
 # for i_path in result:
 #     print(i_path)
 И еще вариант с os.walk
+# with open('output.txt','w') as fout:
+#     for root, subFolders, files in os.walk(rootdir):
+#         if 'data.txt' in files:
+#             with open(os.path.join(root, 'data.txt'), 'r') as fin:
+#                 for lines in fin:
+#                     dosomething()
