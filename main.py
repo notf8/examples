@@ -6312,6 +6312,7 @@ registrations_bad.log — для ошибочных, записывать стр
 #             operation_summ += operation(i_line.strip().split())
 # print('Сумма результатов:', operation_summ)
 
+
 Задача 6. Чат Реализуйте программу — чат, в котором могут участвовать сразу несколько человек, то есть программа может
 работать одновременно для нескольких пользователей. При запуске запрашивается имя пользователя. После этого он выбирает
 одно из действий: Посмотреть текущий текст чата. Отправить сообщение (затем вводит сообщение). Действия запрашиваются бесконечно.
@@ -6356,3 +6357,31 @@ registrations_bad.log — для ошибочных, записывать стр
 # a = [i for i in a if a[i] != 0] # Убираем 0 из списка. Можно и через множество их убрать
 # print(*a)
 
+Задача 3. Пути файлов Реализуйте функцию gen_files_path, которая рекурсивно проходит по всем каталогам указанной.
+директории (по умолчанию — корневой диск), находит указанный пользователем каталог и генерирует пути всех встреченных файлов
+# from collections.abc import Iterable
+# import os
+#
+# def gen_find_dir(folder: str, path: str) -> Iterable[str]:
+#     print('Текущая директория', path)
+#     try:
+#         for i_elem in os.listdir(path):
+#             current_path = os.path.join(path, i_elem)
+#             if os.path.isdir(current_path) and i_elem != folder:
+#                 yield from gen_find_dir(folder, current_path)
+#             elif os.path.isfile(os.path.join(path, i_elem)):
+#                 yield os.path.join(path, i_elem)
+#             else:
+#                 print(f'Директория {folder} найдена')
+#                 break
+#
+#     except PermissionError:
+#         print('Отказано в доступе, продолжаем поиск...')
+#
+# rootdir = os.path.abspath(os.path.join(os.path.sep))
+# user_folder = input('Введите имя каталога: ')
+# result = gen_find_dir(folder=user_folder, path=rootdir)
+#
+# for i_path in result:
+#     print(i_path)
+И еще вариант с os.walk
