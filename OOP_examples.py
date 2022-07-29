@@ -2619,3 +2619,29 @@ from collections.abc import Iterable
 #             with open(os.path.join(root, 'data.txt'), 'r') as fin:
 #                 for lines in fin:
 #                     dosomething()
+
+Задача 4. Последовательность Хофштадтера Реализуйте генерацию последовательности Q Хофштадтера (итератором или генератором)
+Сама последовательность выглядит так:Q(n)=Q(n−Q(n−1))+Q(n−Q(n−2))
+В итератор (или генератор) передаётся список из двух чисел. Например, QHofstadter([1, 1]) генерирует точную
+последовательность Хофштадтера. Если передать значения [1, 2], то последовательность должна немедленно завершиться
+# from collections.abc import Iterable
+# def QHofstadter(s_list: list) -> Iterable[int]:
+#     a = s_list[:]
+#     while True:
+#         if s_list == [1, 2]:
+#             break
+#         else:
+#             try:
+#                 q_num = a[-a[-1]] + a[-a[-2]]
+#                 a.append(q_num)
+#                 yield q_num
+#             except IndexError:
+#                 return
+#
+# limit = 1 # Т.к. псоледовательность бесконечна, ограничил ее на 25 итерациях
+# for x in QHofstadter([1, 1]):
+#     if limit < 25:
+#         print(x, end=' ')
+#         limit += 1
+#     else:
+#         break
