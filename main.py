@@ -6392,3 +6392,30 @@ registrations_bad.log — для ошибочных, записывать стр
 #             with open(os.path.join(root, 'data.txt'), 'r') as fin:
 #                 for lines in fin:
 #                     dosomething()
+
+Задача 5. Количество строк Реализуйте функцию-генератор, которая берёт все питоновские файлы в директории и вычисляет
+общее количество строк кода, игнорируя пустые строки и строчки комментариев
+# import os
+# from collections.abc import Iterable
+#
+# def file_path_find(path: str) -> Iterable[str]:
+#     """Функция рекурсивно проходит по дереву каталога, генерирует пути к файлам"""
+#     for i_elem in os.listdir(path):
+#         new_path = os.path.join(path, i_elem)
+#         if os.path.isdir(new_path) and not new_path.endswith('.git') and not new_path.endswith('.idea'):
+#             yield from file_path_find(new_path)
+#         else:
+#             if new_path.endswith('.py'):
+#                 yield read_and_count(new_path)
+#
+# def read_and_count(new_file: str) -> int:
+#     """Функция для чтения файлов и подсчета количества строк кода"""
+#     count = 0
+#     with open(new_file, 'r', encoding='utf-8') as file:
+#         for line in file.read().split('\n'):
+#             if (not line.strip() == '') and (not line.strip().startswith("#")) and (not line.strip().startswith('"')):
+#                 count += 1
+#     return count
+#
+# file_path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic"
+# print('Общее число строк кода:', sum(file_path_find(file_path)))
