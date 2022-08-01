@@ -2872,6 +2872,7 @@ from collections.abc import Iterable
 8) обернуть в декоратор функцию можно через знак @ и название функции декоратора над декорируемой функцией (сверху)
  Далее синтаксис для вызова задекорированных функций обучный: Функция()
 Из минусов - сложны для отладки, кучу кода нужно выполнять перед основной функции
+Если декораторов несколько, то порядок, в котором они применяются - имеет значение!!
 # import time
 # from typing import Callable, Any
 #
@@ -2889,6 +2890,22 @@ from collections.abc import Iterable
 #         return result
 #     return wrapped_func # Возвращаем функцию без скобок
 #
+# def logging(func: Callable) -> Callable: # func - вызываемое. Здесь передаем kwargs и  args т.к. какие то функции будут с аргкиентами, а какие то нет
+#     """
+#     Декоратор, логирующий работу кода.
+#     """
+#     def wrapped_func(*args, **kwargs) -> Any: # Аргументы для декорируемой функции передаются ф-ей оберткой (wrapped_func)
+#         print('Вызывается функция {func}\t'
+#               'Позиционные аргументы: {args}\t'
+#               'Именованные аргументы: {kwargs}'.format(
+#                 func=func.__name__, args=args, kwargs=kwargs
+#         ))
+#         print('Функция успешно завершила работу')
+#         result = func(*args, **kwargs) # !!! Тут пишем именно аргумента не саму декорируемую функцию, пишем со скобками!
+#         return result
+#     return wrapped_func # Возвращаем функцию без скобок
+#
+# @logging
 # @timer
 # def squares_sum() -> int: # Эта функция первого класса (как и все остальные, которые не являются высшими
 #     number = 100
@@ -2899,12 +2916,14 @@ from collections.abc import Iterable
 #     return result
 #
 # @timer
+# @logging
 # def cubes_sum(number: int) -> int: # Эта функция первого класса (как и все остальные, которые не являются высшими
 #     result = 0
 #     for _ in range(number + 1):
 #         result += sum(i_num ** 3 for i_num in range(10000))
 #
 #     return result
+#
 #
 # my_result = squares_sum() # При использовании декоратора, функцию используем как обычно, в конце пишем скобки
 # print('Результат работы функции:', my_result)
@@ -2933,3 +2952,4 @@ from collections.abc import Iterable
 #     print('Привет, {name}!'.format(name=name))
 #
 # greeting('Tom')
+
