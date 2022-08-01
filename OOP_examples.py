@@ -2882,3 +2882,16 @@ from collections.abc import Iterable
 # print()
 # my_cubes_sum = timer(cubes_sum, 200)
 # print('Результат работы функции:', my_cubes_sum)
+
+Задача 1. Функции Дана функция func_1, которая принимает число и возвращает результат его сложения с числом 10
+Реализуйте функцию высшего порядка func_2, которая будет возвращать перемножение двух результатов переданной функции
+# from typing import Callable
+#
+# def func_1(x: int) -> int:
+#     return x + 10
+#
+# def func_2(func: Callable, *args) -> int:
+#     result = func_1(*args)
+#     return result * func_1(*args)
+#
+# print('Результат:', func_2(func_1, 9))
