@@ -2881,7 +2881,7 @@ from collections.abc import Iterable
 #     """
 #     def wrapped_func(*args, **kwargs) -> Any: # Аргументы для декорируемой функции передаются ф-ей оберткой (wrapped_func)
 #         started_at = time.time()
-#         result = func(*args, **kwargs) # !!! А вот тут пишем со скобками, что бы аргумент запустился как функция
+#         result = func(*args, **kwargs) # !!! Тут пишем именно аргумента не саму декорируемую функцию, пишем со скобками!
 #         ended_at = time.time()
 #         run_time = round((ended_at - started_at), 4)
 #         print('Затраченное время функции: {} cекунд(ы).'.format(run_time))
