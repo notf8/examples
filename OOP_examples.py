@@ -2716,6 +2716,10 @@ from collections.abc import Iterable
 # from typing import Optional, Any
 #
 # class Node:
+#     """
+#     Класс: Узел. Описывает элементы списка.
+#
+#     """
 #     def __init__(self,
 #                  value: Optional[Any] = None, # Элемент списка может быть чем угодно
 #                  next: Optional['Node'] = None) -> None: # Next от Node означет след элемент себя же
@@ -2723,6 +2727,11 @@ from collections.abc import Iterable
 #         self.next = next
 #
 #     def __str__(self) -> str:
+#         """
+#         Метод возвращает элементы списка в строковом формате.
+#         :return: Node
+#         :rtype: str
+#         """
 #         return 'Node [{value}]'.format(
 #             value=str(self.value)
 #         )
@@ -2730,10 +2739,18 @@ from collections.abc import Iterable
 #
 # class Linkedlist:
 #     def __init__(self) -> None:
+#         """
+#         Класс Список. Описывает односвязный список.
+#         """
 #         self.head: Optional[Node] = None # head может быть либо узлом либо None
 #         self.length = 0 # Счетчик длины для проверки индексов списка
 #
 #     def __str__(self) -> str:
+#         """
+#         Метод возвращает односвязный список в виде строки.
+#         :return: Linkedlist
+#         :rtype: str
+#         """
 #         if self.head is not None:
 #             current = self.head
 #             values = [str(current.value)] # Создаем обычный список значений
@@ -2743,7 +2760,29 @@ from collections.abc import Iterable
 #             return '[{values}]'.format(values=' '.join(values))
 #         return 'Linkedlist []' # 'Linkedlist' не печатаемая часть, выведется только список
 #
+#     def __iter__(self):
+#         """
+#         Метод: Итератор
+#         :return: self
+#         """
+#         return self
+#
+#     def __next__(self):
+#         """
+#         Метод возвращает следующий элемент списка.
+#         :return: Node
+#         """
+#         if self.head is None:
+#             raise StopIteration
+#         current, self.head = self.head, self.head.next
+#         return current
+#
 #     def append(self, elem: Any) -> None:
+#         """
+#         Метод добавляет элементы в список
+#         :param elem: Any
+#         :return: None
+#         """
 #         new_node = Node(elem) #Создаем узел
 #         if self.head is None: # Если изначально список пустой, то head будет указывать на этот же узел
 #             self.head = new_node # И значит head'ом будет новый нод
@@ -2756,6 +2795,11 @@ from collections.abc import Iterable
 #         self.length += 1 # Увеличиваем длину списка после добавления элемента
 #
 #     def remove(self, index) -> None:
+#         """
+#         Метод удаляет элементы из списка
+#         :param index: int
+#         :return: None
+#         """
 #         cur_node = self.head # Берем переменную, что бы случайно не поменять голову
 #         cur_index = 0 # Это переменная для текущего индекса
 #         if self.length == 0 or self.length <= index: # Проверяем, не выходит ли индекс за пределы списка
@@ -2778,6 +2822,11 @@ from collections.abc import Iterable
 #         self.length -= 1 # Уменьшаем длину на 1
 #
 #     def get(self, index) -> Optional[Node]:
+#         """
+#         Метод для получения элементов списка по индексу.
+#         :param index: int
+#         :return: Node (элемент списка)
+#         """
 #         cur_node = self.head # Берем переменную, что бы связать элемент с индексом
 #         cur_index = 0 # Это переменная для текущего индекса
 #         if self.length < index: # Проверяем, не выходит ли индекс за пределы списка
@@ -2794,5 +2843,9 @@ from collections.abc import Iterable
 # my_list.append(30)
 # print('Текущий список:', my_list)
 # print('Получение третьего элемента:', my_list.get(2))
+# print('Удаление второго элемента.')
 # my_list.remove(1)
 # print(my_list)
+# print('\nТеперь с итераторм:')
+# for i in my_list:
+#     print(i)
