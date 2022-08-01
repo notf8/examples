@@ -2875,11 +2875,14 @@ from collections.abc import Iterable
 Если декораторов несколько, то порядок, в котором они применяются - имеет значение!!
 # import time
 # from typing import Callable, Any
+# import functools # Что бы иметь доступ к метода функций если используется обертка в декораторе
 #
 # def timer(func: Callable) -> Callable: # func - вызываемое. Здесь передаем kwargs и  args т.к. какие то функции будут с аргкиентами, а какие то нет
 #     """
 #     Декоратор Выводит время работы декорируемой функции и возвращает ее результат
 #     """
+#
+#     @functools.wraps(func) # С помощью этого декоратора приписываем обертке методы, которые указаны в декорируемой функции
 #     def wrapped_func(*args, **kwargs) -> Any: # Аргументы для декорируемой функции передаются ф-ей оберткой (wrapped_func)
 #         started_at = time.time()
 #         result = func(*args, **kwargs) # !!! Тут пишем именно аргумента не саму декорируемую функцию, пишем со скобками!
@@ -2894,6 +2897,8 @@ from collections.abc import Iterable
 #     """
 #     Декоратор, логирующий работу кода.
 #     """
+#
+#     @functools.wraps(func) # С помощью этого декоратора приписываем обертке методы, которые указаны в декорируемой функции
 #     def wrapped_func(*args, **kwargs) -> Any: # Аргументы для декорируемой функции передаются ф-ей оберткой (wrapped_func)
 #         print('Вызывается функция {func}\t'
 #               'Позиционные аргументы: {args}\t'
@@ -2908,6 +2913,12 @@ from collections.abc import Iterable
 # @logging
 # @timer
 # def squares_sum() -> int: # Эта функция первого класса (как и все остальные, которые не являются высшими
+#     """
+#     Функция нахождения суммы квадратов
+#     для каждого N от 0 до 10 000
+#     где 0 < N < 10 000
+#     :return: Сумма квадратов
+#     """
 #     number = 100
 #     result = 0
 #     for _ in range(number + 1):
@@ -2930,6 +2941,9 @@ from collections.abc import Iterable
 # print()
 # my_cubes_sum = cubes_sum(200)
 # print('Результат работы функции:', my_cubes_sum)
+# print()
+# print(squares_sum.__doc__) # Выводит документацию функции
+# print(squares_sum.__name__) # Выводит имя функции
 
 Задача 1. Двойной вызов Реализуйте декоратор do_twice, который дважды вызывает декорируемую функцию
 # from typing import Callable, Any
