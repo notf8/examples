@@ -2953,3 +2953,24 @@ from collections.abc import Iterable
 #
 # greeting('Tom')
 
+Задача 2. Плагины специальный декоратор, который будет «регистрировать» нужные функции как плагины и заносить их в
+соответствующий словарь
+# from typing import Callable, Dict
+#
+# def register(func: Callable) -> Callable: # Декоратор не обязательно оборачивает ф-ию в доп. код и модернезирует ее
+#     """Декоратор регистрирует функцию как плагин"""
+#     PLAGGINS[func.__name__]=func
+#     return func
+#
+# PLAGGINS: Dict[str, Callable] = dict()
+#
+# @register
+# def say_hallo(name: str) ->str:
+#     return 'Hello! {name}!'.format(name=name)
+#
+# @register
+# def say_goodbye(name: str) ->str:
+#     return 'Goodbye! {name}!'.format(name=name)
+#
+# print(PLAGGINS)
+# print(say_hallo('Tom'))
