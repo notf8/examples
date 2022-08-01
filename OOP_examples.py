@@ -2732,9 +2732,7 @@ from collections.abc import Iterable
 #         :return: Node
 #         :rtype: str
 #         """
-#         return 'Node [{value}]'.format(
-#             value=str(self.value)
-#         )
+#         return f'{self.value}'
 #
 #
 # class Linkedlist:
@@ -2849,3 +2847,38 @@ from collections.abc import Iterable
 # print('\nТеперь с итераторм:')
 # for i in my_list:
 #     print(i)
+========================================================================================================================
+Функция высшего порядка - может принимать в качестве аргумента другую функцию и/или возвращать результаты ее работы
+# import time
+# from typing import Callable, Any
+#
+# def timer(func: Callable, *args, **kwargs) -> Any: # func - вызываемое. Здесь передаем kwargs и  args т.к. какие то функции будут с аргкиентами, а какие то нет
+#     """Функция таймер. Выводит время работы функции и возвращает ее результат"""
+#     started_at = time.time()
+#     result = func(*args, **kwargs) # !!! А вот тут пишем со скобками, что бы аргумент запустился как функция
+#     ended_at = time.time()
+#     run_time = round((ended_at - started_at), 4)
+#     print('Затраченное время функции: {} cекунд(ы).'.format(run_time))
+#
+#     return result
+#
+# def squares_sum() -> int: # Эта функция первого класса (как и все остальные, которые не являются высшими
+#     number = 100
+#     result = 0
+#     for _ in range(number + 1):
+#         result += sum(i_num ** 2 for i_num in range(10000))
+#
+#     return result
+#
+# def cubes_sum(number: int) -> int: # Эта функция первого класса (как и все остальные, которые не являются высшими
+#     result = 0
+#     for _ in range(number + 1):
+#         result += sum(i_num ** 3 for i_num in range(10000))
+#
+#     return result
+#
+# my_result = timer(squares_sum) # Когда передаем функцию (как аргумент) в другую функцию - пишем ее без скобок "squares_sum"
+# print('Результат работы функции:', my_result)
+# print()
+# my_cubes_sum = timer(cubes_sum, 200)
+# print('Результат работы функции:', my_cubes_sum)
