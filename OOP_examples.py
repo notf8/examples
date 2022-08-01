@@ -2645,3 +2645,154 @@ from collections.abc import Iterable
 #         limit += 1
 #     else:
 #         break
+
+Задача 3. Пути файлов Реализуйте функцию gen_files_path, которая рекурсивно проходит по всем каталогам указанной
+директории (по умолчанию — корневой диск), находит указанный пользователем каталог и генерирует пути всех встреченных файлов
+
+# from collections.abc import Iterable
+# import os
+#
+# def gen_find_dir(folder: str, path: str) -> Iterable[str]:
+#     print('Текущая директория', path)
+#     try:
+#         for i_elem in os.listdir(path):
+#             current_path = os.path.join(path, i_elem)
+#             if os.path.isdir(current_path) and i_elem != folder:
+#                 yield from gen_find_dir(folder, current_path)
+#             elif os.path.isfile(os.path.join(path, i_elem)):
+#                 yield os.path.join(path, i_elem)
+#             else:
+#                 print(f'Директория {folder} найдена')
+#                 break
+#
+#     except PermissionError:
+#         print('Отказано в доступе, продолжаем поиск...')
+#
+# rootdir = os.path.abspath(os.path.join(os.path.sep))
+# user_folder = input('Введите имя каталога: ')
+# result = gen_find_dir(folder=user_folder, path=rootdir)
+#
+# for i_path in result:
+#     print(i_path)
+И еще вариант с os.walk
+# with open('output.txt','w') as fout:
+#     for root, subFolders, files in os.walk(rootdir):
+#         if 'data.txt' in files:
+#             with open(os.path.join(root, 'data.txt'), 'r') as fin:
+#                 for lines in fin:
+#                     dosomething()
+
+Задача 5. Количество строк Реализуйте функцию-генератор, которая берёт все питоновские файлы в директории и вычисляет
+общее количество строк кода, игнорируя пустые строки и строчки комментариев
+# import os
+# from collections.abc import Iterable
+#
+# def file_path_find(path: str) -> Iterable[str]:
+#     """Функция рекурсивно проходит по дереву каталога, генерирует пути к файлам"""
+#     for i_elem in os.listdir(path):
+#         new_path = os.path.join(path, i_elem)
+#         if os.path.isdir(new_path) and not new_path.endswith('.git') and not new_path.endswith('.idea'):
+#             yield from file_path_find(new_path)
+#         else:
+#             if new_path.endswith('.py'):
+#                 yield read_and_count(new_path)
+#
+# def read_and_count(new_file: str) -> int:
+#     """Функция для чтения файлов и подсчета количества строк кода"""
+#     count = 0
+#     with open(new_file, 'r', encoding='utf-8') as file:
+#         for line in file.read().split('\n'):
+#             if (not line.strip() == '') and (not line.strip().startswith("#")) and (not line.strip().startswith('"')):
+#                 count += 1
+#     return count
+#
+# file_path = r"C:\Users\notf8\PycharmProjects\Python_Basic\Python_Basic"
+# print('Общее число строк кода:', sum(file_path_find(file_path)))
+
+Задача 6. Односвязный список Связный список — это структура данных, которая состоит из элементов, называющихся узлами.
+В узлах хранятся данные, а между собой узлы соединены связями. Связь — это ссылка на следующий или предыдущий элемент списка
+В односвязном списке связь — это ссылка только на следующий элемент, то есть в нём можно передвигаться только в сторону
+конца списка. Узнать адрес предыдущего элемента, опираясь на содержимое текущего узла, невозможно
+# from typing import Optional, Any
+#
+# class Node:
+#     def __init__(self,
+#                  value: Optional[Any] = None, # Элемент списка может быть чем угодно
+#                  next: Optional['Node'] = None) -> None: # Next от Node означет след элемент себя же
+#         self.value = value
+#         self.next = next
+#
+#     def __str__(self) -> str:
+#         return 'Node [{value}]'.format(
+#             value=str(self.value)
+#         )
+#
+#
+# class Linkedlist:
+#     def __init__(self) -> None:
+#         self.head: Optional[Node] = None # head может быть либо узлом либо None
+#         self.length = 0 # Счетчик длины для проверки индексов списка
+#
+#     def __str__(self) -> str:
+#         if self.head is not None:
+#             current = self.head
+#             values = [str(current.value)] # Создаем обычный список значений
+#             while current.next is not None: # Идем циклом по значениям и возвращаем строку
+#                 current = current.next # помещаем в текущий элемент ссылку на следующий
+#                 values.append(str(current.value)) # Добавляем в обычный список следующее значение
+#             return '[{values}]'.format(values=' '.join(values))
+#         return 'Linkedlist []' # 'Linkedlist' не печатаемая часть, выведется только список
+#
+#     def append(self, elem: Any) -> None:
+#         new_node = Node(elem) #Создаем узел
+#         if self.head is None: # Если изначально список пустой, то head будет указывать на этот же узел
+#             self.head = new_node # И значит head'ом будет новый нод
+#             return
+#
+#         last = self.head # А если в списке уже есть элементы, в переменную помещаем его первый элемент
+#         while last.next: # Идем (только с головы и только в конец списка) циклом по элементам
+#             last = last.next # Если next не равен None, то у него есть сосед, его и берем
+#         last.next = new_node # Если элемент последний, выходим из цикла и делаем ему соседа
+#         self.length += 1 # Увеличиваем длину списка после добавления элемента
+#
+#     def remove(self, index) -> None:
+#         cur_node = self.head # Берем переменную, что бы случайно не поменять голову
+#         cur_index = 0 # Это переменная для текущего индекса
+#         if self.length == 0 or self.length <= index: # Проверяем, не выходит ли индекс за пределы списка
+#             raise IndexError # Если выходит, выводим ошибку индекса
+#
+#         if cur_node is not None: # Проверяем, не пустой ли текущий указатель
+#             if index == 0: # Так же проверим, не удаляем ли мы первый элемент
+#                 self.head = cur_node.next # Просто заменяем ссылку в голове, на ссылку из следующего элемента
+#                 self.length -= 1 # Уменьшаем длину на 1 после удаления элемента
+#                 return # И выходим
+#
+#         while cur_node is not None: # Если элемент не первый в списке
+#             if cur_index == index: # Идем по списку и сравниваем текущий индекс, с переданным
+#                 break # Выходим, т.к. если переданный индекс окажется первым элементом, у нас есть условие для него выше
+#             prev = cur_node # Берем предыдущий элемент в переменную
+#             cur_node = cur_node.next # Текущий становится следующим
+#             cur_index += 1 # И увеличиваем текущий индекс на 1
+#
+#         prev.next = cur_node.next # Как только нашли нужный узел, заменяем ссылку в предыдущем узле на след. за найденным узлом
+#         self.length -= 1 # Уменьшаем длину на 1
+#
+#     def get(self, index) -> Optional[Node]:
+#         cur_node = self.head # Берем переменную, что бы связать элемент с индексом
+#         cur_index = 0 # Это переменная для текущего индекса
+#         if self.length < index: # Проверяем, не выходит ли индекс за пределы списка
+#             raise IndexError
+#         while cur_node is not None: # Проверяем, не пустой ли текущий указатель
+#             if cur_index == index: # Если текущий индекс соответствует переданному
+#                 return cur_node # Возвращаем текущий элемент
+#             cur_index += 1 # Если нет, то увеличиваем индекс на 1
+#             cur_node = cur_node.next # И делаем следующий элемент текущим
+#
+# my_list = Linkedlist()
+# my_list.append(10)
+# my_list.append(20)
+# my_list.append(30)
+# print('Текущий список:', my_list)
+# print('Получение третьего элемента:', my_list.get(2))
+# my_list.remove(1)
+# print(my_list)
