@@ -2911,3 +2911,25 @@ from collections.abc import Iterable
 # print()
 # my_cubes_sum = cubes_sum(200)
 # print('Результат работы функции:', my_cubes_sum)
+
+Задача 1. Двойной вызов Реализуйте декоратор do_twice, который дважды вызывает декорируемую функцию
+# from typing import Callable, Any
+#
+# def do_twice(func: Callable) -> Callable:
+#     """
+#     Декоратор. Повторяет дважды декорируемую функцию
+#     :param func:
+#     :return: Callable
+#     """
+#     def wrapping_func(*args, **kwargs) -> Any:
+#         for _ in range(2):
+#             result = func(*args, **kwargs)
+#         return result
+#
+#     return wrapping_func
+#
+# @do_twice
+# def greeting(name: str) -> None:
+#     print('Привет, {name}!'.format(name=name))
+#
+# greeting('Tom')
