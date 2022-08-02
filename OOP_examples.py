@@ -3096,3 +3096,39 @@ function_errors.log записываются названия функции и 
 #     norm_func()
 #     no_arg()
 #     name_error()
+
+Задача 4. Дебаг Напишите декоратор debug, который при каждом вызове декорируемой функции выводит её имя (вместе со всеми
+передаваемыми аргументами), а затем — какое значение она возвращает. После этого выводится результат её выполнения
+# from typing import Callable, Any
+# import functools
+#
+# def debug(func: Callable) -> Callable:
+#     """
+#     Декоратор, логирующий работу кода.
+#     """
+#     @functools.wraps(func)
+#     def wrapped_func(*args, **kwargs) -> Any:
+#         print('\nВызывается функция {func}\t'
+#               'Позиционные аргументы: {args}\t'
+#               'Именованные аргументы: {kwargs}'.format(
+#                 func=func.__name__, args=args, kwargs=kwargs
+#         ))
+#         result = func(*args, **kwargs)
+#         print("{func} вернула значение {res}".format(
+#             func=func.__name__, res=result))
+#         print(result)
+#         return result
+#
+#     return wrapped_func
+#
+# @debug
+# def greeting(name, age=None) -> str:
+#     """Функция возвращает имя и возраст переданные в аргументах"""
+#     if age:
+#         return "Ого, {name}! Тебе уже {age} лет, ты быстро растёшь!".format(name=name, age=age)
+#     else:
+#         return "Привет, {name}!".format(name=name)
+#
+# greeting("Том")
+# greeting("Миша", age=100)
+# greeting(name="Катя", age=16)
