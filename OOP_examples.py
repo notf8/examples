@@ -3136,3 +3136,28 @@ function_errors.log записываются названия функции и 
 # greeting("Том")
 # greeting("Миша", age=100)
 # greeting(name="Катя", age=16)
+
+Задача 5. Счётчик Реализуйте декоратор counter, считающий и выводящий количество вызовов декорируемой функции
+# from typing import Callable, Any
+# import functools
+#
+# def counter(func: Callable) -> Callable:
+#     """ Декоратор считает, сколько раз звызывалась декорируемая функция"""
+#     @functools.wraps(func)
+#     def wrapped_func(*args, **kwargs) -> Any:
+#         wrapped_func.count += 1
+#         result = func()
+#         print('\nФункция {func} запускалась: {count} раз(а):'.format(
+#             func=func.__name__, count=wrapped_func.count))
+#         return result
+#     wrapped_func.count = 0 # Важно! Т.к. wrap это тоже класс, просто через точку добавляем ему атрибут - счетчик.
+#     # Если счетчик вынести за wraper то он его не увидит (будет за пределами видимости). Причем добавляем его после завершения
+#     # функции а не в начале, как обычно!!
+#
+#     return wrapped_func
+#
+# @counter
+# def test():
+#     print('Hallo!')
+# for _ in range(3):
+#     test()
