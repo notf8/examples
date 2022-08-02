@@ -3003,7 +3003,7 @@ from collections.abc import Iterable
 #     def wrapped_func(*args, **kwargs) -> Any:
 #         input('\nКак дела? ')
 #         print('А у меня не очень! Ладно, держи свою функцию.')
-#         result = func()
+#         result = func(*args, **kwargs)
 #         return result
 #     return wrapped_func
 #
@@ -3030,7 +3030,7 @@ from collections.abc import Iterable
 #         time.sleep(3)
 #         time_at_stop = time.time()
 #         print('\nЗапускаем функцию: {func}'.format(func=func.__name__))
-#         result = func()
+#         result = func(*args, **kwargs)
 #         print('\nФункция успешно запустилась спустя:',
 #               round((time_at_stop - time_at_start), 2), 'секунд(ы)')
 #         return result
@@ -3060,7 +3060,7 @@ function_errors.log записываются названия функции и 
 #                     func=func.__name__, docs=func.__doc__
 #             ))
 #             try:
-#                 result = func()
+#                 result = func(*args, **kwargs)
 #                 return result
 #             except Exception as error:
 #                 error = f'\nДата запуска: {datetime.now().strftime("%d.%m.%Y %H:%M:%S")} - ' \ # !!!Формат даты и времени
