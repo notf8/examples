@@ -3039,3 +3039,60 @@ from collections.abc import Iterable
 #     """Тестовая функция для проверки декоратора. Выводит простой текст """
 #     print('<Тут что-то происходит...>')
 # test()
+
+Задача 3. Логирование Реализуйте декоратор logging, который будет отвечать за логирование функций. На экран выводится
+название функции и её документация. Если во время выполнения декорируемой функции возникла ошибка, то в файл
+function_errors.log записываются названия функции и ошибки
+# from typing import Callable, Any, Iterable
+# import functools
+# from datetime import datetime
+#
+# def logging(func: Callable) -> Callable:
+#     """
+#     Декоратор, логирующий работу кода.
+#     """
+#     @functools.wraps(func)
+#     def wrapped_func(*args, **kwargs) -> Any:
+#             print('Вызывается функция {func}\t'
+#                   'Документация функции: {docs}\t'.format(
+#                     func=func.__name__, docs=func.__doc__
+#             ))
+#             try:
+#                 result = func()
+#                 return result
+#             except Exception as error:
+#                 error = f'\nДата запуска: {datetime.now().strftime("%d.%m.%Y %H:%M:%S")} - ' \ # !!!Формат даты и времени
+#                         f'Запускаемая функция: {func.__name__} - Тип ошибки:{error}'
+#                 with open('function_errors.log', 'a', encoding='utf-8') as file:
+#                     file.write(error)
+#
+#     return wrapped_func
+#
+# @logging
+# def sero_division() -> float:
+#     """Функция для проверки: производит деление на ноль"""
+#     x = 1 / 0
+#     return x
+#
+# @logging
+# def norm_func() -> str:
+#     """Функция для проверки: функция не содержит ошибок"""
+#     x = 'Hello'
+#     return x
+#
+# @logging
+# def name_error() -> Iterable:
+#     """Функция для проверки: возвращает ошибку имени"""
+#     a = b
+#     return a
+#
+# @logging
+# def no_arg(x):
+#     """Функция для проверки: ошибка - в функцию не передан аргумент"""
+#     print(x)
+#
+# for _ in range(3):
+#     sero_division()
+#     norm_func()
+#     no_arg()
+#     name_error()
