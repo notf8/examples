@@ -3012,3 +3012,30 @@ from collections.abc import Iterable
 #
 # print(test.__doc__)
 # test()
+
+Задача 2. Замедление кода - декоратор, который перед выполнением декорируемой функции ждёт несколько секунд
+# from typing import Callable, Any
+# import functools
+# import time
+#
+# def waiting(func: Callable) -> Callable:
+#     """ Декоратор перед запуском декорируемой ф-ии, ждет несколько секунд. """
+#
+#     @functools.wraps(func)
+#     def wrapped_func(*args, **kwargs) -> Any:
+#         print('Ждем 3 секунды...')
+#         time_at_start = time.time()
+#         time.sleep(3)
+#         time_at_stop = time.time()
+#         print('\nЗапускаем функцию: {func}'.format(func=func.__name__))
+#         result = func()
+#         print('\nФункция успешно запустилась спустя:',
+#               round((time_at_stop - time_at_start), 2), 'секунд(ы)')
+#         return result
+#     return wrapped_func
+#
+# @waiting
+# def test() -> None:
+#     """Тестовая функция для проверки декоратора. Выводит простой текст """
+#     print('<Тут что-то происходит...>')
+# test()
