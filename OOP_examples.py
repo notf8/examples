@@ -2988,3 +2988,27 @@ from collections.abc import Iterable
 #
 # print(PLAGGINS)
 # print(say_hallo('Tom'))
+
+Задача 1. Как дела? Декоратор при вызове декорируемой функции спрашивает у пользователя «Как дела?», вне зависимости от
+ответа отвечает что-то вроде «А у меня не очень!» и только потом запускает саму функцию
+# from typing import Callable, Any
+# import functools
+#
+# def how_are_you(func: Callable) -> Callable:
+#     """ Декоратор перед запуском декорируемой ф-ии,
+#     задает вопрос пользователю ип возвращает результат декорируемой функции. """
+#     @functools.wraps(func)
+#     def wrapped_func(*args, **kwargs) -> Any:
+#         input('\nКак дела? ')
+#         print('А у меня не очень! Ладно, держи свою функцию.')
+#         result = func()
+#         return result
+#     return wrapped_func
+#
+# @how_are_you
+# def test() -> None:
+#     """Тестовая функция для проверки декоратора. Выводит простой текст """
+#     print('<Тут что-то происходит...>')
+#
+# print(test.__doc__)
+# test()
