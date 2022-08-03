@@ -3213,3 +3213,70 @@ class Z(M1, M2, M3)
 Задача 1. Снова роботы.реализует все необходимые классы роботов. Сущности «Робот» и «Может летать» должны быть вынесены
 в отдельные классы. Обычный робот имеет модель и может вывести сообщение «Я — Робот». Объект, который умеет летать,
 дополнительно имеет атрибуты «Высота» и «Скорость», а также может взлетать, летать и приземляться.
+# class Robot:
+#     """Базовый класс Робот"""
+#     def __init__(self, model, *args, **kwargs) -> None:
+#         super().__init__(*args, **kwargs)
+#         self.model = model
+#
+#     def __str__(self) -> str:
+#         res = super().__str__()
+#         return res + ' {} model {}'.format(self.__class__.__name__, self.model)
+#
+#     def operate(self) -> None:
+#         print('Я - Робот!')
+#
+# class CanFly:
+#     """Базовый класс полет"""
+#     def __init__(self, *args, **kwargs) -> None:
+#         self.altitude = 0  # метров
+#         self.velocity = 0  # км/ч
+#
+#     def take_off(self) -> None:
+#         """Метод взлет"""
+#         self.altitude = 100
+#         self.velocity = 300
+#
+#     def fly(self) -> None:
+#         """Метод полет"""
+#         self.altitude = 5000
+#
+#     def land_on(self) -> None:
+#         """Метод посадка"""
+#         self.altitude = 0
+#         self.velocity = 0
+#
+#     def operate(self) -> None:
+#         super().operate()
+#         print('летим')
+#
+#     def __str__(self) -> str:
+#         res = super().__str__()
+#         return res + ' {} высота {} скорость {}'.format(
+#             self.__class__.__name__, self.altitude, self.velocity,
+#         )
+#
+# class ScoutDrone(CanFly, Robot):
+#     """Класс робот-разведчик. Дочерний класс от классов робот и полет."""
+#     def __init__(self, model) -> None:
+#         super().__init__(model=model)
+#
+#     def operate(self) -> None:
+#         super().operate()
+#         print('Робот ведет разведку с воздуха')
+#
+#
+# class WarDrone(CanFly, Robot):
+#     """Класс боевой робот. Дочерний класс от классов робот и полет"""
+#     def __init__(self, model, gun) -> None:
+#         super().__init__(model=model)
+#         self.gun = gun
+#
+#     def operate(self) -> None:
+#         super().operate()
+#         print(f'Робот защищает объект при помощи {self.gun}')
+#
+# print()
+# ScoutDrone('a1').operate()
+# print()
+# WarDrone('r2-d2', 'intellect').operate()
