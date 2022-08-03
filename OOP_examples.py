@@ -3161,3 +3161,55 @@ function_errors.log записываются названия функции и 
 #     print('Hallo!')
 # for _ in range(3):
 #     test()
+========================================================================================================================
+MRO - metod resolution order(Порялок наследования методотов). Множественное наследование
+Сначало смотрится методы наследника, зате его родительские классы слева направо и в конце супер-класс
+Если у родительских классовтоже несколько родителей, то смотрятся по одному родителю, стоящему первым в списке по очереди
+Class Main
+Class A(Main)
+Class B(Main)
+class M1(A, B)
+class M2(A, D)
+class M3(C,D, E)
+class Z(M1, M2, M3)
+Тогда MRO = Z -> M1 -> A -> M2 - B -> M3 -> C -> D -> E -> Main
+# from typing import List
+#
+# class Person:
+#     """Базовый класс человек"""
+#     def __init__(self, name: str, age: int) -> None:
+#         self.__name = name
+#         self.__age = age
+#
+# class Employee(Person):
+#     """Работник, дочерний класс от Person """
+#     def __init__(self, name: str, age: int) -> None:
+#         super().__init__(name, age)
+#         self.__salary = 20000
+#
+#     def get_salary(self) -> int:
+#         """Метод для получения размера зарплаты"""
+#         return self.__salary
+#
+# class Parent(Person):
+#     """Родитель, дочерний класс от Person """
+#     def __init__(self, name: str, age: int) -> None:
+#         super().__init__(name, age)
+#         self.__kids = ['Tom', 'Bob']
+#
+#     def get_kids(self) -> List[str]:
+#         return self.__kids
+#
+# class Citizen(Parent, Employee): # Множественное наследование. Через запятую указываем классы, от которых хотим наследовать
+#     """Житель является и родителем и работником"""
+#     pass
+#
+# my_citizen = Citizen(name='Anton', age=30)
+# print(my_citizen.get_salary())
+# print(my_citizen.get_kids())
+#
+# print(my_citizen.__class__.__mro__) # Так можно посмотреть порядок наследования методов и атрибутов класса
+
+Задача 1. Снова роботы.реализует все необходимые классы роботов. Сущности «Робот» и «Может летать» должны быть вынесены
+в отдельные классы. Обычный робот имеет модель и может вывести сообщение «Я — Робот». Объект, который умеет летать,
+дополнительно имеет атрибуты «Высота» и «Скорость», а также может взлетать, летать и приземляться.
