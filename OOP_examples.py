@@ -3280,3 +3280,61 @@ class Z(M1, M2, M3)
 # ScoutDrone('a1').operate()
 # print()
 # WarDrone('r2-d2', 'intellect').operate()
+
+Абстрактный клас и абстрактные методы (квадрат и прямоугольник)
+# from abc import ABC, abstractmethod #Abstract Base Class
+#
+# class Figure(ABC): # Называется абстрактным так как его экземпляры создавать не требуется. Он нужен для наследования основных методов
+#     """
+#     Абстрактный базовый класс фигура
+#
+#     Args and attrs:
+#         pos_x (int): координата X
+#         pos_y (int): координата Y
+#         length (int): длина фигуры
+#         width (int): ширина фигуры
+#     """
+#     def __init__(self, pos_x: int, pos_y: int, length: int, width: int) -> None:
+#         self.pos_x = pos_x
+#         self.pos_y = pos_y
+#         self.width = width
+#         self.length = length
+#
+#     @abstractmethod # А благодаря ABC и abstractmethod мы просто не сможем создать инстанс (объект) этого класса
+#     def move(self, pos_x: int, pos_y: int) -> None:
+#         """Метод изменяет координаты фигуры на плоскости"""
+#         self.pos_x = pos_x
+#         self.pos_y = pos_y
+#
+# class ResizableMixin: # Класс примесь. Нужен для изменения размера фигуры. Имеет общий функционал(полиморфизм) для разных фигур(классов ниже).
+#     def resize(self, width: int, length: int) -> None:
+#         self.width = width
+#         self.length = length
+#
+# class Rectangle(Figure, ResizableMixin):
+#     """ Прямоугольник. Родительский класс: Figure"""
+#
+#     def move(self, pos_x: int, pos_y: int) -> None:# абстрактный метод обязательно должен быть переопределён в дочернем классе!
+#         """Метод изменяет координаты фигуры на плоскости"""
+#         self.pos_x = pos_x
+#         self.pos_y = pos_y
+#
+# class Square(Figure, ResizableMixin):
+#     """Квадрат. Родительский класс: Figure"""
+#     def __init__(self, pos_x: int, pos_y: int, size: int):
+#         super().__init__(pos_x, pos_y, size, size) #Переопределяем инит родителя, что бы не вносить размер для квадрата дважды
+#
+#     def move(self, pos_x: int, pos_y: int) -> None: # абстрактный метод обязательно должен быть переопределён в дочернем классе!
+#         """Метод изменяет координаты фигуры на плоскости"""
+#         self.pos_x = pos_x
+#         self.pos_y = pos_y
+#
+# rect_1 = Rectangle(pos_x=10, pos_y=20, length=5, width=6)
+# rect_2 = Rectangle(pos_x=30, pos_y=40, length=10, width=11)
+# square = Square(pos_x=50, pos_y=70, size=7)
+#
+# for figure in [rect_1, rect_2, square]: # Увеличиваем размеры фигур в два раза
+#     new_size_x = figure.length * 2
+#     new_size_y = figure.width * 2
+#     figure.resize(new_size_x, new_size_y)
+
