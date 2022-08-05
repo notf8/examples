@@ -3500,3 +3500,87 @@ class Z(M1, M2, M3)
 #
 # with File('example.txt', 'w') as file:
 #     file.write('Всем привет!')
+
+Прописываем контекст менеджер, который выводит тип ошибки, ее значение и ее след
+# class Example:
+#     """Класс для контекст-менеджера"""
+#     def __init__(self):
+#         print('Вызов __init__')
+#
+#     def __enter__(self) -> bool:
+#         """Метод для входа в контекст менеджер"""
+#         print('Вызов __enter__')
+#         return True
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+#         """
+#         Метод для выхода из контекст-менеджера. Возвращает текстовое описание ошибки при ее наличии
+#         :return:
+#             exc_type (str):  Тип ошибки
+#             exc_val (str): Значение ошибки
+#             exc_tb (str): След ошибки
+#         """
+#         print('Вызов __exit__')
+#         if exc_type:
+#             print(f'Тип ошибки: {exc_type}\nЗначение ошибки: {exc_val}\n"След" ошибки:{exc_tb}') # Тут выводим все три параметра: тип ,значение и след
+#         return True  # первый вариант без этой строки, второй с этой строкой
+#
+# my_obj = Example()
+#
+# with my_obj as obj:
+#     print('Код внутри первого вызова контекст менеджера')
+#     with my_obj as obj2:
+#         raise Exception('Выброс исключения во вложенном (втором) вызове контекст менеджере')
+
+Декораторы setter и property. Setter нужен для установки атрибута а utnnth для получения инфы о нем
+# class Person:
+#     """
+#     Базовый класс описывающий служащего
+#
+#     Args:
+#         name(str): Передается имя служащего
+#         age(int): Передается возраст служащего
+#     """
+#     def __init__(self, name: str, age: int):
+#         self._name = name # Одно подчеркивание означает, что атрибут можно использовать в дочернем классе
+#         self.age = age # Даже если атрибут без '_' (_age) то в методах нужно указывать с нижнимм подчеркиванием. Иначе попадешь в рекурсию
+#
+#     def __str__(self) -> str:
+#         return f'Имя: {self._name}\nВозраст: {self._age}'
+#
+#     @property #Декоратор - свойство (для получения инфы о возрасте возраста)
+#     def age(self) -> int:
+#         """
+#         Геттер для получения возраста
+#         :return: age
+#         :rtype: int
+#         """
+#         return self._age
+#
+#     @age.setter# Декоратор-сеттер Для установки возраста. Сначала пишем параметр (age) и через точку дописываем 'setter'
+#     def age(self, age: int) -> None: # Важно!!! Сеттер обязательно идет после property (не до!!!)
+#         """
+#         Сеттер для установки возраста
+#         :param age: int
+#         :return: age
+#         """
+#         if age in range(1, 90):
+#             self._age = age
+#         else:
+#             raise Exception('Недопустимый возраст')
+#
+#     @property
+#     def name(self) -> str:
+#         """
+#         Геттер для получения имени
+#         :return: name
+#         :rtype: str
+#         """
+#         return self._name
+#
+# tom = Person('Tom', 25)
+# print(tom)
+# print(tom.age)
+# tom.age = 36
+# print(tom.age)
+# print(tom.name)
