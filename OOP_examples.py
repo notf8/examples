@@ -3654,3 +3654,36 @@ class Z(M1, M2, M3)
 # print(amph_transport.color)
 # amph_transport.color = 'white'
 # print(amph_transport.color)
+
+Класс метод (@classmethod) позволяет получать досту ко всему, что есть в классе, изменять любые атрибуты и тд
+# class Pet:
+#     TOTAL_SOUNDS = 0
+#
+#     def __init__(self) -> None:
+#         self.__legs = 4
+#         self.__has_tail = True
+#
+#     def __str__(self) -> str:
+#         tail = 'Да' if self.__has_tail else 'нет'
+#         return 'Всего ног: {legs}\nХвост присутствует: {has_tail}'.format(
+#             legs=self.__legs,
+#             has_tail=tail
+#         )
+#
+# class Cat(Pet):
+#     @classmethod # Декоратор позволяет получать доступ ко всему, что есть в классе, вместо атрибута self в скобках пишем cls.
+#     def sound(cls) -> None:
+#         cls.TOTAL_SOUNDS += 1 #Через cls и точку обращаемся у нужному элементу класса
+#         print(cls.TOTAL_SOUNDS)
+#         print('Мяу!')
+#
+# class Dog(Pet):
+#     @classmethod
+#     def sound(cls):
+#         cls.TOTAL_SOUNDS += 1  # Через cls и точку обращаемся у нужному элементу класса
+#         print(cls.TOTAL_SOUNDS)
+#         print('Гав!')
+#
+# my_cat = Cat()
+# my_cat.sound()
+# my_cat.sound()
