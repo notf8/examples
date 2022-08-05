@@ -3472,4 +3472,31 @@ class Z(M1, M2, M3)
 #     print('Третья часть')
 #     val_3 = 300 * 300 ** 3000000
 
-
+Задача 1. Работа с файлом класс File — контекстный менеджер для работы с файлами. Он должен принимать на вход имя файла
+и режим чтения/записи и открывать сам файл. В начале работы менеджер возвращает файловый объект, а в конце — закрывает файл.
+# from typing import TextIO
+#
+# class File:
+#     """
+#     Класс для контекст-менеджера
+#     :param:
+#         file name (str): Имя файла
+#         mode (str): Режим чтения/записи
+#     """
+#     def __init__(self, file_name: str, mode: str) -> None:
+#         self.file_name = file_name
+#         self.mode = mode
+#         self.file = None
+#
+#     def __enter__(self) -> TextIO:
+#         """Метод для входа в контекст менеджер. Возвращает открытый файл."""
+#         self.file = open(self.file_name, self.mode, encoding='utf-8')
+#         return self.file
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+#         """Метод закрывает файл после выполнения блока кода"""
+#         self.file.close()
+#         return True
+#
+# with File('example.txt', 'w') as file:
+#     file.write('Всем привет!')
