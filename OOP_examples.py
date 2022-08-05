@@ -3338,3 +3338,100 @@ class Z(M1, M2, M3)
 #     new_size_y = figure.width * 2
 #     figure.resize(new_size_x, new_size_y)
 
+У нас есть парк транспорта. У каждого транспорта есть цвет и скорость, и каждый умеет двигаться и подавать сигнал. В парке транспорта стоят:
+Автомобили. Они могут ездить только по земле.
+Лодки. Ездят только по воде.
+Амфибии. Могут перемещаться и по земле, и по воде.
+Класс «Транспорт» должен быть абстрактным и содержать абстрактные методы.
+Также добавьте класс-примесь, в котором реализован функционал проигрывания музыки. «Замешайте» этот класс в «Амфибию»
+# from abc import ABC, abstractmethod
+# class Transport(ABC):
+#     """
+#     Абстрактный базовый класс транспорт.
+#
+#     Args and attrs:
+#         color (str): цвет транспорта
+#         speed (int): скорость транспорт
+#     """
+#     def __init__(self, color, speed) -> None:
+#         self.color = color
+#         self.speed = speed
+#
+#
+#     # @abstractmethod
+#     # def ride_on_earth(self) -> None:
+#     #     pass
+#     #
+#     # @abstractmethod
+#     # def ride_on_water(self) -> None:
+#     #     pass
+#
+#     @abstractmethod
+#     def horn(self) -> None:
+#         pass
+#
+#     @abstractmethod
+#     def __str__(self) -> str:
+#         pass
+#
+# class MediaMixin:
+#     """Класс примесь. Нужен для добавления мультимедиа в дочерние классы"""
+#     def playing(self) -> None:
+#         print("Зачетно качает музло!")
+#
+# class Car(Transport):
+#     """Класс Машина. Родительский класс Transport"""
+#
+#     def ride_on_earth(self) -> None:
+#         """Метод езда"""
+#         print('Машина едет по земле!')
+#
+#     def horn(self) -> None:
+#         """Метод сигнал"""
+#         print('И сигналит Бип бип бип!!!')
+#
+#     def __str__(self) -> str:
+#         """Метод возвращает текстовое описание объекта"""
+#         return 'У {name} цвет {color} и она еде со скоростью {speed}'.format(
+#             name=__class__.__name__, color=self.color, speed=self.speed
+#         )
+#
+# class Boat(Transport):
+#     """Класс Лодка. Родительский класс Transport"""
+#
+#     def ride_on_water(self) -> None:
+#         """Метод езда"""
+#         print('Лодка едет по воде!')
+#
+#     def horn(self) -> None:
+#         """Метод езда"""
+#         print('И сигналит Бип бип бип!!!')
+#
+#     def __str__(self) -> str:
+#         """Метод возвращает текстовое описание объекта"""
+#         return 'У {name} цвет {color} и она еде со скоростью {speed}'.format(
+#             name=__class__.__name__, color=self.color, speed=self.speed
+#         )
+#
+# class Amphibian(Car, Boat, MediaMixin):
+#
+#     def __str__(self) -> str:
+#         """Метод возвращает текстовое описание объекта"""
+#         return 'У {name} цвет {color} и она еде со скоростью {speed}'.format(
+#             name=__class__.__name__, color=self.color, speed=self.speed
+#         )
+#
+# new_car = Car('red', 200)
+# new_boat = Boat('blue', 85)
+# new_amphibian = Amphibian('green', 75)
+# new_car.ride_on_earth()
+# new_car.horn()
+# new_boat.ride_on_water()
+# new_boat.horn()
+# new_amphibian.ride_on_water()
+# new_amphibian.horn()
+# new_amphibian.playing()
+# print(new_car)
+# print(new_boat)
+# print(new_amphibian)
+
