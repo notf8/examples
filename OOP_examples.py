@@ -3742,3 +3742,170 @@ class Z(M1, M2, M3)
 # print('Объем куба:', res_3)
 # print('Площадь поверхности сферы:', res_4)
 # print('Объем сферы:', res_5)
+
+Задача 3. Моделирование Для моделирования 3D фигур используются соответствующие 2D-фигуры, а именно квадрат и треугольник.
+Вся поверхность 3D-фигуры может храниться в виде списка. Например, для куба это будет [Square, Square, Square, Square, Square, Square]
+Квадрат инициализируется длинами сторон, а треугольник — основанием и высотой. Каждая из 2D-фигур умеет находить свои
+периметр и площадь, а 3D-фигуры, в свою очередь, могут находить площадь своей поверхности. спользуя входные данные о
+фигурах и знания математики, реализуйте соответствующие классы и методы. Для базовых классов также реализуйте геттеры и сеттеры
+# from abc import ABC, abstractmethod
+#
+# class Figure(ABC):
+#     """Абстрактный базовый клас фигура"""
+#
+#     def __init__(self, _length, _base, _height) -> None:
+#         self.length = _length
+#         self.height = _height
+#         self.base = _base
+#
+#     @abstractmethod
+#     def __str__(self) -> str:
+#         """
+#         Абстрактный метод возвращает описание фигуры.
+#         :return: str
+#         """
+#         return f'\nФигура: "{Figure.__name__}"\nПериметр: {self.perimetr()}\nПлощадь: {self.square()}'
+#
+#     @abstractmethod
+#     def perimetr(self) -> None:
+#         """Абстрактный метод нахождения периметра"""
+#         pass
+#
+#     @abstractmethod
+#     def square(self) -> None:
+#         """Абстрактный метод нахождения площади"""
+#         pass
+#
+#     @property
+#     def length(self) -> int:
+#         """Геттер. Возвращает значение атрибута 'длина'."""
+#         return self._length
+#
+#     @length.setter
+#     def length(self, value: int) -> None:
+#         """Сеттер: Устанавливает значения атрибута 'длина'."""
+#         self._length = value
+#
+#     @property
+#     def base(self) -> int:
+#         """Геттер. Возвращает значения параметра основание (base)"""
+#         return self._base
+#
+#     @base.setter
+#     def base(self, value: int) -> None:
+#         """Сеттер: Устанавливает значения атрибута 'основание'."""
+#         self._base = value
+#
+#     @property
+#     def height(self) -> int:
+#         """Геттер. Возвращает значения параметра 'высота'"""
+#         return self._height
+#
+#     @height.setter
+#     def height(self, value: int):
+#         """Сеттер: Устанавливает значения атрибута 'высота'."""
+#         self._height = value
+#
+# class Square(Figure):
+#     """Клас: Квадрат. Родительский класс: Figure."""
+#     def __init__(self, _length: int) -> None: #При переопределении инита = Важно! Не забыть удалить ненужные параметры
+#         super().__init__(_length, None, None)
+#
+#     def __str__(self) -> str: # Если нужно, что бы методы работали сразу при печати, просто добавляем их в метод __str__
+#         """
+#         Переопределенный метод, возвращает информацию о фигуре.
+#         :return: str
+#         """
+#         info = super().__str__().replace('Figure', 'Квадрат')
+#         return info
+#
+#     def perimetr(self) -> int:
+#         """
+#         Переопределенный метод нахождения периметра.
+#         :rtype: int
+#         """
+#         result = self._length * 4 # Что бы питон увидел атрибут, сначала нужно написать без "_"(self.length), потом добавляешь "_" в уже подсвеченный атрибут вручную и все работает
+#         return result
+#
+#     def square(self) -> int:
+#         """
+#         Переопределенный метод нахождения площади.
+#         :rtype: int
+#         """
+#         result = self._length ** 2
+#         return result
+#
+# class Triangle(Figure):
+#     """Клас: Треугольник. Родительский класс: Figure."""
+#     def __init__(self, _base: int, _height: int):
+#         super().__init__(None, _base, _height)
+#
+#     def __str__(self) -> str:
+#         """
+#         Переопределенный метод, возвращает информацию о фигуре.
+#         :return: str
+#         """
+#         info = super().__str__().replace('Figure', 'Треугольник')
+#         return info
+#
+#     def perimetr(self) -> int:
+#         """
+#         Переопределенный метод нахождения периметра.
+#         :rtype: int
+#         """
+#         result = (2 * self._height) + self._base
+#         return result
+#
+#     def square(self) -> float:
+#         """
+#         Переопределенный метод нахождения площади.
+#         :rtype: int
+#         """
+#         result = (self._base * self._height) / 2
+#         return result
+#
+# class Cube(Square):
+#     """Клас: Куб. Родительский класс: Square."""
+#
+#     def __str__(self) -> str:
+#         """
+#         Переопределенный метод, возвращает информацию о фигуре.
+#         :return: str
+#         """
+#         info = f'\nФигура: "{"Куб"}"\nПлощадь поверхности: {self.surface_area()}'
+#         return info
+#
+#     def surface_area(self) -> int:
+#         """
+#         Метод нахождения площади поверхности.
+#         :rtype: int
+#         """
+#         result = 6 * self._length ** 2
+#         return result
+#
+# class Pyramid(Triangle):
+#     """Клас: Пирамида. Родительский класс: Triangle."""
+#
+#     def __str__(self) -> str:
+#         """
+#         Переопределенный метод, возвращает информацию о фигуре.
+#         :return: str
+#         """
+#         info = f'\nФигура: "{"Пирамида"}"\nПлощадь поверхности: {self.surface_area()}'
+#         return info
+#
+#     def surface_area(self) -> int:
+#         """
+#         Метод нахождения площади поверхности.
+#         :rtype: int
+#         """
+#         result = (4 * self._base) + (self._height ** 2)
+#         return result
+#
+# square = Square(_length=84)
+# triangle = Triangle(_base=6, _height=12)
+# cube = Cube(_length=15)
+# pyramid = Pyramid(_base=68, _height=152)
+#
+# for figure in [square, triangle, cube, pyramid]:
+#     print(figure)
