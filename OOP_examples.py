@@ -3474,6 +3474,7 @@ class Z(M1, M2, M3)
 
 Задача 1. Работа с файлом класс File — контекстный менеджер для работы с файлами. Он должен принимать на вход имя файла
 и режим чтения/записи и открывать сам файл. В начале работы менеджер возвращает файловый объект, а в конце — закрывает файл.
+Прописано условия - если файл не найден, создастя новый и откроется для записи
 # from typing import TextIO
 #
 # class File:
@@ -3490,7 +3491,11 @@ class Z(M1, M2, M3)
 #
 #     def __enter__(self) -> TextIO:
 #         """Метод для входа в контекст менеджер. Возвращает открытый файл."""
-#         self.file = open(self.file_name, self.mode, encoding='utf-8')
+#         try:
+#             self.file = open(self.file_name, self.mode, encoding='utf-8')
+#         except FileNotFoundError:
+#             print('Ошибка! Указанный файл не найден\nЗапрошенный файл будет создан автоматически')
+#             self.file = open(self.file_name, 'w', encoding='utf-8')
 #         return self.file
 #
 #     def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
@@ -3498,7 +3503,7 @@ class Z(M1, M2, M3)
 #         self.file.close()
 #         return True
 #
-# with File('example.txt', 'w') as file:
+# with File('example.txt', 'r') as file:
 #     file.write('Всем привет!')
 
 Прописываем контекст менеджер, который выводит тип ошибки, ее значение и ее след
@@ -3687,3 +3692,53 @@ class Z(M1, M2, M3)
 # my_cat = Cat()
 # my_cat.sound()
 # my_cat.sound()
+
+Задача 2. Математический модуль класс MyMath, состоящий как минимум из следующих методов (можете бонусом добавить и:
+вычисление длины окружности,вычисление площади окружности,вычисление объёма куба,вычисление площади поверхности сферы
+# class MyMath:
+#     """
+#     Класс - аналогия модуля math
+#     :return: Any
+#     :rtype: float
+#     """
+#
+#     @classmethod
+#     def circle_sq(cls, radius) -> float:
+#         """Метод возвращает площадь окружности"""
+#         s = 3.141592653589793 * (radius ** 2)
+#         return s
+#
+#     @classmethod
+#     def circle_len(cls, radius) -> float:
+#         """Метод возвращает длину окружности"""
+#         p = 2 * 3.141592653589793 * radius
+#         return p
+#
+#     @classmethod
+#     def cube_volume(cls, side) -> float:
+#         """Метод возвращает объем куба"""
+#         v = side ** 3
+#         return v
+#
+#     @classmethod
+#     def sphere_sq(cls, radius) -> float:
+#         """Метод возвращает площадь поверхности сферы"""
+#         s = 4 * 3.141592653589793 * (radius ** 2)
+#         return s
+#
+#     @classmethod
+#     def sphere_volume(cls, radius) -> float:
+#         """Метод возвращает объем сферы"""
+#         v = 4 * 3.141592653589793 / 3 * (radius ** 3)
+#         return v
+#
+# res_1 = MyMath.circle_len(radius=5)
+# res_2 = MyMath.circle_sq(radius=6)
+# res_3 = MyMath.cube_volume(side=15)
+# res_4 = MyMath.sphere_sq(radius=5)
+# res_5 = MyMath.sphere_volume(radius=6)
+# print('Длина окружности:', res_1)
+# print('Площадь окружности:', res_2)
+# print('Объем куба:', res_3)
+# print('Площадь поверхности сферы:', res_4)
+# print('Объем сферы:', res_5)
