@@ -3909,3 +3909,40 @@ class Z(M1, M2, M3)
 #
 # for figure in [square, triangle, cube, pyramid]:
 #     print(figure)
+
+Задача 4. Дата класс Date, который должен:проверять числа даты на корректность;конвертировать строку даты в объект класса
+Date, состоящий из соответствующих числовых значений дня, месяца и года.Оба метода должны получать на вход строку вида
+dd-mm-yyyy При тестировании программы объект класса Date должен инициализироваться исключительно через метод конвертации
+class Date:
+    """Базовый класс: Дата"""
+    def __init__(self, day: int = 0, month: int = 0, year: int = 0) -> None:
+        self.day = day
+        self.month = month
+        self.year = year
+
+    def __str__(self) -> str:
+        """Метод возвращает дату в формате строки"""
+        return 'День: {}\tМесяц: {}\tГод: {}'.format(
+            self.day, self.month, self.year
+        )
+
+    @classmethod # Если сэлф не используем, то можно сразу делать его классметодом
+    def is_date_valid(cls, data: str) -> bool:
+        """Метод проверяет корректность даты"""
+        day, month, year = map(int, data.split('-'))
+        return 0 < day <= 31 and 0 < month <= 12 and 0 < year <= 9999
+
+    @classmethod
+    def from_string(cls, data: str) -> 'Date':
+        """Метод возвращает дату в виде объекта класса, преобразованный из строки"""
+        # dmy_list = data.split('-')
+        # day, month, year = int(dmy_list[0]), int(dmy_list[1]), int(dmy_list[2])
+        day, month, year = map(int, data.split('-')) # Можно заменить верхние закомментированные строки на одну такую
+        date_obj = cls(day, month, year)
+        return date_obj
+
+
+date = Date.from_string('10-12-2077')
+print(date)
+print(Date.is_date_valid('10-12-2077'))
+print(Date.is_date_valid('40-12-2077'))
