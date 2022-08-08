@@ -3162,7 +3162,7 @@ function_errors.log записываются названия функции и 
 # for _ in range(3):
 #     test()
 ========================================================================================================================
-MRO - metod resolution order(Порялок наследования методотов). Множественное наследование
+MRO - metod resolution order(Порялок наследования методотов). Множественное наследование (алгоритм: C3 superclass linearization)
 Сначало смотрится методы наследника, зате его родительские классы слева направо и в конце супер-класс
 Если у родительских классовтоже несколько родителей, то смотрятся по одному родителю, стоящему первым в списке по очереди
 Class Main
@@ -3173,6 +3173,7 @@ class M2(A, D)
 class M3(C,D, E)
 class Z(M1, M2, M3)
 Тогда MRO = Z -> M1 -> A -> M2 - B -> M3 -> C -> D -> E -> Main
+
 # from typing import List
 #
 # class Person:
@@ -3282,6 +3283,8 @@ class Z(M1, M2, M3)
 # WarDrone('r2-d2', 'intellect').operate()
 
 Абстрактный клас и абстрактные методы (квадрат и прямоугольник)
+Если класс создается для наследования его методов дочерними классами и не подразумевает создание его инстансов - такой
+класс нужно делать абстрактным (наследовать ABC  из модуля abc)
 # from abc import ABC, abstractmethod #Abstract Base Class
 #
 # class Figure(ABC): # Называется абстрактным так как его экземпляры создавать не требуется. Он нужен для наследования основных методов
@@ -3913,36 +3916,36 @@ class Z(M1, M2, M3)
 Задача 4. Дата класс Date, который должен:проверять числа даты на корректность;конвертировать строку даты в объект класса
 Date, состоящий из соответствующих числовых значений дня, месяца и года.Оба метода должны получать на вход строку вида
 dd-mm-yyyy При тестировании программы объект класса Date должен инициализироваться исключительно через метод конвертации
-class Date:
-    """Базовый класс: Дата"""
-    def __init__(self, day: int = 0, month: int = 0, year: int = 0) -> None:
-        self.day = day
-        self.month = month
-        self.year = year
-
-    def __str__(self) -> str:
-        """Метод возвращает дату в формате строки"""
-        return 'День: {}\tМесяц: {}\tГод: {}'.format(
-            self.day, self.month, self.year
-        )
-
-    @classmethod # Если сэлф не используем, то можно сразу делать его классметодом
-    def is_date_valid(cls, data: str) -> bool:
-        """Метод проверяет корректность даты"""
-        day, month, year = map(int, data.split('-'))
-        return 0 < day <= 31 and 0 < month <= 12 and 0 < year <= 9999
-
-    @classmethod
-    def from_string(cls, data: str) -> 'Date':
-        """Метод возвращает дату в виде объекта класса, преобразованный из строки"""
-        # dmy_list = data.split('-')
-        # day, month, year = int(dmy_list[0]), int(dmy_list[1]), int(dmy_list[2])
-        day, month, year = map(int, data.split('-')) # Можно заменить верхние закомментированные строки на одну такую
-        date_obj = cls(day, month, year)
-        return date_obj
-
-
-date = Date.from_string('10-12-2077')
-print(date)
-print(Date.is_date_valid('10-12-2077'))
-print(Date.is_date_valid('40-12-2077'))
+# class Date:
+#     """Базовый класс: Дата"""
+#     def __init__(self, day: int = 0, month: int = 0, year: int = 0) -> None:
+#         self.day = day
+#         self.month = month
+#         self.year = year
+#
+#     def __str__(self) -> str:
+#         """Метод возвращает дату в формате строки"""
+#         return 'День: {}\tМесяц: {}\tГод: {}'.format(
+#             self.day, self.month, self.year
+#         )
+#
+#     @classmethod # Если сэлф не используем, то можно сразу делать его классметодом
+#     def is_date_valid(cls, data: str) -> bool:
+#         """Метод проверяет корректность даты"""
+#         day, month, year = map(int, data.split('-'))
+#         return 0 < day <= 31 and 0 < month <= 12 and 0 < year <= 9999
+#
+#     @classmethod
+#     def from_string(cls, data: str) -> 'Date':
+#         """Метод возвращает дату в виде объекта класса, преобразованный из строки"""
+#         # dmy_list = data.split('-')
+#         # day, month, year = int(dmy_list[0]), int(dmy_list[1]), int(dmy_list[2])
+#         day, month, year = map(int, data.split('-')) # Можно заменить верхние закомментированные строки на одну такую
+#         date_obj = cls(day, month, year)
+#         return date_obj
+#
+#
+# date = Date.from_string('10-12-2077')
+# print(date)
+# print(Date.is_date_valid('10-12-2077'))
+# print(Date.is_date_valid('40-12-2077'))
