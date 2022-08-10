@@ -4319,3 +4319,41 @@ dd-mm-yyyy При тестировании программы объект кл�
 # say_hallo()
 # say_hallo()
 # say_hallo()
+
+Задача 1. Права доступа Напишите декоратор check_permission, который проверяет, есть ли у пользователя доступ к вызываемой
+функции, и если нет, то выдаёт исключение PermissionError
+# from typing import Callable
+# import functools
+# def check_permission(permission: str) -> Callable:
+#     """
+#     Декоратор для проверки прав доступа.
+#     Возвращает результат функции либо ошибку прав доступа.
+#     """
+#
+#     def check(func: Callable) -> Callable:
+#         @functools.wraps(func)
+#         def wrap(*args, **kwargs):
+#             try:
+#                 if permission in user_permissions:
+#                     return func(*args, **kwargs)
+#                 else:
+#                     raise PermissionError
+#             except PermissionError:
+#                 print('PermissionError: У пользователя недостаточно прав, чтобы выполнить функцию {func}'.format(
+#                     func=func.__name__
+#                 ))
+#         return wrap
+#     return check
+#
+# user_permissions = ['admin']
+#
+# @check_permission('admin')
+# def delete_site():
+#     print('Удаляем сайт')
+#
+# @check_permission('user_1')
+# def add_comment():
+#     print('Добавляем комментарий')
+#
+# delete_site()
+# add_comment()
