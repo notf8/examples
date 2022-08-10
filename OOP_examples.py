@@ -4461,3 +4461,35 @@ import time
 # my_obj = B()
 # my_obj.test_sum_1()
 # my_obj.test_sum_2()
+
+Задача 4. Весь мир — декоратор… Реализуйте декоратор для декораторов: он должен декорировать другую функцию, которая
+должна быть декоратором, и даёт возможность любому декоратору принимать произвольные аргументы
+from typing import Callable
+import functools
+
+
+def decorator_with_args_for_any_decorator(decorator_to_enhanced) -> Callable:
+    """Декоратор позволяет другому декоратору принимать произвольные документы"""
+    def decorator_maker(*args, **kwargs) -> Callable:
+        def decorator_wrapper(func: Callable) -> Callable:
+            return decorator_to_enhanced(func, *args, **kwargs) # Возвращаем декоратор, который по сути просто функция, возвращающая другую функцию
+        return decorator_wrapper
+    return decorator_maker
+
+
+@decorator_with_args_for_any_decorator
+def decorated_decorator(func: Callable, *dec_args, **dec_kwargs) -> Callable:
+    """Шаблон для декоратора"""
+    @functools.wraps(func)
+    def wrapper(*func_args, **func_kwargs) -> Callable:
+        print('Переданные арги и кварги в декоратор:', dec_args, dec_kwargs)
+        return func(*func_args, **func_kwargs)
+    return wrapper
+
+
+@decorated_decorator(100, 'рублей', 200, 'друзей')
+def decorated_function(text: str, num: int) -> None:
+    print("Привет", text, num)
+
+
+decorated_function("Юзер", 101)
