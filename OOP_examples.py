@@ -4466,30 +4466,61 @@ import time
 должна быть декоратором, и даёт возможность любому декоратору принимать произвольные аргументы
 from typing import Callable
 import functools
+#
+# def decorator_with_args_for_any_decorator(decorator_to_enhanced) -> Callable:
+#     """Декоратор позволяет другому декоратору принимать произвольные документы"""
+#     def decorator_maker(*args, **kwargs) -> Callable:
+#         def decorator_wrapper(func: Callable) -> Callable:
+#             return decorator_to_enhanced(func, *args, **kwargs) # Возвращаем декоратор, который по сути просто функция, возвращающая другую функцию
+#         return decorator_wrapper
+#     return decorator_maker
+#
+#
+# @decorator_with_args_for_any_decorator
+# def decorated_decorator(func: Callable, *dec_args, **dec_kwargs) -> Callable:
+#     """Шаблон для декоратора"""
+#     @functools.wraps(func)
+#     def wrapper(*func_args, **func_kwargs) -> Callable:
+#         print('Переданные арги и кварги в декоратор:', dec_args, dec_kwargs)
+#         return func(*func_args, **func_kwargs)
+#     return wrapper
+#
+#
+# @decorated_decorator(100, 'рублей', 200, 'друзей')
+# def decorated_function(text: str, num: int) -> None:
+#     print("Привет", text, num)
+#
+#
+# decorated_function("Юзер", 101)
 
-
-def decorator_with_args_for_any_decorator(decorator_to_enhanced) -> Callable:
-    """Декоратор позволяет другому декоратору принимать произвольные документы"""
-    def decorator_maker(*args, **kwargs) -> Callable:
-        def decorator_wrapper(func: Callable) -> Callable:
-            return decorator_to_enhanced(func, *args, **kwargs) # Возвращаем декоратор, который по сути просто функция, возвращающая другую функцию
-        return decorator_wrapper
-    return decorator_maker
-
-
-@decorator_with_args_for_any_decorator
-def decorated_decorator(func: Callable, *dec_args, **dec_kwargs) -> Callable:
-    """Шаблон для декоратора"""
-    @functools.wraps(func)
-    def wrapper(*func_args, **func_kwargs) -> Callable:
-        print('Переданные арги и кварги в декоратор:', dec_args, dec_kwargs)
-        return func(*func_args, **func_kwargs)
-    return wrapper
-
-
-@decorated_decorator(100, 'рублей', 200, 'друзей')
-def decorated_function(text: str, num: int) -> None:
-    print("Привет", text, num)
-
-
-decorated_function("Юзер", 101)
+Задача 5. Синглтон Синглтон — это порождающий паттерн проектирования, который гарантирует, что у класса есть только один
+экземпляр, и предоставляет к нему глобальную точку доступа. Синглтонами мы уже пользовались, к ним относятся, например,
+None, True и False. Именно потому, что None является синглтоном, мы можем использовать оператор is — он возвращает True
+только для объектов, представляющих одну и ту же сущность
+# import functools
+#
+# def singleton(cls): # Использем cls т.к. будем декорировать целый класс
+#     # Аннотацию не пишем так как это cls
+#     """
+#     Декоратор класса. Позволяет сделать из класса singleton
+#     Класс, который может иметь только один инстанс (объект класа)
+#     """
+#     @functools.wraps(cls) # Т.к. работаем с классом
+#     def wrapper_singleton(*args, **kwargs):
+#         if not wrapper_singleton.instance:
+#             wrapper_singleton.instance = cls(*args, **kwargs)
+#         return wrapper_singleton.instance
+#     wrapper_singleton.instance = None # Это кэш (если в нем есть объект класса отдаем его, если нет, то вычисляем
+#     return wrapper_singleton
+#
+# @singleton
+# class Example:
+#     pass
+#
+# my_obj = Example()
+# my_another_obj = Example()
+#
+# print(id(my_obj))
+# print(id(my_another_obj))
+#
+# print(my_obj is my_another_obj)
