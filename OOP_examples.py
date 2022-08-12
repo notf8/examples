@@ -4679,3 +4679,62 @@ print(y(5))
 # print('\nМаксимальное количество очков:', max(grades, key=lambda values: values['score']))
 # print('\nМинимальное количество очков:', min(grades, key=lambda values: values['score']))
 # print('\nОтсортированный список:', sorted(grades, key=lambda values: values['score']))
+
+!!! Метод __repr__ в Python выдает текстовое или строковое представление сущности или объекта. Функция __str__ в Python
+делает то же самое, но ее поведение всё же немного отличается. Она предназначена для создания удобочитаемой версии,
+ полезной для отслеживания или отображения информации об объекте. А метод __repr__ предназначен для предоставления
+«официального» текстового образа объекта, который можно использовать для воссоздания этого объекта
+
+
+Задача 2. Сортировка Реализуйте класс Person с соответствующей инициализацией, а также сеттерами и геттерами. Затем
+создайте список из хотя бы трёх людей и отсортируйте их. Для сортировки используйте лямбда-функцию
+# class Person:
+#     """
+#     Базовый класс. Описывает человека.
+#     :param:
+#         name: Имя (str)
+#         age: Возраст (int)
+#     """
+#     def __init__(self, name: str, age: int) -> None:
+#         self._name = name
+#         self._age = age
+#
+#     def __repr__(self) -> str:  # Метод __repr__ выдает текстовое или строковое представление сущности или объекта
+#         return '\nИмя: {name},\tВозраст: {age}'.format(
+#             name=self.name, age=self.age
+#         )
+#
+#     @property
+#     def age(self) -> int:
+#         """Метод возвращает возраст"""
+#         return self._age
+#
+#     @age.setter
+#     def age(self, age: int) -> None:
+#         """Метод для установки возраста"""
+#         if age in range(1, 90):
+#             self._age = age
+#         else:
+#             raise Exception('Недопустимый возраст')
+#
+#     @property
+#     def name(self) -> str:
+#         """Метод возвращает имя."""
+#         return self._name
+#
+#     @name.setter
+#     def name(self, name: str) -> None:
+#         """Метод для установки имени."""
+#         self._name = name
+#
+# man_1 = Person('Tom', 35)
+# man_2 = Person('Jack', 85)
+# man_3 = Person('Alice', 26)
+#
+# people_list = [man_1, man_2, man_3]
+#
+# print(people_list)
+# people_list.sort(key=lambda value: value.age)  # Сортируем по возрастанию
+# print(people_list)
+# people_list.sort(key=lambda value: - value.age)  # Сортируем по убыванию
+# print(people_list)
