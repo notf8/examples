@@ -4785,3 +4785,17 @@ print(list(result))
 экран список этих символов, исключая цифры и буквы в верхнем регистре
 # string = input('введите строку из чисел и цифр: ')
 # print(list(filter(lambda val: not (val.isupper() or val.isdigit()), string)))
+
+Задача 3. Функция reduce Помимо map и filter, есть ещё одна функция — reduce. Она применяет указанную функцию к элементам
+последовательности, сводя её к единственному значению
+# from functools import reduce
+# from typing import List
+#
+# def my_add(a: int, b: int) -> int:
+#     result = a + b
+#     print(f"{a} + {b} = {result}")
+#     return result
+#
+# numbers: List[int] = [0, 1, 2, 3, 4]
+#
+# print(reduce(my_add, numbers))
