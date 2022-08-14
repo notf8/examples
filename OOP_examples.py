@@ -4858,3 +4858,6 @@ print(list(result))
 # if __name__ == '__main__':
 #     results = list(map(lambda x, y: (x, y), letters, numbers))
 #     print(results)
+
+Простые числа одной строкой (с использованием lambda функций)
+# print(*list(filter(lambda x: x % 2 != 0 and all(map(lambda i: x % i != 0, range(3, int(x ** 0.5) + 1, 2))) or x == 2, range(2, 1000))))
