@@ -4830,3 +4830,19 @@ print(list(result))
 # ]
 # if __name__ == "__main__":
 #     print(reduce(check_was, sentences))
+
+Задача 1. Новые списки Напишите код, который создаёт три новых списка. Вот их содержимое:Каждое число из списка floats
+возводится в третью степень и округляется до трёх знаков после запятой. Из списка names берутся только те имена, в которых
+есть минимум пять букв Из списка numbers берётся произведение всех чисел
+# from typing import List
+# from functools import reduce
+#
+# floats: List[float] = [12.3554, 4.02, 5.777, 2.12, 3.13, 4.44, 11.0001]
+# names: List[str] = ["Vanes", "Alen", "Jana", "William", "Richards", "Joy"]
+# numbers: List[int] = [22, 33, 10, 6894, 11, 2, 1]
+#
+# if __name__ == '__main__':
+#     print('\n1-ый список:', list(map(lambda x: round(x ** 3, 3), floats)))
+#     print('2-ой список:', list(filter(lambda elem: len(elem) >= 5, names)))
+#     print('3-ий список:', reduce(lambda prev_el, el: prev_el * el, numbers)) # Тут очень подходит reduce, так как он оставляет
+#     # только крайнее число в последовательности, а лямбда как раз его умножает на следующий элемент списка (гениально)
