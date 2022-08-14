@@ -4846,3 +4846,15 @@ print(list(result))
 #     print('2-ой список:', list(filter(lambda elem: len(elem) >= 5, names)))
 #     print('3-ий список:', reduce(lambda prev_el, el: prev_el * el, numbers)) # Тут очень подходит reduce, так как он оставляет
 #     # только крайнее число в последовательности, а лямбда как раз его умножает на следующий элемент списка (гениально)
+
+Задача 2. И снова zip Даны список букв (letters) и список цифр (numbers). Каждый список состоит из N элементов. Создайте
+кортежи из пар элементов списков и запишите их в список results. Не используйте функцию zip. Решите задачу «в одну строку»
+(не считая print(results))
+# from typing import List
+#
+# letters: List[str] = ['a', 'b', 'c', 'd', 'e']
+# numbers: List[int] = [1, 2, 3, 4, 5, 6, 7, 8]
+#
+# if __name__ == '__main__':
+#     results = list(map(lambda x, y: (x, y), letters, numbers))
+#     print(results)
