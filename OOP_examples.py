@@ -4971,3 +4971,21 @@ r'{4}' - в фигурных скобках указываем, сколько �
 # text = 'Amit 34-3456 12-05-2007, XYZ 56-4532 11-11-2011, ABC 67-8945 12-01-2009'
 # result = re.findall(r'\d{2}-\d{2}-\d{4}', text)
 # print('Список дат:', result)
+
+Задача 1. Lorem ipsum Напишите программу, которая обрабатывает этот текст и выводит список слов, состоящих ровно из четырёх букв
+# import re
+# text = """ Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+# Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+# nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
+# Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate
+# """
+# def search(some_text):
+#     search_pattern = r'\b\w{4}\b' # Что бы указать, сколько букв должно быть, нужно ограничить с двух сторон \b....\b
+#     result = re.findall(search_pattern, some_text)
+#     print(result)
+#
+# if __name__ == '__main__':
+#     search(text)
+========================================================================================================================
+
+Модуль request и основы парсинга
