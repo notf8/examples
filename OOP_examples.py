@@ -5123,3 +5123,36 @@ with open('my_test.json', 'r') as file:
 #
 # if __name__ == '__main__':
 #     brute_force_pin()
+
+Задача 6. Web scraping Изучите код этой страницы и реализуйте программу, которая получает список всех подзаголовков сайта
+(они заключены в теги h3)
+import requests
+from typing import List
+from bs4 import BeautifulSoup
+# address = 'http://www.columbia.edu/~fdc/sample.html'
+#
+# def get_info(url: str) -> List:
+#     """
+#     Функция получает информацию с HTML страницы,
+#     возвращает список всех подзаголовков.
+#     :param url:
+#     :return: data_list
+#     """
+#     my_req = requests.get(url)
+#     my_soup = BeautifulSoup(my_req.content, "html.parser")
+#     elements = my_soup.findAll('h3')
+#     data_list = []
+#     for i_elem in elements:
+#         data_list.append(i_elem.get_text())
+#     return data_list
+#
+# def main() -> None:
+#     """
+#     Основная функция. Выводит на экран подзаголовки сайта.
+#     :return: None
+#     """
+#     my_data = get_info(address)
+#     print(my_data)
+#
+# if __name__ == '__main__':
+#     main()
