@@ -5110,3 +5110,16 @@ with open('my_test.json', 'r') as file:
 #
 # if __name__ == '__main__':
 #     check_number()
+
+Задача 5. ПИН-код ПИН-код состоит из четырёх цифр. На каждой позиции ПИН-кода находится цифра от 0 до 9. Позиции не
+зависят друг от друга. Напишите программу, которая переберёт все возможные коды. Не используйте вложенные циклы
+# import itertools
+#
+# def brute_force_pin():
+#     """Основная функция. Выводит на экран все возможные коды"""
+#     pin_code = itertools.product(range(10), repeat=4)
+#     for number in pin_code:
+#         print(*number)
+#
+# if __name__ == '__main__':
+#     brute_force_pin()
