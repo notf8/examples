@@ -5045,3 +5045,51 @@ with open('my_test.json', 'r') as file:
 #
 # if __name__ == '__main__':
 #     main()
+
+Задача 3. Во все тяжкие напишите программу, которая выводит на экран (а также в JSON-файл) информацию о том, в каком
+эпизоде произошло больше всего смертей. Информация хранится в виде словаря, который содержит: ID эпизода. Номер сезона.
+Номер эпизода.Общее количество смертей.Список погибших
+import requests
+import json
+from typing import Dict
+
+def get_request() -> Dict:
+    """
+    Функция делает запрос на сервер и возвращает данные в виде дневника
+    rtype: Dict
+    """
+    my_req = requests.get("https://breakingbadapi.com/api/deaths")
+    return json.loads(my_req.text)
+
+def data_preparation(some_data) -> Dict:
+    """
+    Функция подготавливает и возвращает пользовательский словарь
+    :return my_data
+    :rtype Dict
+    """
+    temp_dict = max(some_data, key=lambda d: d['number_of_deaths'])
+    my_data = dict()
+    my_data['ID эпизода: '] = temp_dict['death_id']
+    my_data['Номер сезона: '] = temp_dict['season']
+    my_data['Номер эпизода: '] = temp_dict['episode']
+    my_data['Общее количество смертей: '] = temp_dict['number_of_deaths']
+    my_data['Список погибших: '] = temp_dict['death']
+    return my_data
+
+def main():
+    """
+    Основная функция:
+    Записывает данные в файл json.
+    Открывает записанный файл и выводит информацию из файла на экран.
+    """
+    temp_dict = get_request()
+    request_data = data_preparation(temp_dict)
+    with open('breaking_api.json', 'w', encoding='utf-8') as file:
+        json.dump(request_data, file, indent=4, ensure_ascii=False) # Если нужно записать данные в utf8, указываем ensure_ascii=False
+    with open('breaking_api.json', 'r', encoding='utf-8') as file:
+        data = json.load(file)
+        for i, k in data.items():
+            print(i, k)
+
+if __name__ == '__main__':
+    main()
