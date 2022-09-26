@@ -119,5 +119,6 @@ Inner Join (внутреннее объединение). При написан�
     from `good` g
     join good_category c on c.id = g.category_id
     join order2good o2g on o2g.good_id = g.id
-    join `order` o on o.id = o2g.order_id
+    join `order` o on o.id = o2g.order_id and (здесь можно добавить нужное условие для объединения просто через AND)
+        o.creation_date between '2017-08-01' and '2017-08-31'
     join `user` u on u.id = o.user_id
