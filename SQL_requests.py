@@ -171,3 +171,33 @@ join той же таблицы (т.к. первый join уже забрал д
     join good_category c on c.id = g.category_id
     group by `category_id`
     order by `count` desc # Группируем по убыванию (имя поля указываем в косых `` кавычках)
+
+ - Группировка по нескольким полям. Для этого после GROUP BY через запятую, указываем нужные поля
+    SELECT
+        g.name,
+    from good g
+    group by
+        `category_id`,
+        `price`
+========================================================================================================================
+
+Объединение результатов запросов, опертор UNION
+Важно! Если мы объединяем несколько запросов, каждый запрос должен возвращать одинаковое количество полей (строк),
+желательно, что бы это были одни и те же поля.
+Что бы реализавтаь такаой запрос, сначала прокисываем каждый отдельно, проверяем, что бы он работал корректно, и потом между
+ними просто вписываем оператор UNION (Важно! Поле каждого отдельного запроса в конце не ставится ';')
+    SELECT o.id, o.creation_date
+    FROM `order` o
+    join `order_status` s on s.id = o.status_id
+    where s.code in ('APPROVED_BY_STOCK', 'PACKED')
+    UNION
+    SELECT o.id, o.creation_date
+    FROM `order` o
+    join `user` u on u.id = o.user_id
+    where u.reg_date between '2018-02-01' and '2018-02-28'
+    UNION
+    SELECT o.id, o.creation_date
+    FROM `good` g
+    join `order2good` o2g on o2g.`good_id` = g.`id`
+    join `order` o on o.`id` = o2g.`order_id`
+    where g.`name` like '%йогурт%'
