@@ -267,5 +267,5 @@ SET и указываем имя поля. Если запросов неско�
         `count` < 20,
         `price` * 0.8,
         `price`
-        ) UpdatedPrice
+        ) `UpdatedPrice`
     from `good`
