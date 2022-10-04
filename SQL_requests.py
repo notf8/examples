@@ -415,3 +415,12 @@ dayofyear(date) - выводит день года, если в нее пере�
     group by `category_id`               # Тут групируем по полю `category_id`
     having `count` < 50 or `count` > 300 # Здесь дописываем условия вывода
     order by `count` desc # Сортируем по убыванию
+или
+Вывести все заказы, стоимость которых больше 1000 рублей:
+    select
+        o.id, sum(o2g.count * g.price) `TotalPrice`
+    from `order` o
+    join `order2good` o2g on o2g.order_id = o.id
+    join `good` g on g.id = o2g.good_id
+    group by o.id
+    having `TotalPrice` > 1000
