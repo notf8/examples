@@ -113,6 +113,9 @@ if __name__ == "__main__":
         return HttpResponse('<ul>'
                             '<li>Мастер на час</li>'
                             '<li>Выведение из запоя</li>'
-                            '<li>Мастер на час</li>'
-                            '<li>Услуги жкскаватора-погрузчика</li>'
+                            '<li>Услуги экскаватора-погрузчика</li>'
                             '</ul>')
+ - Что бы добавить новую страничку с объявлением. Для этого нужно дописать еще один url в urlpatterns, например ‘advertisement/’
+    по аналогии с предыдущим (то есть, если вы хотите добавить отдельную ссылку для адреса http://127.0.0.1:8000/advertisement/
+    вам нужно добавить в urls.py такую строчку path('advertisement/', views.advertisement_detail, name='advertisement_list')
+    и представление advertisement_detail во views.py.
