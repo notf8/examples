@@ -99,7 +99,7 @@ if __name__ == "__main__":
     - А в переменную urlpatterns (в список) добавим через запятую: path('', include('advertisement.urls'))
     - После, в папке advertisement создаем файл urls.ry
     - from django.urls import path
-    - from .import views          ## Тут импортируем вьхи
+    - from .import views          ## Тут импортируем вьюхи
      - urlpatterns = [
         path("", views.advertisement_list, name='advertisement_list')  #Здесь связываем представления advertisement
       ]                                                                #с корневым каталогом двойными кавычками
@@ -118,7 +118,7 @@ if __name__ == "__main__":
  - Что бы добавить новую страничку с объявлением. Для этого нужно дописать еще один url в urlpatterns, например ‘advertisement/’
     по аналогии с предыдущим (то есть, если вы хотите добавить отдельную ссылку для адреса http://127.0.0.1:8000/advertisement/
     вам нужно добавить в urls.py такую строчку path('advertisement/', views.advertisement_detail, name='advertisement_list')
-    и представление advertisement_detail во views.py.
+    и представление (функцию) advertisement_detail во views.py.
 
 Что бы функция в файле views возвращала пердставление (а не шаблон внутри представления), а html код в отдельном шаблоне:
     def advertisement_list(request, *args, **kwargs):
@@ -127,3 +127,4 @@ if __name__ == "__main__":
     Просто создаем нужные папки в дирректории и уже внутри создадим файл advertisement_list.html
  - Далее в файл settings.py в директории board/board добавляем 'advertisement' в список INSTALLED_APPS
  - Файл settings.py - Это конфигуратор проекта, в нем лежат все переменные ,которые мы будем использовать в проекте
+ - Теперь нужно добавить теги в шаблон, что бы отобразить список объявлений - Это делаем в ранее созданом файле advertisement_list.html.
