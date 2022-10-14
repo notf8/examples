@@ -119,3 +119,11 @@ if __name__ == "__main__":
     по аналогии с предыдущим (то есть, если вы хотите добавить отдельную ссылку для адреса http://127.0.0.1:8000/advertisement/
     вам нужно добавить в urls.py такую строчку path('advertisement/', views.advertisement_detail, name='advertisement_list')
     и представление advertisement_detail во views.py.
+
+Что бы функция в файле views возвращала пердставление (а не шаблон внутри представления), а html код в отдельном шаблоне:
+    def advertisement_list(request, *args, **kwargs):
+        return render(request, 'advertisement/advertisement_list.html', {}) # функция render возвращает объект http response
+ - После изменения функции нужно создать соответствующий шаблон. Они хранятся в директории 'advertisement => templates => advertisement'
+    Просто создаем нужные папки в дирректории и уже внутри создадим файл advertisement_list.html
+ - Далее в файл settings.py в директории board/board добавляем 'advertisement' в список INSTALLED_APPS
+ - Файл settings.py - Это конфигуратор проекта, в нем лежат все переменные ,которые мы будем использовать в проекте
