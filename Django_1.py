@@ -90,3 +90,9 @@ if __name__ == "__main__":
 
  - Создаем приложение, в котором будет лежать код для доски объявлений - python  manage.py startapp advertisement
  - Теперь создаем миграцию базы данных (в gjango пердустановлена SQLlite) - python manage.py migrate
+
+Теперь конфигурируем проект:
+ - Для этого в файл 'urls.py', который лежит в папке board добавим импорт из проекта advertisement:
+    - В строке импорта (from django.urls) дописываем через запятую include
+    - А в переменную urlpatterns (в список) добавим через запятую: path('', include('advertisement.urls'))
+    - После, в папке advertisement создаем файл urls.ry
