@@ -389,3 +389,11 @@ CSS - Каскадные таблицы стилей (Cascade Style Sheet)
     .heading {
       color: red !important;
  - Если есть !important в файле CSS но его менять нельзя - Просто добавить !important в аргумент тэга <h1 style="color: red !important;">Заголовок страницы</h1>
+========================================================================================================================
+
+Единицы измерения CSS:
+ - Базовые: https://webref.ru/course/css-basics/size
+ - Дополнительные: https://www.w3.org/Style/Examples/007/units.ru.html
+ - Справочник стилей: https://webref.ru/css
+ - Справочник стилей (2): https://html5book.ru/css-css3/
+ -
