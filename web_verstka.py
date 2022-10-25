@@ -434,4 +434,37 @@ CSS - Каскадные таблицы стилей (Cascade Style Sheet)
             }
 ========================================================================================================================
 
-Свойства Display
+Свойства Display: С помощью Display мы управляем поведением элемнтов на странице. Их видимостью и т.д.
+ - Справочник 1 - https://webref.ru/css/display
+ - Справочник 2 - https://www.w3schools.com/cssref/pr_class_display.php
+ - Справочник 3 - https://html5book.ru/svoystvo-display/
+ - Блочный ии строчный элемент:
+    Блочный  - растягивается на всю дсотупную ширину экрана
+    Строчный - стремится занять как можно меньше доступного пространства
+    Для примера:
+        div, span {
+          background-color: aqua;
+        }
+
+        div {
+          display: inline; # С помощью display делаем div строчным
+        }
+
+        span {
+          display: block;  # С помощью display делаем span блочным
+        }
+        Так же бывает атрибут display: none;  # Так мы делаем элемент невидимым и убираем его из потока запросов к стилям
+
+    Объединение inline и block:
+        .block {
+          margin-bottom: 30px;
+        }
+
+        .inline {
+          margin-bottom: 30px;
+        }
+
+        .inline-block {
+          display: inline-block; # В отличии от чистого Block, имеет настраиваемые margin (т.е. обладает настраиваемыми элементами inline)
+          margin-bottom: 30px;
+        }
