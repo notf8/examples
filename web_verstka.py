@@ -603,3 +603,18 @@ CSS - Каскадные таблицы стилей (Cascade Style Sheet)
         padding: 0;
         list-style: none;
         }
+========================================================================================================================
+
+Позиционирование: Как например закрепить шапку сайта при скроле
+ - почитать 1: https://html5book.ru/css-position/
+ - почитать 2: https://developer.mozilla.org/ru/docs/Learn/CSS/CSS_layout/Positioning
+ - position: sticky: http://shpargalkablog.ru/2017/04/position-sticky.html (работает не во всех браузерах)
+ - Поток: Это то, как располагаются элементы на экране (слева на право, сверхувниз)
+ - position: static - Он же не позиционированный элемент (находится в потоке, без каких лиюо правил)
+ - position: relative - Можем управлять его положением
+    .relative {
+      position: relative;
+      left: 50px;
+      top: 5px;
+      background-color: #000;
+}
