@@ -575,3 +575,22 @@ CSS - Каскадные таблицы стилей (Cascade Style Sheet)
  - Отступы между секциями, должны регулироваться исключительно стилями самих секций
  - Логика должна читаться: Если элементы inline-block то убираем правый отступ у последнего элемента. Если елемент
     display-block: то убираем нижний отсутп у последнегшо элемента
+ - Пример грамотного сброса:
+    html {
+        box-sizing: border-box;
+    }
+    *,
+    *::before,
+    *::after {
+        box-sizing: inherit;
+    }
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+    img {
+        max-width: 100%;
+    }
+    body {
+        font-family: 'font', sans-serif;
+    }
