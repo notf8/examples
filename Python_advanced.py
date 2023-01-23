@@ -79,3 +79,36 @@ _______________________________________________________LINUX____________________
  - sudo pytho3 -m virtualenv -p python3 venv - создать виртуальное окружение
  - source venv/bin/activate - запустить виртуальное окружение
  - sudo snap install pycharm-professional --classic - Установим Pycharm
+ - which python - узнать путь до исполняемого файла питон
+========================================================================================================================
+
+Готовим сервер:
+from flask import Flask
+app = Flask(__name__)
+
+@app.route("/hello/<username>") # В угловых скобках указываем переменную, которую передадим в URL
+def hello(username) -> str: # Эту же переменную передаем аргументом в функцию
+    return f"Hello {username}!" # Возвращаем аргумент и текст (в нашем случае аргумент это имя пользователя)
+
+@app.route("/even/<int:number>") # Передаем аргументом число
+def even(number):
+    if number % 2 == 0:
+        result = "четное"
+    else:
+        result = "Не четное"
+    return f'Число {number} {result}' # Возвращаме переданное число и пишем, четное или нет это число
+
+@app.route("/compare/<float:number_1>/<float:number_2>") # На вход два числа флоат
+def compare(number_1, number_2) -> str: # В функции проверяем какое больше и вовзращаем результат проверки в конце
+    if number_1 == number_2:
+        sign = "="
+    elif number_1 > number_2:
+        sign = ">"
+    else:
+        sign = "<"
+    return f'<h3>Compare</h3>{number_1} {sign} {number_2} '
+
+if __name__ == '__main__':
+    app.run(debug=True) #Запускаем в режиме дебага, что бы сервер перезапускался автоматически при изменении эндпоинтов
+    # python main.py - Вводим в консоль для запуска сервера
+    # CTRL + C - остановить сервер
