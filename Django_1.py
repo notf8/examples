@@ -222,6 +222,8 @@
 
                                     Шаблоны в джанго
 Документация - https://docs.djangoproject.com/en/4.0/ref/templates/builtins/
+{{}} - Вывод переменной в шаблонах джанго
+
  - Шаблоны в джанго рендерятся на стороне серера и возвращаются пользователю
  - Все шаблоны хранятся в файле setting.py, в строке templates
  - Тег для автозаполнения шаблона - {% lorem %}
@@ -279,3 +281,118 @@
             <span> Lucky product </span>  # Тут пишем что вывести, если условие выполнено
         {{% endif %}}                     # Тут закрывающий тег if
                                         ***********************
+========================================================================================================================
+
+                                            Работа с базой данных
+ - ORM - Objeckt relation mappin (объектно реляционное отображение) - позволяет  высокоуровневых языках представлять данные
+    из БВ в виде объектов. Свойства таких объектов соответсвуют столбцам каждой записи
+ - QuerySet - это набор данных которые мы запрашиваем из базы данных. Запрос к базе происходит, когда мы добавляем к запросу
+    ,all(). QuerySet позволяет ограничивать выгрузку и добавлять разные параметры к запросу и фильтровать выгрузку
+                                            *********************
+ - Запускаем созданый ранее сервер - python manage.py runserver
+ - Переходим на сраницу админа - http://127.0.0.1:8000/admin/
+ - создаем шаблон для отрисовки групп на странице:
+    - В папке приложения (shopapp), которая в шаблонах создаем новый файл html (groups-list)
+    - В созданном файле удаляем всю инфу и наследуем базовый шаблон(который делали раньше): {% extends 'shopapp/base.html' %}
+    - Дале добавляем блок тайтл: {% block title %} Groups list {% endblock %}
+    - И блок боди: {% block body %} <h1>Groups:</h1> {% endblock %}
+ - Создаем вью функцию для его отрисовки:
+    - Переходим в файл views.py(все там же, в папке приложения shopapp)
+    - Добавляем функцию:
+        def groups_list(request: HttpRequest):
+            context = {
+                "groups": Group.objects.all() # Когда введем значение Group, питон подсветит его красным, щелкаем по "красной лампочке" и выбираем: импортитровать имя из gjango.contribe.auth.model
+            }                   # Или можно в файл добавить импорт вручную: from django.contrib.auth.models import Group
+            return render(request, 'shopapp/groups-list.html', context=context)
+ - Подключаем созданную функцию к urls.py внутри приложения (папка shopapp):
+    Добавляем в импорт имя функции: from .views import shop_index, groups_list
+    в список urlpatterns, через запятую добавляем: path("groups/", groups_list, name="groups_list"),
+ - Возвращаемся в шаблон и в него добьавляем в блок боди:
+    <div>
+    {% if not groups %}
+        <h3>No groups yet</h3>
+    {% else %}
+        <ul>
+            {% for group in groups %}
+                <li>{{group}}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+                                            **************************
+Вывод информации о связях в группе:
+ - Переходим к определеню группы: Перейдем в файл views.py и удерживая ctrl кликаем по Group. (в строке контекста - "groups": Group.objects.all())
+ - В открывшемся файле models.py находим инфу о группе (для примера permissions)
+ - В шаблоне добавляем в список отображение прав группы. Делается это через обращение через "." (как к обычному объекту)
+    <h1>Groups:</h1>
+    <div>
+    {% if not groups %}
+        <h3>No groups yet</h3>
+    {% else %}
+        <ul>
+            {% for group in groups %}
+                <li>
+                    <div>{{group.name}}</div>
+                    <ul>
+                        {% for permission in group.permissions.all %} # Когда делаем запрос к .all запрос делается к каждой группе, страница будет грузиться долго
+                            <li>                                      # Для этого ниже будем оптимизировать вью функцию
+                                {{permission.name}}
+                                (<code>{{permission.codename}}</code>) # Абрамляем в тег кода (<code>), так как выводим кодовое название
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    </div>
+ - Идем и редактируем вьюху, что бы оптимизировать подгрузку из бд:
+    Меняем строку ("groups": Group.objects.all()) в таком виде - "groups": Group.objects.prefetch_related('permissions').all()
+        prefetch_related('permissions') - таким образом заранее указываем, какое свойство группы подгружать вместе с запросом
+        что бы этих запросов было меньше
+                                        *************************************
+
+                                        Модели и поля в Джанго
+Документация - https://docs.djangoproject.com/en/4.1/topics/db/models/
+
+Созаем собственные поля:
+ - Открываем файл models.py
+ - Объявляем свою модель - Создаем класс Product
+    class Product(models.Model):
+        name = models.CharField(max_length=100) # Каждый атрибут класса является отдельным свойством и соответсвует колонке в таблице
+        description = models.TextField(null=False, blank=True) # Null - говорим что не может отсутствовать значение, blank - позволяет сохранить пустое значение (не null)
+
+ - Создаем атомарную (малыми шагами) миграцию (одна файл миграции = одна измененная модель):
+    В терминале(остановив сервер) в папке проекта (mysite) пишем: python manage.py makemigrations
+    Потом вручную проверяем, в папке migrations нет ли ошибок (имя миграции видно после выполнения команды)
+    Далее проверяем доступные миграции: python manage.py showmigrations
+    Если нашли не выполненные (у нас будет 1 по shopapp ), в терминале пишем: python manage.py migrate
+    Далее обновляем таблицы в DB browser и видем, что была создана таблица shopapp_product
+
+ - Создаем новую сущность в таблице (Создаем файлы с командами):
+    Создаем новую папку в приложении: кликаем пкм по папке shopapp и создаем дирректорию management/commands
+    Далее в этой папке создаем python файлы. Название указываем то, которое будет соответствовать команде: create_products
+    Делаем импорт базовой команды: Пишем BaseCommand - в красной лампочке выбираем iport name из django.core.management, после импорта удаляем надпись BaseCommand
+    Добавляем импорт: from shopapp.models import Product
+    Создаем класс command:
+        class Command(BaseCommand):
+            """
+            Creates new products
+            """
+            def handle(self, *args, **options):         # Метод определяет логикуу выполнения команды
+                self.stdout.write("Create products")
+
+                products_names = [
+                    "Laptop",
+                    "Desktop",
+                    "Smartphone"
+                ]
+
+                for product_name in products_names:
+                    product, created = Product.objects.get_or_create(name=product_name) # get_or_create не создает заново одинаковые имена
+                    self.stdout.write(f"Created product: {product.name}")
+
+                self.stdout.write(self.style.SUCCESS("Products created"))
+    Теперь можно создать сущности просто выполнив команду в терминале: python manage.py create_products
+                                        ************************************
+
