@@ -396,3 +396,29 @@
     Теперь можно создать сущности просто выполнив команду в терминале: python manage.py create_products
                                         ************************************
 
+                                        Свойства полей
+Документация - https://docs.djangoproject.com/en/4.1/ref/models/fields/
+
+ - На ту же модель Product добавляем поля (файл models.py):
+    class Product(models.Model):
+        name = models.CharField(max_length=100)
+        description = models.TextField(null=False, blank=True)
+        prie = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+            # DecimalField специально используется для работы с деньгами, если использовать float буду погрешности в вычислениях
+            # max_digits=8 - количество возможных чисел, decimal_places=2 - сколько цифр займут десятичные после запятой
+        discount = models.SmallIntegerField(default=0) # SmallIntegerField - Маленькое положительное число
+        created_at = models.DateTimeField(auto_now_add=True) # Поле со временем создания продукта, auto_now_add=True - автоматически сохраняет время создания
+ - Потом создаем миграции:
+    В папке mysite в терминале пишем: python manage.py makemigrations
+    Если уже были продукты до миграции, джанго спросит что делать, так как в поле created_at нет значения по умолчанию
+    В открывшемся диалоге джанго предложет вставить текущее время - просто соглашаемся нажав enter
+    Не забываем вручную проверить миграции (в папке migrations)
+    После проверки пишем в терминале: python manage.py showmigrations
+    Видим миграции, и пишем в терминале: python manage.py migrate shopapp # Выполняем миграцию для приложения shopapp
+
+- Отмена миграции (для этого сначала создадим новое поле для примера)
+    В моделе создадим новое поле: archived = models.BooleanField(default=False)
+    Далее снова пишем: python manage.py makemigrations
+    Проверим саму миграцию вручную
+    Выпоняем миграцию:python manage.py migrate shopapp
+    Делаем откат (нужно будет указать, на какую миграцию будем откатываться): python manage.py migrate shopapp 0002 # В конце команды просто указываем номер миграции
