@@ -430,8 +430,8 @@
     Создаем функцию для отрисовки шаблона: Переходим в файл views.py (в папке приложения shopapp)
         в импорт добавим импорт: from .models import Product
         def products_list(request: HttpRequest):
-            context = {"products": Product.objects.all(),}
-            return render(request, 'shopapp/products-list.html')
+            context = {"products": Product.objects.all(),}                         #Тут запрашиваем все поля из таблицы Products
+            return render(request, 'shopapp/products-list.html', context=context)
     Подключаем функцию к маршрутам urls.py (d gfgrt shopapp):
         Добавим импорт через запятую: from .views import shop_index, groups_list, products_list
         В список добавим маршрут: path("products/", products_list, name="products_list"),
