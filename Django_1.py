@@ -422,3 +422,32 @@
     Проверим саму миграцию вручную
     Выпоняем миграцию:python manage.py migrate shopapp
     Делаем откат (нужно будет указать, на какую миграцию будем откатываться): python manage.py migrate shopapp 0002 # В конце команды просто указываем номер миграции
+    Если результат не устроил можно снова вернуться к миграции 0003, для этого просто пишем: python manage.py migrate shopapp 0003
+
+Создаем шаблон для отрисовки таблицы с продуктами:
+    В папке с шаблонами приложения shopapp создаем новый шаблон: пкм по папке templates/shopapp -> создать файл пhtml 'products-list'
+    Переопределяем базовый шаблон, как в примерах выше
+    Создаем функцию для отрисовки шаблона: Переходим в файл views.py (в папке приложения shopapp)
+        в импорт добавим импорт: from .models import Product
+        def products_list(request: HttpRequest):
+            context = {"products": Product.objects.all(),}
+            return render(request, 'shopapp/products-list.html')
+    Подключаем функцию к маршрутам urls.py (d gfgrt shopapp):
+        Добавим импорт через запятую: from .views import shop_index, groups_list, products_list
+        В список добавим маршрут: path("products/", products_list, name="products_list"),
+    Добавляем в шаблон отрисовки продуктов (shopapp/templates/shopapp/'products-list'), в тэг {% block body %} сами продукты:
+        <h1>Products:</h1>
+            {% if products %}
+                <div>
+                {% for product in products %}
+                    <div>
+                        <p>Name: {{product.name}}</p>
+                        <p>Price: {{product.price}}</p>
+                        <p>Discount: {% firstof product.discount 'no discount'%}</p> # % firstof % - тэг который берет первое не отрицательное значение либо выводит текстовое сообщение если значения нет
+
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <h3>No products yet</h3>
+            {% endif %}
