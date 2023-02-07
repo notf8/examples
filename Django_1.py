@@ -424,7 +424,7 @@
     Делаем откат (нужно будет указать, на какую миграцию будем откатываться): python manage.py migrate shopapp 0002 # В конце команды просто указываем номер миграции
     Если результат не устроил можно снова вернуться к миграции 0003, для этого просто пишем: python manage.py migrate shopapp 0003
 
-Создаем шаблон для отрисовки таблицы с продуктами:
+ - Создаем шаблон для отрисовки таблицы с продуктами:
     В папке с шаблонами приложения shopapp создаем новый шаблон: пкм по папке templates/shopapp -> создать файл пhtml 'products-list'
     Переопределяем базовый шаблон, как в примерах выше
     Создаем функцию для отрисовки шаблона: Переходим в файл views.py (в папке приложения shopapp)
@@ -451,3 +451,106 @@
             {% else %}
                 <h3>No products yet</h3>
             {% endif %}
+                                                **************************
+                                                Связи между таблицами
+
+ - Создадим новую модель (таблицу) в файле models.py:
+    class Order(models.Model):
+        delivery_address = models.TextField(null=True, blank=True)           # TextField больше подходит для текстовых полей
+        promocode = models.CharField(max_length=20, null=False, blank=True)  # CharField подходит для полей, где будет не много символов
+        created_at = models.DateTimeField(auto_now_add=True)
+ - Создаем связь между таблицами:
+    Для этого в класс Order добавляем переменную user:         # Просто пишем User в скобках, далее пкм по нему, и выбираем import this name из django.contribe
+    user = models.ForeignKey(User, on_delete=models.PROTECT)   # on_delete=models.PROTECT - нужен для защиты полей, в случае удаления User
+    Сразу делаем миграцию (будет вопрос, что делать с уже существующими записями, выбираем 1 и потом снова пишем 1, как значение по умолчанию для созданой ранее таблицы)
+    После этого в таблицу order будет добавлено поле user_id, так как ссылка делается на таблицу product?, а в ней prymary key = id
+
+- Создаем команду, которая будет делать заказ:
+    В папке shopapp/menegment/commands создаем новый python файл create_order:
+        Импортируем BaseCommand (пишем BaseCommand, пкм по надписи и выбираем import this name из django.core.management) или написать from django.core.management import BaseCommand
+        Импортируем User и Order по такому же принципу, как написано выше (просто написать например Order и далее import this name)
+            class Command(BaseCommand):
+                def handle(self, *args, **options):
+                    self.stdout.write("Create order")
+                    user = User.objects.get(username="admin")
+                    order = Order.objects.get_or_create(
+                        delivery_address="ul chalenko, d 17/1",
+                        promocode="SALE123",
+                        user=user,
+                    )
+                    self.stdout.write(f"Created order{order}")
+    Далее в терминале пишем: python manage.py create_order (команда может не выполниться, если в бд не включен автокоммит)
+
+ - Создаем шаблон для вывода всех заказов:
+    Идем в шаблоны (shopapp/templates/shopapp) и создаем там новый html файл: orders-list
+    И как обычно расширяем базовый шаблон
+        {% extends 'shopapp/base.html' %}
+
+        {% block title %}
+            Orders list
+        {% endblock %}
+
+        {% block body %}
+            <h1>Orders:</h1>
+            {% if orders %}
+                <div>
+                {% for order in orders %}
+                    <div>
+                        <p>Order by: {% firstof order.user.first_name order.user.username %}</p>
+                        <p>Promocode: <code>{{ order.promocode }}</code></p>
+                        <p>Delivery address: {{ order.delivery_address }}</p>
+                    <div>
+                        Products in order:
+                        <ul>
+                            {% for product in order.products.all %}
+                                <li>{{ product.name }} for ${{product.price}}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+                </div>
+            {% else %}
+                <h3>No orders yet</h3>
+            {% endif %}
+        {% endblock %}
+
+    Подключаем новый шаблон к views.py
+        from .models import Product, Order
+        def orders_list(request: HttpRequest):
+            context = {
+                "orders": Order.objects.select_related("user").prefetch_related("products").all() # select_related - нужен, кода нужно подгрузить одну связь, к которой ссылаемся
+            }                                                        # Что бы не делать лишних запросов в БД, а загрузить все сразу
+                                                                     # prefetch_related("products") - сразу подгружаем весь состав заказов (если их будет много)
+            return render(request, 'shopapp/orders-list.html', context=context)
+    Подключаем функцию к urls.py в папке shopapp:
+        path("orders/", orders_list, name="orders_list"),
+
+ - Добавляем продуты в заказ (делаем связь: многие -> многим). Такая связь делается чероез промежуточную таблицу. Этим занимается сам джанго
+    Идем в файл models.py и добавляем строку в класс Order:
+        class Order(models.Model):
+            products = models.ManyToManyField(Product, related_name="orders") # Product - с какаой таблицей связываем
+            # related_name="orders" - как получаем список заказов с класса Product
+    Делаем миграцию как обычно: python manage.py makemigrations -> python manage.py migrate shopapp
+
+ - Создаем команду для обновления заказов:
+    В папке shopapp/menegment/commands создаем новый python файл update_order:
+    Импортируем BaseCommand (пишем BaseCommand, пкм по надписи и выбираем import this name из django.core.management) или написать from django.core.management import BaseCommand
+    Импортируем User и Order по такому же принципу, как написано выше (просто написать например Order и далее import this name)
+        class Command(BaseCommand):
+            def handle(self, *args, **options):
+                order = Order.objects.first()
+                if not order:
+                    self.stdout.write("No order found")
+                    return
+                products = Product.objects.all()
+                for product in products:
+                    order.products.add(product) #Это менеджер связи ManyToMany
+                order.save()       # Сохраняем изменения после цикла
+                self.stdout.write(
+                    self.style.SUCCESS(
+                        f"Successfully added products {order.products.all()} to order: {order}"
+                    )
+                )
+                                            ********************************************
+
+                                            Метаданные моделей
