@@ -528,7 +528,7 @@
  - Добавляем продуты в заказ (делаем связь: многие -> многим). Такая связь делается чероез промежуточную таблицу. Этим занимается сам джанго
     Идем в файл models.py и добавляем строку в класс Order:
         class Order(models.Model):
-            products = models.ManyToManyField(Product, related_name="orders") # Product - с какаой таблицей связываем
+            products = models.ManyToManyField(Product, related_name="orders") # Product - с какой таблицей связываем
             # related_name="orders" - как получаем список заказов с класса Product
     Делаем миграцию как обычно: python manage.py makemigrations -> python manage.py migrate shopapp
 
@@ -551,6 +551,68 @@
                         f"Successfully added products {order.products.all()} to order: {order}"
                     )
                 )
-                                            ********************************************
+                                ********************************************
 
                                             Метаданные моделей
+Документация - https://docs.djangoproject.com/en/4.1/ref/models/options/
+
+ - Метакслассы в джанго позволяют просто добавить информацию к моделе (в отличии от метаклассов питона, которые переопределяют поведение классов)
+ - Метакласс объявляется внутри существующего класа (что бы существовать в конкретном нейм спейсе)
+    class Product(models.Model):
+        class Meta:
+            ordering = ["name", "price"]              # Эта строка уазывает, по какому полю сортировать продукты, если указать "-name", то будет сортировка в обратном порядке
+            db_table = "tech_products"                # Указывает, к какой таблице нужно обращаться за свойствами
+            verbose_name_plural = "products"          # Указывает, как будет объявлять продукты во множественном числе
+            # (полезно, когда имя модели не сделать во множественном числе, просто добавив букву s в конце
+        name = models.CharField(max_length=100)
+        description = models.TextField(null=False, blank=True)
+        price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+        discount = models.SmallIntegerField(default=0)
+        created_at = models.DateTimeField(auto_now_add=True)
+        archived = models.BooleanField(default=False)
+        user = models.ForeignKey(User, on_delete=models.PROTECT)
+========================================================================================================================
+
+                                            Административный инфтерфейс джанго
+Документация - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/
+                                            **********************************
+
+                                            Подключаем свои модели к админке
+Документация - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/#modeladmin-objects
+ - Открываем файл admin.py в папке приложения (shopapp) и импортируем туда модель Product: from .models import Product
+ - Регистрируем модель в админке: admin.site.register(Product)
+ - Что бы изменить отображение модели, создадим новый класс в том же файле (admin.py)
+    class ProductAdmin(admin.ModelAdmin):
+        list_display = "pk", "name", "description", "price", "discount" # "pk" - ключ продукта (primary key), остальное понятно (тут пишем, что хотим отоброазить в админке)
+ - Подключаем админ модель, к модели, которую регистрируем (через запятую): admin.site.register(Product, ProductAdmin)
+ - Делаем имя продукта кликабельным (перейти к деталям сущности), для этого добавим к лассу еще одну строку:
+    class ProductAdmin(admin.ModelAdmin):
+        list_display = "pk", "name", "description", "price", "discount"
+        list_display_links = "pk", "name"
+ - Второй способ зарегистрировать модель:
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin):
+        list_display = "pk", "name", "description", "price", "discount"
+        list_display_links = "pk", "name"
+                                          ***************************************
+
+                                          Меняем отоброжение в админке:
+ - Меням отоброжение ключа и имени продукта в админке. Для этого открываем сам файл с моделями (models.py) и добавляем в
+   модель Product строку (переопределяем метод отоброжения):
+    def __str__(self):
+        return f"Product(pk={self.pk}, name={self.name!r})" # !r - позволяет выделить текст в кавычки (репрезентативный вид)
+ - Ограничиваем количество символов в поле description (на случай если описание очень большое):
+    Для этого в файле models.py, в той же модели Product просто добавим метод с декоратором проперти:
+        @property
+        def description_short(self) -> str:
+            if len(self.description) < 48:
+                return self.description
+            return self.description[:48] + "..."
+        После этого, не забываем указать это поле (description_short) в файле admin.py, в строке list_display
+    Если же нужно этот метод использовать во всей админке а не только в модели Product, можно внести его в файл admine.py
+    в таком виде:
+        def description_short(self, obj: Product) -> str:
+            if len(obj.description) < 48:
+                return obj.description
+            return obj.description[:48] + "..."
+        После этого, не забываем указать это поле (description_short) в файле admin.py, в строке list_display
