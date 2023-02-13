@@ -595,8 +595,8 @@
         list_display = "pk", "name", "description", "price", "discount"
         list_display_links = "pk", "name"
                                           ***************************************
-
                                           Меняем отоброжение в админке:
+
  - Меням отоброжение ключа и имени продукта в админке. Для этого открываем сам файл с моделями (models.py) и добавляем в
    модель Product строку (переопределяем метод отоброжения):
     def __str__(self):
@@ -616,3 +616,72 @@
                 return obj.description
             return obj.description[:48] + "..."
         После этого, не забываем указать это поле (description_short) в файле admin.py, в строке list_display
+
+ - Фильтры и поле поиска:
+    Для этого в админской моделе (в файле admin.py) добавляем поле ordering:
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin):
+        list_display = "pk", "name", "description_short", "price", "discount"
+        list_display_links = "pk", "name"
+        ordering = "pk",   #Тут должен быть либо список, либо кортеж, поэтому в конце обязательно стоит "," если элемент 1 в списке
+        # Если нужно в обратную сторону, просто ставим "-pk"
+
+ - Поля поиска. Для этого все в ту же админмодель добавляем поле search_fields:
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin):
+        list_display = "pk", "name", "description_short", "price", "discount"
+        list_display_links = "pk", "name"
+        ordering = "pk",
+        search_fields = "name", "description" # Добавляем именно description, тк имено по нему будет поиск
+                                    **********************************************
+
+                                    Отображение и редактирование связанных записей:
+ - Отображаем связь многие ко многим:
+    Для этого идем в файл admin.py и там объявляем соответсвующий класс
+    @admin.register(Order)
+    class OrderAdmin(admin.ModelAdmin):
+        list_display = "delivery_address", "promocode", "created_at", "user_verbose"
+        def get_queryset(self, request):                   # Оптимизируем, что бы запрос не делался каждый раз к базе ,что бы отразить пользователя
+            return Order.objects.select_related("user")
+
+ - Выводим имя пользователя (либо имя, либо юзернэйм):
+    Все в той же админмоделе, в новом классе Order добавляем поле
+    def user_verbose(self, obj: Order) -> str:
+        return obj.user.first_name or obj.user.username # Возвращаем либо имя, либо юзернэйм
+    после этого не забыть указать в list_display "user_verbose"
+
+ - Отображаем связанные продукты на странице заказа (tabular inline И stackt inline - разница только в отображении)
+    Обявляем еще одну админскую модель (в файле admin.py) - ProductInLine
+        class ProductInLine(admin.TabularInline):
+            model = Order.products.through # Тут обязательно пишем, что продукты через модель закза вытаскивать
+    потом в админ моделе OrderAdmin добавлячем поле inlines
+        @admin.register(Order)
+        class OrderAdmin(admin.ModelAdmin):
+            inlines = [
+                ProductInLine,
+            ]
+            list_display = "delivery_address", "promocode", "created_at", "user_verbose"
+            def get_queryset(self, request):
+                return Order.objects.select_related("user").prefetch_realted("products") # Хорошая практика, что бы оптимизировать подгрузку продуктов
+            def user_verbose(self, obj: Order) -> str:
+                return obj.user.first_name or obj.user.username
+    далее в самой админке на сайте можно посмотреть детали заказа, там же добавить продукт или удалить
+
+ - Отображаем связь продуков с заказами:
+    Там же в админ моедлях (admin.py) объявляем новый класс
+        class OrderInLine(admin.TabularInline):
+            model = Product.orders.through
+    Потом в класс ProductAdmin добавляем запись inlines (пог аналогии с OrderAdmin):
+        @admin.register(Product)
+        class ProductAdmin(admin.ModelAdmin):
+            inlines = [
+                OrderInLine,
+            ]
+            list_display = "pk", "name", "description_short", "price", "discount"
+            list_display_links = "pk", "name"
+            ordering = "pk",
+            search_fields = "name", "description"
+            def description_short(self, obj: Product) -> str:
+                if len(obj.description) < 48:
+                    return obj.description
+                return obj.description[:48] + "..."
