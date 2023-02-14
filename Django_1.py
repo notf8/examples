@@ -716,3 +716,16 @@
                                             *****************************************
 
                                             Групповые действия
+Документация - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/actions/
+
+ - Добавим поле 'archived' в ProductAdmin (файл admin.py)
+    Для этого просто в строку list_display через запятую 'archived'
+ - Далее в той же админке (файл admin.py) объявляем отдельную функцию (вне классов):
+    @admin.action(description="Archive products")
+    def mark_archived(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset: QuerySet): # Здесь просто пишем аннотации и через пкм импортируем их
+        queryset.update(archived=True)
+ - Далее в классе ProductAdmin добавляем строку в которй указываем созданную функцию
+@admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin):
+        actions = [mark_archived,]
+        
