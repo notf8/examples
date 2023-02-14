@@ -724,8 +724,50 @@
     @admin.action(description="Archive products")
     def mark_archived(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset: QuerySet): # Здесь просто пишем аннотации и через пкм импортируем их
         queryset.update(archived=True)
- - Далее в классе ProductAdmin добавляем строку в которй указываем созданную функцию
-@admin.register(Product)
-    class ProductAdmin(admin.ModelAdmin):
-        actions = [mark_archived,]
+    Далее в классе ProductAdmin добавляем строку в которй указываем созданную функцию
+    @admin.register(Product)
+        class ProductAdmin(admin.ModelAdmin):
+            actions = [mark_archived,]
         
+ - Для разархивации тупо копируем функцию, меняем название и в ней меняем значение archived=False
+    @admin.action(description="Unarchive products")
+    def mark_unarchived(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset: QuerySet):
+        queryset.update(archived=False)
+    И так же добавляем ее в список action в ProductAdmin:
+    @admin.register(Product)
+            class ProductAdmin(admin.ModelAdmin):
+                actions = [mark_archived, mark_unarchived,]
+                                        **********************************
+
+                                        Примеси (миксин, mixin)
+ - Создадим отдельный питон файл в папке приложения (shopapp) - admin_mixins.py
+ - В этом файл создадим отдельный класс (который позволит скачивать csv файл):
+    import csv
+    from django.db.models import QuerySet
+    from django.db.models.options import Options
+    from django.http import HttpRequest, HttpResponse
+
+    class ExportAsCSVMixin:
+        def export_csv(self, request: HttpRequest, queryset: QuerySet):
+            meta: Options = self.model._meta  # Просто пишем от руки, потом ПКМ и импортируем из django models (так получаем все поля моделей)
+            field_names = [field.name for field in meta.fields] # Собираем список названий полей в листкомпрехеншен
+            response = HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = f"attachment; filename={meta}-export.csv"
+            csv_writer = csv.writer(response)                      # Записываем инфу в файл ответа
+            csv_writer.writerow(field_names)                       # Записываем первой строчкой имена полей (столбцов)
+            for obj in queryset:                                   # Записываем в цикле, так как запись 1 объект/за раз
+                csv_writer.writerow([getattr(obj, field) for field in field_names])
+
+            return response
+
+        export_csv.short_description = "Export as CSV"             # Создаем описание метода
+ - Потом импортируем этот класс в файл админки (admin.py)
+    from .admin_mixins import ExportAsCSVMixin
+ - Далее подмешиваем этот класс в нужные нам модели:
+    class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
+ - И теперь добавляем действие в список actions в нужной моделе (именем действия как раз будет имя метода класса):
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
+        actions = [
+            mark_archived, mark_unarchived, "export_csv"    # Метод миксина указывается именно как текст, в кавычках
+        ]
