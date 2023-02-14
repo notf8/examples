@@ -671,7 +671,7 @@
     Там же в админ моедлях (admin.py) объявляем новый класс
         class OrderInLine(admin.TabularInline):
             model = Product.orders.through
-    Потом в класс ProductAdmin добавляем запись inlines (пог аналогии с OrderAdmin):
+    Потом в класс ProductAdmin добавляем запись inlines (по аналогии с OrderAdmin):
         @admin.register(Product)
         class ProductAdmin(admin.ModelAdmin):
             inlines = [
@@ -685,3 +685,34 @@
                 if len(obj.description) < 48:
                     return obj.description
                 return obj.description[:48] + "..."
+                                        *********************************
+
+                                        групировка полей
+
+ - переходим в класс ProductAdmin (admin.py) и добавляем строку fieldsets:
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin):
+        inlines = [
+            OrderInLine,
+        ]
+        list_display = "pk", "name", "description_short", "price", "discount"
+        list_display_links = "pk", "name"
+        ordering = "pk",
+        search_fields = "name", "description"
+        fieldsets = [
+            (None, {                                  # None - означает что секция не именованная
+                "fields": ("name", "description"),    # Второй параметр всегда словарь! Здесь указываем, какие поля в секции отображать
+            }),
+            ("Price options", {
+                "fields": ("price", "discount"),      # "fields" - в значениях всегда содержит пару полей (если одно поле, то обязательно поставить ',')
+                "classes": ("wide", "collapse"),      # "collapse" - поле всегда будет свернутым, "wide" - отступ от имени поля шире (длиннее)
+            }),                                        #
+            ("Extra options", {
+                "fields": ("archived",),
+                "classes": ("collapse",),
+                "description": "Extra option. Field 'archived' is for soft delete", # Это параметр для описания поля, принимает обычный текст
+            }),
+            ]
+                                            *****************************************
+
+                                            Групповые действия
