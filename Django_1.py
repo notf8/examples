@@ -879,3 +879,61 @@ querysrting - это дополнительные параметры get зап�
                                         **************************************
                                                 Выполнение POST запросов
 
+Почитать - https://docs.djangoproject.com/en/4.1/ref/request-response/#django.http.HttpRequest.POST
+File storage API - https://docs.djangoproject.com/en/4.1/ref/files/storage/
+
+Post запрос используется для передачи параметров на сервер и отправки специальных форм (например вход на сайт - это спец
+форма, у которй есть поля для ввода никнейма и пароля. Или например форма используется для отправки файлов)
+
+                                        ***************************************
+                                         Создаем форму для ввода данных
+
+- Создадим новый шаблон в папке templates/requestdataapp -  user-bio-form.html:
+    {% extends "requestdataapp/base.html" %}
+
+    {% block Title %}
+        User BIO
+    {% endblock %}
+
+    {% block body %}
+        <h1>User form</h1>
+        <div>
+            <form method="post">                                                 # Метод запроса
+                {% csrf_token %}                                                 # Токен нужен что бы джанго форму отправил, а не остановил на проверке
+                <p>
+                    <label for="name_id">Full name</label>                        # Пишем название поял для ввода
+                    <input id="name_id" name="name" type="text" maxlength="100">  # Само поле ввода. Обязательно должен быть параметр name у каждого (имя любое можно указать)
+                </p>
+                <p>
+                    <label for="age">Age</label>
+                    <input id="age" name="age" type="number" min="1" max="99">    # Само имя и Id не обязаны совпадать
+                </p>
+                <p>
+                    <label for="bio">Bio</label>
+                    <textarea name="bio" id="bio" cols="42" rows="5"></textarea>
+                </p>
+
+                <button type="submit">                                             # Это кнопа. type="submit" - означает что это кнопка отправки формы
+                    Submit
+                </button>
+            </form>
+        </div>
+    {% endblock %}
+
+- Создаем вью функцию для этого шаблона (в папке приложения requestdataapp, в файле views.py):
+    def user_form(request: HttpRequest) -> HttpResponse:
+        return render(request, "requestdataapp/user-bio-form.html",)
+
+- Подключаем функцию в urls.py в папке приложения (requestdataapp):
+    from django.urls import path
+    from .views import process_get_view, user_form
+
+    app_name = "requestdataapp"
+
+    urlpatterns = [
+        path("get/", process_get_view, name="get_view"),
+        path("bio/", user_form, name="user-form"),
+]
+                                        *******************************************
+                                            Достаем данные пост запроса напрямую
+
