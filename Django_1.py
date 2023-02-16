@@ -632,7 +632,7 @@
         list_display = "pk", "name", "description_short", "price", "discount"
         list_display_links = "pk", "name"
         ordering = "pk",
-        search_fields = "name", "description" # Добавляем именно description, тк имено по нему будет поиск
+        search_fields = "name", "description" # Добавляем именно description, тк именно по нему будет поиск
                                     **********************************************
 
                                     Отображение и редактирование связанных записей:
@@ -668,7 +668,7 @@
     далее в самой админке на сайте можно посмотреть детали заказа, там же добавить продукт или удалить
 
  - Отображаем связь продуков с заказами:
-    Там же в админ моедлях (admin.py) объявляем новый класс
+    Там же в админ моделях (admin.py), вне самих моделей объявляем новый класс
         class OrderInLine(admin.TabularInline):
             model = Product.orders.through
     Потом в класс ProductAdmin добавляем запись inlines (по аналогии с OrderAdmin):
@@ -724,7 +724,7 @@
     @admin.action(description="Archive products")
     def mark_archived(modeladmin: admin.ModelAdmin, request: HttpRequest, queryset: QuerySet): # Здесь просто пишем аннотации и через пкм импортируем их
         queryset.update(archived=True)
-    Далее в классе ProductAdmin добавляем строку в которй указываем созданную функцию
+    Далее в классе ProductAdmin добавляем строку в которой указываем созданную функцию
     @admin.register(Product)
         class ProductAdmin(admin.ModelAdmin):
             actions = [mark_archived,]
@@ -771,3 +771,110 @@
         actions = [
             mark_archived, mark_unarchived, "export_csv"    # Метод миксина указывается именно как текст, в кавычках
         ]
+========================================================================================================================
+                                        Обработка запросов в Django (midleware)
+
+                                                *******************
+                                                Концепция MVC и MTV
+
+Почитать - https://habr.com/ru/company/vivid_money/blog/544856/
+В общем и целом обе концепции определяют слои и последовательность обработки данных
+
+ - mvc (model view controller)
+    Model - бизнес логика представления данных
+    View - Сущность (представление) модели
+    Controller - имеет доступ к моделе, изменяет сущности
+
+ - mtv (model template view) как раз применима к django (тк именно view функция работает с данными и моделями)
+    Чаще всего в джанго - бизнеслогика отнесена в отдельный слой с моделями
+    Model - бизнес логика представления данных
+    Templates - шаблоны представления модели
+    View - Сущность (представление) модели, обработка данных
+
+                                        ************************
+                                            Postman/Insomnia
+                                    (Инструменты для отправки запросов)
+
+Postman - https://www.postman.com/ - Основной для тестирования http запросов
+Insomnia - https://insomnia.rest/https://insomnia.rest/ - Так же для тестирования http запросов ,но проще postman
+
+ - Скачиваем insomnia
+ - Создаем новый запрос (в выпадающем списке перед запросом можно выбрать его тип get/post/и т.д.)
+ - вводим адрес: https://httpbin.org/get - вернется гет запрос
+ - вводим адрес: https://httpbin.org/post - https://httpbin.org/post
+ - Под строкой ввода адреса (иудет изначально написано body) можно выбрать, какие даные отправить  (текст, json и т.д.)
+
+                                    ************************************
+                                    Работа с различными http методами
+
+https://httpbin.org/
+querysrting - это дополнительные параметры get запроса, которые идут в адресной строке после занка "?"
+
+ - Создаем новый проект в папке проекта mysite: python manage.py startapp requestdataapp
+ - Подключаем приложение к проекту: в папке mysite, открываем файл settings.py и в installed app добавляем через запятую
+    наше прложение (для этого, в папке приложения открываем файл apps.py и там кликаем ПКМ по названию нашего приложения -> copy reference)
+ - Подключаем urls: для этого можно просто скопировать скопировать файл urls.py из прошлого приложения (shopapp) и в нем удалить все лишнее
+    Потом идем в файл urls самого проекта (mysite) и в него через запятую добавляем: path('req/', include('requestdataapp.urls')),
+ - Создаем в приложении папку шаблонов: ПКМ -> создать директорию -> templates/requestdataapp
+ - Создаем новый базовый шаблон в папке templates/requestdataapp: base.html
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            {% block Title %}
+            {% endblock %}
+        </title>
+    </head>
+    <body>
+    {% block body %}
+    {% endblock %}
+    </body>
+    </html>
+
+ - Дале создаем новый шаблон request-query-params.html. В нем переопределяем базовый шаблон:
+    {% extends 'requestdataapp/base.html' %}
+
+    {% block Title %}
+        Demo request params
+    {% endblock %}
+
+    {% block body %}
+        <h1>Good afternoon, {% firstof request.GET.name 'User' %}</h1> # Тут указываем, какое значение будет по умолчанию, если ничего не вводить после ?
+    <div>
+        <pre>
+            a = '{{ a }}' # Так мы передаем во вью функцию переменные и связываем их с переменными внутри вью функции
+            b = '{{ b }}'
+            result = '{{ result }}'
+        </pre>
+    </div>
+    {% endblock %}
+    Если в адресной строке добавить в конце ?name=Jhon - то вернестя ответ с именем, которое мы передали
+    Что бы передать до параметры, используем амперсант(&): http://127.0.0.1:8000/req/get/?name=Сергей&a=Foo&b=bar
+
+ - Создаем вью функцию для этого шаблона (в папке приложения requestdataapp, в файле views.py):
+    from django.http import HttpRequest, HttpResponse
+
+    def process_get_view(request: HttpRequest) -> HttpResponse: # Тут как обычно пишем HttpRequest и пкм по надписи -> import from django.http
+        a = request.GET.get("a", "") # Содержимое GET-запроса это словарь. Потому обращаемся за значениями через обычный метод get (там же указываем значения по умолчанию)
+        b = request.GET.get("b", "")
+        result = a + b
+        context = {
+            "a": a,
+            "b": b,
+            "result": result,
+        }
+        return render(request, "requestdataapp/request-query-params.html", context=context)
+
+ - Подключаем функцию в urls.py в папке приложения (requestdataapp):
+    from django.urls import path
+    from .views import process_get_view
+
+    app_name = "requestdataapp"
+
+    urlpatterns = [
+        path("get/", process_get_view, name="get_view"),
+    ]
+                                        **************************************
+                                                Выполнение POST запросов
+
