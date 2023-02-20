@@ -829,6 +829,10 @@ querysrting - это дополнительные параметры get зап�
     <body>
     {% block body %}
     {% endblock %}
+    <br>
+    <div>
+        HTTP User-Agent {{request.user_agent}} # Этот блок потребуется для подключения middleware
+    </div>
     </body>
     </html>
 
@@ -888,7 +892,7 @@ Post запрос используется для передачи параме�
                                         ***************************************
                                          Создаем форму для ввода данных
 
-- Создадим новый шаблон в папке templates/requestdataapp -  user-bio-form.html:
+- Создадим новый шаблон в папке templates/requestdataapp - user-bio-form.html:
     {% extends "requestdataapp/base.html" %}
 
     {% block Title %}
@@ -937,3 +941,152 @@ Post запрос используется для передачи параме�
                                         *******************************************
                                             Достаем данные пост запроса напрямую
 
+ - Создаем доп блок if в шаблоне user-bio-form.html (сразу под блоком div):
+    {% extends "requestdataapp/base.html" %}
+    {% block Title %}
+        User BIO
+    {% endblock %}
+
+    {% block body %}
+        <h1>User form</h1>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    <label for="name_id">Full name</label>
+                    <input id="name_id" name="name" type="text" maxlength="100">
+                </p>
+                <p>
+                    <label for="age">Age</label>
+                    <input id="age" name="age" type="number" min="1" max="99">
+                </p>
+                <p>
+                    <label for="bio">Bio</label>
+                    <textarea name="bio" id="bio" cols="42" rows="5"></textarea>
+                </p>
+
+                <button type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
+
+        {% if request.POST %}
+            <div>
+                <h2>Previous form data:</h2>
+                <table>
+                    <tr>
+                        <td>Full name:</td>
+                        <td>{{request.POST.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Age:</td>
+                        <td>{{request.POST.age}}</td>
+                    </tr>
+                    <tr>
+                        <td>Bio:</td>
+                        <td>
+                            <p>{{request.POST.bio|linebreaks}}</p>  # Фильтр linebreaks сохраняет форматирование формы, например переносы строк
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+    {% endblock %}
+                                           ************************************
+
+                                                     Обработка формы
+- Создадим новый шаблон в папке templates/requestdataapp - file-upload.html:
+    {% extends 'requestdataapp/base.html' %}
+
+    {% block Title %}
+      File upload
+    {% endblock %}
+
+    {% block body %}
+      <h1>Upload file</h1>
+      <form method="post" enctype="multipart/form-data"> # Что бы форма принимала файлы
+        {% csrf_token %}
+        <p>
+          <input type="file" name="myfile">
+        </p>
+        <button type="submit">Upload</button>
+      </form>
+    {% endblock %}
+
+
+- Создаем вью функцию для этого шаблона (в папке приложения requestdataapp, в файле views.py):
+    from django.core.files.storage import FileSystemStorage
+    from django.http import HttpRequest, HttpResponse
+    from django.shortcuts import render
+
+    def handle_file_upload(request: HttpRequest) -> HttpResponse:
+        if request.method == "POST" and request.POST.get("myfile"):
+            myfile = request.FILES["myfile"]
+            fs = FileSystemStorage()                # Это помошник сохранения в джанго, пишем от руки и через ПКМ импортируем из django.core.files.storage
+            filename = fs.save(myfile.name, myfile) # Сохраняем файл (он сохранится в корень проекта)
+            print("Saved file: ", filename)
+        return render(request, "requestdataapp/file-upload.html",)
+
+ - Подключаем функцию в urls.py в папке приложения(requestdataapp):
+    rom django.urls import path
+    from .views import process_get_view, user_form, handle_file_upload
+
+    app_name = "requestdataapp"
+
+    urlpatterns = [
+      path("get/", process_get_view, name="get_view"),
+      path("bio/", user_form, name="user-form"),
+      path("upload/", handle_file_upload, name="file-upload"),
+        ]
+
+                                        *********************************
+
+                                                Middleware
+                    (Позволяет изменять обработку запроса и ответ ,который будет возвращен)
+Документация - https://docs.djangoproject.com/en/4.1/topics/http/middleware/ (тут описаны все встроенные мидлвэры в джанго)
+Подкходит для: Фильтрация запросов(проверка), логировать запросы, выполянть подсчет запросов и т.д.
+
+                                       Создаем простейший middlewares в виде функции
+
+ - Создадим новый python middlewares.py файл в папке с проектом (requestdataapp)
+ - Создадим в нем функцию для чтения из запроса user agent и установки его в качестве отдельного поля на объект request:
+    from django.http import HttpRequest
+    def set_useragent_on_request_middleware(get_response): # Очень похоже на декоратор
+        print("Initial call")
+        def middleware(request: HttpRequest):
+            print("Before get response")
+            request.user_agent = request.META["HTTP_USER_AGENT"]
+            response = get_response(request)
+            print("After get response")
+            return response
+        return middleware
+ - Подключаем созданный middleware в настройках приложения (requestdataapp):
+    Кликаем по названию фунции set_useragent_on_request_middleware ПКМ -> copy reference
+    Идем в файл settings.py (папка прокта mysite) и добавляем в список MIDDLEWARE через запятую, то что скопировали
+
+                                        Создаем простейший middlewares в виде класса
+                            (Класс может хранить в себе какие либо настройки, плюс он может изменяться)
+
+ - В том же файле middlewares.py создадим ккласс:
+    class CountRequestsMiddleware:
+        def __init__(self, get_response):
+            self.get_response = get_response
+            self.requests_count = 0
+            self.responses_cont = 0
+            self.exceptions_count = 0
+
+        def __call__(self, request: HttpRequest):
+            self.requests_count += 1                           # Подсчитываем количество запросов
+            print("Requests count: ", self.requests_count)
+            response = self.get_response(request)
+            print("Responses count: ", self.responses_cont)
+            self.responses_cont += 1
+            return response
+
+        def process_exception(self, request: HttpRequest, exception: Exception): # Это метод для подсчета ошибок возможных
+            self.exceptions_count += 1
+            print("got", self.exceptions_count, "exceptions so far")
+- Подключаем созданный middleware в настройках приложения (requestdataapp):
+    Кликаем по названию фунции set_useragent_on_request_middleware ПКМ -> copy reference
+    Идем в файл settings.py (папка прокта mysite) и добавляем в список MIDDLEWARE через запятую, то что скопировали
