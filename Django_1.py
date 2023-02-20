@@ -1021,11 +1021,15 @@ Post запрос используется для передачи параме�
     from django.shortcuts import render
 
     def handle_file_upload(request: HttpRequest) -> HttpResponse:
+        link = '<h3><a href="http://127.0.0.1:8000/req/upload/">Выбрать другой файл</a></h3>'
         if request.method == "POST" and request.POST.get("myfile"):
             myfile = request.FILES["myfile"]
             fs = FileSystemStorage()                # Это помошник сохранения в джанго, пишем от руки и через ПКМ импортируем из django.core.files.storage
-            filename = fs.save(myfile.name, myfile) # Сохраняем файл (он сохранится в корень проекта)
-            print("Saved file: ", filename)
+            if myfile.size <= 1048576:              # Добавляем ограничение на объем файла
+                filename = fs.save(myfile.name, myfile) # Сохраняем файл (он сохранится в корень проекта)
+                print("Saved file: ", filename)
+            else:
+                return HttpResponse(f"<h1>Размер файла превышает 1 мб {link}</h1>", )
         return render(request, "requestdataapp/file-upload.html",)
 
  - Подключаем функцию в urls.py в папке приложения(requestdataapp):
