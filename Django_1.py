@@ -1094,3 +1094,37 @@ Post запрос используется для передачи параме�
 - Подключаем созданный middleware в настройках приложения (requestdataapp):
     Кликаем по названию фунции set_useragent_on_request_middleware ПКМ -> copy reference
     Идем в файл settings.py (папка прокта mysite) и добавляем в список MIDDLEWARE через запятую, то что скопировали
+
+                                    Middleware ограничивающий количество запросов с одного IP
+# class RequestThrottling:
+#     def __init__(self, get_response):
+#         self.get_response = get_response
+#         self.count = 0
+#         self.current_time = datetime.now()
+#         self.time_to_stop = datetime.now() + timedelta(seconds=+60)
+#         self.seconds = 60
+#
+#     def __call__(self, request: HttpRequest):
+#         current_ip = request.META.get('REMOTE_ADDR')
+#         check_user = {current_ip: self.count}
+#         print("Проверка дневника", check_user)
+#         while self.time_to_stop > self.current_time:
+#             self.current_time = datetime.now()
+#             print("Проверка временного лимита:", self.time_to_stop)
+#             if check_user[current_ip] <= 5:
+#                 response = self.get_response(request)
+#                 self.count += 1
+#                 print("Проверка количества запросов:", self.count)
+#                 return response
+#             else:
+#                 remain_time_to_repeat = self.time_to_stop - self.current_time
+#                 if 60 > remain_time_to_repeat.seconds:
+#                     return HttpResponse(f"Количество запросов превышено, повторите попытку через "
+#                                         f"{remain_time_to_repeat.seconds} секунд(ы)")
+#         else:
+#             self.current_time = datetime.now()
+#             self.time_to_stop = datetime.now() + timedelta(seconds=+60)
+#             response = self.get_response(request)
+#             self.count = 0
+#             return response
+
