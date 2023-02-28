@@ -971,7 +971,7 @@ Post запрос используется для передачи параме�
             </form>
         </div>
 
-        {% if request.POST %}
+        {% if request.POST %}         # Эта часть шаблона позволяет видеть те данные, которые мы заполнили в форме и опубликовали
             <div>
                 <h2>Previous form data:</h2>
                 <table>
@@ -995,7 +995,7 @@ Post запрос используется для передачи параме�
     {% endblock %}
                                            ************************************
 
-                                                     Обработка формы
+                                        Обработка формы (загрузка файла)
 - Создадим новый шаблон в папке templates/requestdataapp - file-upload.html:
     {% extends 'requestdataapp/base.html' %}
 
@@ -1015,7 +1015,7 @@ Post запрос используется для передачи параме�
     {% endblock %}
 
 
-- Создаем вью функцию для этого шаблона (в папке приложения requestdataapp, в файле views.py):
+- Создаем вью функцию для этого шаблона  + ограничение объема файла (в папке приложения requestdataapp, в файле views.py):
     from django.core.files.storage import FileSystemStorage
     from django.http import HttpRequest, HttpResponse
     from django.shortcuts import render
@@ -1051,7 +1051,7 @@ Post запрос используется для передачи параме�
 Документация - https://docs.djangoproject.com/en/4.1/topics/http/middleware/ (тут описаны все встроенные мидлвэры в джанго)
 Подкходит для: Фильтрация запросов(проверка), логировать запросы, выполянть подсчет запросов и т.д.
 
-                                       Создаем простейший middlewares в виде функции
+                   Создаем простейший middlewares в виде функции (выводит на экран инфо о система пользователя)
 
  - Создадим новый python middlewares.py файл в папке с проектом (requestdataapp)
  - Создадим в нем функцию для чтения из запроса user agent и установки его в качестве отдельного поля на объект request:
@@ -1095,6 +1095,7 @@ Post запрос используется для передачи параме�
     Кликаем по названию фунции set_useragent_on_request_middleware ПКМ -> copy reference
     Идем в файл settings.py (папка прокта mysite) и добавляем в список MIDDLEWARE через запятую, то что скопировали
 
+
                                     Middleware ограничивающий количество запросов с одного IP
 # class RequestThrottling:
 #     def __init__(self, get_response):
@@ -1127,4 +1128,163 @@ Post запрос используется для передачи параме�
 #             response = self.get_response(request)
 #             self.count = 0
 #             return response
+========================================================================================================================
+
+                                        Формы в джанго
+
+ - Создаем файл forms.py в папке приложения requestdataapp
+ - Импортируем формы из джанго (from django import forms)
+
+ - Создам клас UserBioForm, наследования должны быть от forms.Form (посмотреть, какие поля добавиить, можно в ранее
+    созданом одноименном шаблоне в папке templates)
+    from django import forms
+    class UserBioForm(forms.Form):
+        name = forms.CharField(max_length=100)
+        age = forms.IntegerField(label="Your age", min_value=1, max_value=120) # Так указываем, что будет написано в строке ввода
+        bio = forms.CharField(label="Biography", widget=forms.Textarea) # Виджет меняет отображение формы
+
+ - Теперь редактируем вью функцию (она все там же в файле views.py в папке приложения requestdataapp)
+    from .forms import UserBioForm # Не забывааем импортировать созданную форму
+    def user_form(request: HttpRequest) -> HttpResponse:
+        context = {
+            "form": UserBioForm(), # Инициализируем форму (что бы не создавать переменную отдельно)
+        }
+        return render(request, "requestdataapp/user-bio-form.html", context=context)
+
+ - Потом меняем одноименный шаблон в папке templates
+    {% extends "requestdataapp/base.html" %}
+
+    {% block Title %}
+        User BIO
+    {% endblock %}
+
+    {% block body %}
+        <h1>User form</h1>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}               # as_p - означает, что мы хотим отобразить строки как параграфы (так же это может быть список или таблица)
+
+                <button type="submit">
+                    Submit
+                </button>
+            </form>
+        </div>
+
+        {% if request.POST %}
+            <div>
+                <h2>Previous form data:</h2>
+                <table>
+                    <tr>
+                        <td>Full name:</td>
+                        <td>{{request.POST.name}}</td>
+                    </tr>
+                    <tr>
+                        <td>Age:</td>
+                        <td>{{request.POST.age}}</td>
+                    </tr>
+                    <tr>
+                        <td>Bio:</td>
+                        <td>
+                            <p>{{request.POST.bio|linebreaks}}</p> # |linebreaks - сохраняет пользовательские переносы текста
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+    {% endblock %}
+
+                                **************************************************
+                                Валидация форм (прописывается и работает на бэкэнде)
+Документация - https://docs.djangoproject.com/en/4.1/ref/forms/validation/
+
+ - Создадим форму для создания нового продукта
+ - Идем в приложениее shopapp и создаем там файл forms.py
+    from django import forms
+    class ProductForm(forms.Form):
+        name = forms.CharField(max_length=100)
+        price = forms.DecimalField(min_value=1, max_value=100000)
+        description = forms.CharField(label="Product description", widget=forms.Textarea)
+
+ - Создаем новый шаблон create-product.html для отображения формы (в папке shopapp/templates/shopapp)
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Create product
+    {% endblock %}
+    {% block body %}
+        <h1>Create a new product</h1>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {{form.as_p}}
+                <button type="submit">Create</button>
+            </form>
+        </div>
+        <div>
+            <a href="{% url 'shopapp:products_list' %}">
+                Back to products list
+            </a>
+        </div>
+    {% endblock %}
+
+ - Подключаем шаблон во вью функции (открываем views.py в папке shopapp)
+    from .forms import ProductForm
+    def create_product(request: HttpRequest) -> HttpResponse:
+        form = ProductForm()
+        context = {
+            "form": form,
+        }
+        return render(request, 'shopapp/create-product.html', context=context)
+
+ - Подключаем созданную функцию к urls.py (там же, в папке приложения shopapp)
+    from django.urls import path
+    from .views import shop_index, groups_list, products_list, orders_list, create_product
+
+    app_name = "shopapp"
+
+    urlpatterns = [
+        path("", shop_index, name="shop_index"),
+        path("groups/", groups_list, name="groups_list"),
+        path("products/", products_list, name="products_list"),
+        path("orders/", orders_list, name="orders_list"),
+        path("products/create/", create_product, name="product_create"),
+    ]
+                                    ****************************************
+                                    Автогенирация ссылок в django
+
+ - Создаем ссылку со страницы products-list на страницу создания продукта (create_product)
+ - Идем в шаблон products-list (приложения shopapp) и добавляем туда еще один блок div
+    <div>
+        <a href="{% url 'shopapp:product_create' %}"> # после тэг url пишем в кавычках имя приложения, двоеточие (без пробела!!)имя вью функции
+            Create a new product                        # Которое указывали при подключении к urls.py
+        </a>
+    </div>
+
+ - И уже в шаблоне create-product делаем обратную сыслку на странцу шаблон products_list
+    <div>
+        <a href="{% url 'shopapp:products_list' %}">
+            Back to products list
+        </a>
+    </div>
+                                ***************************************************
+                                Редирект и реверс ссылок + валидация формы на бэкэнд
+
+ - Делаем редирект на стрицу списка продукторв со страницы создания продукта, после нажатия кнопки submit
+ - Идем в файл views.py (приложения shopapp) и импортируем из django.shortcuts redirect и revers
+ - Дописываем функцию create_product
+    from django.shortcuts import render, redirect, reverse
+    def create_product(request: HttpRequest) -> HttpResponse:
+        if request.method == "POST":                # Делаем редирект, только если запрос POST
+            form = ProductForm(request.POST)        # Предзаполняем данными форму из пост запроса
+            if form.is_valid():                     # Если форма валидна, делаем редирект
+                url = reverse("shopapp:products_list")
+                return redirect(url)
+        else:
+            form = ProductForm()                    # Переопределяем форму, если это был GET запрос
+        context = {
+            "form": form,
+        }
+        return render(request, 'shopapp/create-product.html', context=context)
+                            **************************************************************
+                                Создаем объект в базе данных после публикации формы
 
