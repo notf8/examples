@@ -1016,21 +1016,22 @@ Post запрос используется для передачи параме�
 
 
 - Создаем вью функцию для этого шаблона  + ограничение объема файла (в папке приложения requestdataapp, в файле views.py):
-    from django.core.files.storage import FileSystemStorage
-    from django.http import HttpRequest, HttpResponse
-    from django.shortcuts import render
-
-    def handle_file_upload(request: HttpRequest) -> HttpResponse:
-        link = '<h3><a href="http://127.0.0.1:8000/req/upload/">Выбрать другой файл</a></h3>'
-        if request.method == "POST" and request.POST.get("myfile"):
-            myfile = request.FILES["myfile"]
-            fs = FileSystemStorage()                # Это помошник сохранения в джанго, пишем от руки и через ПКМ импортируем из django.core.files.storage
-            if myfile.size <= 1048576:              # Добавляем ограничение на объем файла
-                filename = fs.save(myfile.name, myfile) # Сохраняем файл (он сохранится в корень проекта)
-                print("Saved file: ", filename)
-            else:
-                return HttpResponse(f"<h1>Размер файла превышает 1 мб {link}</h1>", )
-        return render(request, "requestdataapp/file-upload.html",)
+    Лучше использовать версию с формами! Она будет ниже, в разделе валидация форм
+    # from django.core.files.storage import FileSystemStorage
+    # from django.http import HttpRequest, HttpResponse
+    # from django.shortcuts import render
+    #
+    # def handle_file_upload(request: HttpRequest) -> HttpResponse:
+    #     link = '<h3><a href="http://127.0.0.1:8000/req/upload/">Выбрать другой файл</a></h3>'
+    #     if request.method == "POST" and request.POST.get("myfile"):
+    #         myfile = request.FILES["myfile"]
+    #         fs = FileSystemStorage()                # Это помошник сохранения в джанго, пишем от руки и через ПКМ импортируем из django.core.files.storage
+    #         if myfile.size <= 1048576:              # Добавляем ограничение на объем файла
+    #             filename = fs.save(myfile.name, myfile) # Сохраняем файл (он сохранится в корень проекта)
+    #             print("Saved file: ", filename)
+    #         else:
+    #             return HttpResponse(f"<h1>Размер файла превышает 1 мб {link}</h1>", )
+    #     return render(request, "requestdataapp/file-upload.html",)
 
  - Подключаем функцию в urls.py в папке приложения(requestdataapp):
     rom django.urls import path
@@ -1107,11 +1108,11 @@ Post запрос используется для передачи параме�
 #
 #     def __call__(self, request: HttpRequest):
 #         current_ip = request.META.get('REMOTE_ADDR')
-#         check_user = {current_ip: self.count}
-#         print("Проверка дневника", check_user)
-#         while self.time_to_stop > self.current_time:
+#         check_user = {current_ip: self.count}  # TODO эта переменная существует только в время конкретного запроса
+#         # пользователя и после этого она изчезает, храните словарь в атрибуте класса, или в глобальной переменной или
+#         # в файлае
+#         while self.time_to_stop > self.current_time:  # TODO цикл тут не нужен
 #             self.current_time = datetime.now()
-#             print("Проверка временного лимита:", self.time_to_stop)
 #             if check_user[current_ip] <= 5:
 #                 response = self.get_response(request)
 #                 self.count += 1
@@ -1128,6 +1129,13 @@ Post запрос используется для передачи параме�
 #             response = self.get_response(request)
 #             self.count = 0
 #             return response
+# # TODO  Попробуйте сделать так:
+# #  - храним данные по посещениях в словаре
+# #  - при запросе смотрим в словарь по ключу с ip, если его нет, создаём запись вида "ip: време доступа", и всё, а если
+# #  ключ есть, то получаем время прошлого доступа
+# #  - сравниваем текущее время и время последнего запроса, если разница меньше допустимого - возвращаем страницу с
+# #  ошибкой. Если разница допустима - обновляем время доступа для этого ip.
+
 ========================================================================================================================
 
                                         Формы в джанго
@@ -1201,10 +1209,18 @@ Post запрос используется для передачи параме�
  - Создадим форму для создания нового продукта
  - Идем в приложениее shopapp и создаем там файл forms.py
     from django import forms
+    from django.core import validators
     class ProductForm(forms.Form):
         name = forms.CharField(max_length=100)
-        price = forms.DecimalField(min_value=1, max_value=100000)
-        description = forms.CharField(label="Product description", widget=forms.Textarea)
+        price = forms.DecimalField(min_value=1, max_value=100000, decimal_places=2) # decimal_places - количество символов после запятой
+        description = forms.CharField(
+        label="Product description",
+        widget=forms.Textarea(attrs={"rows": 5, "cols": 30}),    # Если после forms.Textarea поставить () в них можно будет добавлять свои свойства, без скобок будет поле по умолчанию
+        validators=[validators.RegexValidator(        # RegexValidator - это валидатор по регулярным выражениям (проверяет слова)
+            regex="great",                            # Проверяет, есть ли в тексте слово"great"
+            message="Field must contain word great",  # Так мы выводим сообщение, которе получит пользователь в случае ошибки
+                )]
+            )
 
  - Создаем новый шаблон create-product.html для отображения формы (в папке shopapp/templates/shopapp)
     {% extends 'shopapp/base.html' %}
@@ -1279,14 +1295,85 @@ Post запрос используется для передачи параме�
             form = ProductForm(request.POST)                # Предзаполняем данными форму из пост запроса
             if form.is_valid():                             # Если форма валидна, делаем редирект
                 # name = form.cleaned_data["name"]          # Так делаем если имена полей отличаются от полей в базе данных
-                Product.objects.create(**form.cleaned_data,) # Если поля называются так же как и в бд, то просто распаковываем форму
-                url = reverse("shopapp:products_list")
-                return redirect(url)
+                # Product.objects.create(**form.cleaned_data,) # Если поля называются так же как и в бд, то просто распаковываем форму (старая версия, использовалась без форм)
+                form.save()
+                url = reverse("shopapp:products_list")       # Тут просто пишем имя приложения и функции, джанго сам подставит ссылку
+                return redirect(url)                         # Созданный url передаем в redirect
         else:
             form = ProductForm()                    # Переопределяем форму, если это был GET запрос
         context = {
             "form": form,
         }
         return render(request, 'shopapp/create-product.html', context=context)
+                                            *************************************
+                                            Модернезируем страниц загрузки файла
 
+- Для этого в папке приложения (requestdataapp/forms.py) создаем новый класс
+    class UploadFileForm(forms.Form):
+        file = forms.FileField()
 
+- Переходим ко вью функции (requestdataapp/views.py)
+    from .forms import UserBioForm, UploadFileForm
+    def handle_file_upload(request: HttpRequest) -> HttpResponse:
+
+        link = '<h3><a href="http://127.0.0.1:8000/req/upload/">Выбрать другой файл</a></h3>'
+
+        if request.method == "POST":
+            form = UploadFileForm(request.POST, request.FILES)
+            if form.is_valid():
+                # myfile = request.FILES["myfile"]  # Старая версия, использовалась без форм
+                myfile = form.cleaned_data["file"]
+                fs = FileSystemStorage()
+                if myfile.size <= 1048576:
+                    filename = fs.save(myfile.name, myfile)
+                    print("Saved file: ", filename)
+                    print("File size = ", myfile.size)
+                else:
+                    return HttpResponse(f"<h1>Размер файла превышает 1 мб {link}</h1>",)
+        else:
+            form = UploadFileForm()
+
+        context = {
+            "form": form
+        }
+        return render(request, "requestdataapp/file-upload.html", context=context)
+
+ - Потом идем в шаблон (requestdataapp/templates/requestdataapp/file-upload.html) и добавляем форму
+    {% extends 'requestdataapp/base.html' %}
+    {% block Title %}
+      File upload
+    {% endblock %}
+
+    {% block body %}
+      <h1>Upload file</h1>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button type="submit">Upload</button>
+      </form>
+    {% endblock %}
+
+ - Создадим свой собственный валидатор файла в (requestdataapp/forms.py). По аналогии можно и проверку на размер файла
+    from  django.core.files.uploadedfile import InMemoryUploadedFile        # Импортируем InMemoryUploadedFile
+    from django.core.exceptions import ValidationError                      # Импортируем сообщение об ошибке
+    def validate_file_name(file: InMemoryUploadedFile) -> None:             # Именно функцию
+        if file.name and "virus" in file.name:
+            raise ValidationError("File name should not contain word 'virus'")
+ - Подключаем созданную функцию в ранее созданный класс UploadFileForm
+    class UploadFileForm(forms.Form):
+        file = forms.FileField(validators=[validate_file_name])
+
+                                        **********************************
+                                                 ModelForm
+
+Документация - https://docs.djangoproject.com/en/4.1/topics/forms/modelforms/
+В отличии от создания класса наследника Form, наследование от ModelForm позволяет сгенерировать форму на сонове существующей
+уже модели (и такая форма будет содержать гшораздо меньше инфы)
+
+ - Создадим форму Product в (shopapp/forms.py)
+    from .models import Product
+    class ProductForm(forms.ModelForm):
+        class Meta:
+            model = Product
+            fields = "name", "price", "description", "discount" # В отличии от прошлого класса, достаточно указать просто наличе полей
