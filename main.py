@@ -6356,4 +6356,5 @@ registrations_bad.log — для ошибочных, записывать стр
 #
 # a = [i for i in a if a[i] != 0] # Убираем 0 из списка. Можно и через множество их убрать
 # print(*a)
+Test key gitlab
 
