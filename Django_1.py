@@ -1377,3 +1377,56 @@ Post запрос используется для передачи параме�
         class Meta:
             model = Product
             fields = "name", "price", "description", "discount" # В отличии от прошлого класса, достаточно указать просто наличе полей
+
+=========================================================================================================================
+
+                                            Class based views
+                                            *****************
+ - Класс вью с методом GET
+ - Открыть mysite/shopapp/vews.py
+ - Импортируем Views (потом ПКМ и импорт из django):  from django.views import View
+
+ - Объявляем класс ShopIndexView и в нем метод get (который полностью заменит функцию shop_index)
+    class ShopIndexView(View):
+        def get(self, request: HttpRequest) -> HttpResponse:
+            links = [
+                {"title": "Список продуктов", "address": "products/"},
+                {"title": "Список заказов", "address": "orders/"},
+            ]
+            context = {
+                "time_running": default_timer(),
+                "links": links
+            }
+            return render(request, 'shopapp/shop-index.html', context=context)
+
+ - Подключаем созданный класс к mysite/shopapp/urls.py
+    from django.urls import path
+    from .views import ShopIndexView, products_list, orders_list, create_product, create_order
+    app_name = "shopapp"
+    urlpatterns = [
+        path("", ShopIndexView.as_view(), name="shop_index"),
+     - Поключаем класс в mysite/shopapp/urls.py
+                         ]
+
+ - Класс вью с методом POST
+ - Готовим форму для метода POST (shopapp/forms.py):
+    from django.contrib.auth.models import Group
+    class GroupForm(forms.ModelForm):
+        class Meta:
+            model = Group
+            fields = ['name']
+
+ - Объявляем класс GroupsListView и в нем метод get (shopapp/view.py)
+    from .forms import GroupForm
+    class GroupsListView(View):
+        def get(self, request: HttpRequest) -> HttpResponse:
+            context = {
+                "groups": Group.objects.prefetch_related('permissions').all(),
+                "form": GroupForm(),
+            }
+            return render(request, 'shopapp/groups-list.html', context=context)
+
+        def post(self):
+            pass
+
+ - Добавляем в шаблон отрисовку формы (shopapp/templates/shopapp/group-list.html)
