@@ -1382,6 +1382,9 @@ Post запрос используется для передачи параме�
 
                                             Class based views
                                             *****************
+Документация - https://docs.djangoproject.com/en/4.1/topics/class-based-views/generic-display/
+
+
  - Класс вью с методом GET
  - Открыть mysite/shopapp/vews.py
  - Импортируем Views (потом ПКМ и импорт из django):  from django.views import View
@@ -1416,7 +1419,7 @@ Post запрос используется для передачи параме�
             model = Group
             fields = ['name']
 
- - Объявляем класс GroupsListView и в нем метод get (shopapp/view.py)
+ - Объявляем класс GroupsListView и в нем метод get и post (shopapp/view.py)
     from .forms import GroupForm
     class GroupsListView(View):
         def get(self, request: HttpRequest) -> HttpResponse:
@@ -1426,7 +1429,81 @@ Post запрос используется для передачи параме�
             }
             return render(request, 'shopapp/groups-list.html', context=context)
 
-        def post(self):
-            pass
+        def post(self, request: HttpRequest):
+            form = GroupForm(request.POST)
+            if form.is_valid():
+                form.save()
+
+            return redirect(request.path)   # Так можно сделать редирект на страницу с группами, потому что на этой же странице есть и сама форма, которую обрабатываем
+            # То есть в это вслучае revers прописывать ненужно. Плюс если сделать return render(), то пользоватль сможет опубликовать ту же самую форму дважды
 
  - Добавляем в шаблон отрисовку формы (shopapp/templates/shopapp/group-list.html)
+    # {% extends 'shopapp/base.html' %}
+    # {% block title %}
+    #     Groups list
+    # {% endblock %}
+    # {% block body %}
+    #     <h1>Groups:</h1>
+    #     <div>
+    #         <form method="post">
+    #             {% csrf_token %}
+    #             {{ form.as_p }}
+    #             <button type="submit">Create</button>
+    #         </form>
+    #     </div>
+    #     <div>
+    #     {% if not groups %}
+    #         <h3>No groups yet</h3>
+    #     {% else %}
+    #         <ul>
+    #             {% for group in groups %}
+    #                 <li>
+    #                     <div>{{group.name}}</div>
+    #                     <ul>
+    #                         {% for permission in group.permissions.all %}
+    #                             <li>
+    #                                 {{permission.name}}
+    #                                 (<code>{{permission.codename}}</code>)
+    #                             </li>
+    #                         {% endfor %}
+    #                     </ul>
+    #                 </li>
+    #             {% endfor %}
+    #         </ul>
+    #     {% endif %}
+    #     </div>
+    #     <div>
+    #         <a href="{% url 'shopapp:shop_index' %}">
+    #             Back to the shop
+    #         </a>
+    #     </div>
+    # {% endblock %}
+
+                                            ****************************************
+                                            Отображение элментов по первичному ключу
+
+Просмотр деталей товара:
+ - Создаем вьюфункцию для отоброжения деталей продукта
+    class ProductDetailsView(View):
+        def get(self, request: HttpRequest, pk: int) -> HttpResponse:
+            product = Product.objects.get(pk=pk)
+            context = {
+                "product": product,
+            }
+            return render(request, "shopapp/products-details.html", context=context)
+
+ - Cоздадим шаблон для отрисовки страницы с деталями (shopapp/templates/shopapp/products-details.html)
+    {% extends 'shopapp/base.html' %}
+
+    {% block title %}
+        Product #{{product.pk}}
+    {% endblock %}
+
+    {% block body %}
+    <h1>Product <strong>{{product.name}}</strong></h1>
+    {% endblock %}
+
+ - Подключаем функцию r mysite/shopapp/urls.py
+    path("products/<int:pk>/", ProductDetailsView.as_view(), name="product_details"), # В адресе указываем, что ожидаем перв ключ "/<int:pk>/"
+                                                                                    # В пути специально указываем <int:pk> что бы добавить проверку "на число"
+
