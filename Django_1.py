@@ -1605,3 +1605,37 @@ class OrdersListView(ListView):
 
  - Важно!!! Нужно переименовать шаблон закзов в mysite/shopapp/templates/shopapp
     Переименовыем шаблон orders-list.html в order_list.html # ТК джанго ищет шаблорн афтоматом по имени модели Order и добавляет суфикс _list сам
+
+ - Изменяем сам шабло отрисовки заказов mysite/shopapp/templates/shopapp/order_list
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Orders list
+    {% endblock %}
+    {% block body %}
+        <h1>Orders:</h1>
+        {% if object_list %}                                                    # Тут заменяем 'orders' на 'object_list'
+            <div>
+            {% for order in object_list %}                                      # И тут
+                <div>
+                    <p>Order by: {% firstof order.user.first_name order.user.username %}</p>
+                    <p>Promocode: <code>{{ order.promocode }}</code></p>
+                    <p>Delivery address: {{ order.delivery_address }}</p>
+                </div>
+                    Products in order:
+                    <ul>
+                        {% for product in order.products.all %}
+                            <li>{{ product.name }} for ${{product.price}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <h3>No orders yet</h3>
+        {% endif %}
+        <div>
+            <a href="{% url 'shopapp:order_create' %}">
+                Create a new order
+            </a>
+        </div>
+    {% endblock %}
