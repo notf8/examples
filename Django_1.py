@@ -1590,3 +1590,18 @@ DetailView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
         template_name = "shopapp/products-details.html"
         model = Product
         context_object_name = "products"
+
+                                ************************************************************
+                                Реализуем отображение списка заказов с DetailView и ListView
+
+ - создадим класс OrdersListView mysite/shopapp/views.py
+class OrdersListView(ListView):
+    queryset = (                                # Пишем сразу queryset, тк у заказов есть связи с продуктами
+        Order.objects.select_related("user").
+        prefetch_related("products")            # .all() в концуе указыаать не нужно
+    )
+ - Подключаем новую функцию а mysite/shopapp/urls.py
+    path("orders/", OrdersListView.as_view(), name="orders_list"),
+
+ - Важно!!! Нужно переименовать шаблон закзов в mysite/shopapp/templates/shopapp
+    Переименовыем шаблон orders-list.html в order_list.html # ТК джанго ищет шаблорн афтоматом по имени модели Order и добавляет суфикс _list сам
