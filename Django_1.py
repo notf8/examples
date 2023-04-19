@@ -1606,7 +1606,7 @@ class OrdersListView(ListView):
  - Важно!!! Нужно переименовать шаблон закзов в mysite/shopapp/templates/shopapp
     Переименовыем шаблон orders-list.html в order_list.html # ТК джанго ищет шаблорн афтоматом по имени модели Order и добавляет суфикс _list сам
 
- - Изменяем сам шабло отрисовки заказов mysite/shopapp/templates/shopapp/order_list
+ - Изменяем сам шаблон отрисовки заказов mysite/shopapp/templates/shopapp/order_list.html
     {% extends 'shopapp/base.html' %}
     {% block title %}
         Orders list
@@ -1639,3 +1639,39 @@ class OrdersListView(ListView):
             </a>
         </div>
     {% endblock %}
+
+- создадим класс OrderDetailView в mysite/shopapp/views.py
+    class OrderDetailView(DetailView):
+        queryset = (                            # В кверисет оставляем то же что и в прошлом классе, тк нужны все данные
+            Order.objects
+            .select_related("user")
+            .prefetch_related("products")
+        )
+
+ - Создадим новый шаблон для оотрисовки деталей заказа mysite/shopapp/templates/shopapp/order_detail.html
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Orders # {{ object.pk }} details
+    {% endblock %}
+    {% block body %}
+        <h1>Orders # {{ object.pk }}</h1>
+            <div>
+                <p>Order by: {% firstof object.user.first_name object.user.username %}</p>
+                <p>Promocode: <code>{{ object.promocode }}</code></p>
+                <p>Delivery address: {{ object.delivery_address }}</p>
+                <div>
+                    Products in order:
+                    <ul>
+                        {% for product in order.products.all %}
+                            <li>{{ product.name }} for ${{product.price}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        <div>
+            <a href="{% url 'shopapp:orders_list' %}">Back to orders</a>
+        </div>
+    {% endblock %}
+
+ - Подключаем новый класс к mysite/shopapp/urls.py
+    path("orders/<int:pk>/", OrderDetailView.as_view(), name="order_details"),
