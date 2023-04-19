@@ -1500,10 +1500,44 @@ Post запрос используется для передачи параме�
     {% endblock %}
 
     {% block body %}
-    <h1>Product <strong>{{product.name}}</strong></h1>
+    <h1>Product <strong>{{ product.name }}</strong></h1>
+    <div>
+        <div>Description: <em>{{ product.description }}</em></div>
+        <div>Price: {{ product.price }}</div>
+        <div>Discount: {{ product.discount }}</div>
+        <div>Archived: {{ product.archived }}</div>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_list' %}">Back to products list</a> # Важно!!! В тегах url имена функций после shopapp: пишем без пробелов
+    </div>
     {% endblock %}
 
  - Подключаем функцию r mysite/shopapp/urls.py
     path("products/<int:pk>/", ProductDetailsView.as_view(), name="product_details"), # В адресе указываем, что ожидаем перв ключ "/<int:pk>/"
                                                                                     # В пути специально указываем <int:pk> что бы добавить проверку "на число"
-
+ - Редактируем после этого шаблон списка товаров (что бы добавить ссылку) shopapp/templates/shopapp/products-list.html
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Products list
+    {% endblock %}
+    {% block body %}
+        <h1>Products:</h1>
+        {% if products %}
+            <div>
+            {% for product in products %}
+                <div>
+                    <p><a href="{% url 'shopapp:product_details' pk=product.pk %}">Name: {{product.name}}</a></p> # Тут именованным аргументом добавляем ключ продкукта
+                    <p>Price: {{product.price}}</p>
+                    <p>Discount: {% firstof product.discount 'no discount'%}</p>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <h3>No products yet</h3>
+        {% endif %}
+        <div>
+            <a href="{% url 'shopapp:product_create' %}">
+                Create a new product
+            </a>
+        </div>
+    {% endblock %}
