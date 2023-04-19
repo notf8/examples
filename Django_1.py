@@ -1570,3 +1570,23 @@ Post запрос используется для передачи параме�
 Generic display views - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-display/
 ListView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-display/#listview
 DetailView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-display/#detailview
+
+                                                ***********************
+                                                        ListView
+
+ - Переработаем класс класс ProductsListView в mysite/shopapp/views.py
+    from django.views.generic import ListView
+    class ProductsListView(ListView):
+        template_name = 'shopapp/products-list.html'
+        model = Product                               # Указываем модель, сущности которой надо вытащить
+        context_object_name = "products"              # Указываем нужное имя в шаблоне, по которому они будут доступны
+
+                                                ***********************
+                                                        DetailView
+
+ - Переработаем класс класс ProductsDetailView в mysite/shopapp/views.py
+    from django.views.generic import ListView, DetailView
+        class ProductDetailsView(DetailView):            # При такой отрисовке, не нужно писать логику поиска объекта, джанго сам вернет ошибку 404 при необходимоти
+        template_name = "shopapp/products-details.html"
+        model = Product
+        context_object_name = "products"
