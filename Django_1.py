@@ -1484,9 +1484,11 @@ Post запрос используется для передачи параме�
 
 Просмотр деталей товара:
  - Создаем вьюфункцию для отоброжения деталей продукта
+ - Нужно добавить в импорт метод get_object_or_404
+    from django.shortcuts import render, redirect, reverse, get_object_or_404
     class ProductDetailsView(View):
         def get(self, request: HttpRequest, pk: int) -> HttpResponse:
-            product = Product.objects.get(pk=pk)
+            product = get_object_or_404(Product, pk=pk) #Так мы возращаем ошибку 404, если будет введен не корректный ID продукта
             context = {
                 "product": product,
             }
@@ -1541,3 +1543,30 @@ Post запрос используется для передачи параме�
             </a>
         </div>
     {% endblock %}
+=========================================================================================================================
+
+                                            ****************************
+                                                Class  TemplateView
+
+Документация - https://docs.djangoproject.com/en/4.1/ref/class-based-views/base/#django.views.generic.base.TemplateView
+
+ - Перепишем функцию products_list() в mysite/shopapp/views.py
+    from django.views.generic import TemplateView
+    class ProductsListView(TemplateView):
+        template_name = 'shopapp/products-list.html'
+
+        def get_context_data(self, **kwargs): # Если нужно добавлять новые объекты в шаблон, делается это в методе get_context_data, дополняя контекст
+            contex = super().get_context_data(**kwargs) # Переопределяем родл класс и закидываем туда кварги (ключ продукта)
+            contex["products"] = Product.objects.all()  # Контекстом будет просто словарь с продуктами
+            return contex
+
+ - Подключаем новый класс в mysite/shopapp/urls.py
+    path("products/", ProductsListView.as_view(), name="products_list"),
+========================================================================================================================
+
+                                            ****************************
+                                                ListView и DetailView
+
+Generic display views - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-display/
+ListView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-display/#listview
+DetailView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-display/#detailview
