@@ -1604,7 +1604,7 @@ class OrdersListView(ListView):
     path("orders/", OrdersListView.as_view(), name="orders_list"),
 
  - Важно!!! Нужно переименовать шаблон закзов в mysite/shopapp/templates/shopapp
-    Переименовыем шаблон orders-list.html в order_list.html # ТК джанго ищет шаблорн афтоматом по имени модели Order и добавляет суфикс _list сам
+    Переименовыем шаблон orders-list.html в order_list.html # ТК джанго ищет шаблон автоматом по имени модели Order и добавляет суфикс _list сам
 
  - Изменяем сам шаблон отрисовки заказов mysite/shopapp/templates/shopapp/order_list.html
     {% extends 'shopapp/base.html' %}
@@ -1613,7 +1613,7 @@ class OrdersListView(ListView):
     {% endblock %}
     {% block body %}
         <h1>Orders:</h1>
-        {% if object_list %}                                                    # Тут заменяем 'orders' на 'object_list'
+        {% if object_list %}  # Тут заменяем 'orders' на 'object_list' что бы не писать кучу кода с context_object во вью функции проще изменить шаблон
             <div>
             {% for order in object_list %}                                      # И тут
                 <div>
