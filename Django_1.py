@@ -1721,6 +1721,7 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
     class ProductUpdateView(UpdateView):
         model = Product
         fields = "name", "price", "description", "discount" # Можно указывать те поля, которые будем редактировать
+        template_name_suffix = "_update_form" # Укажем суфикс шаблона, что бы джанго искал именно шаблон обновления а не создания (его создадим позже)
 
  - Подключаем новый класс к mysite/shopapp/urls.py
     path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="product_update"),
@@ -1747,3 +1748,5 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
         >Back to products list</a>
     </div>
     {% endblock %}
+
+ - Создадим шаблон для отрисовки страницы обновления продукта (что бы джанго не использовал шаблон создания продукта) mysite/shopapp/templates/shopapp/product_update_form.html
