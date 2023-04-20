@@ -1675,3 +1675,40 @@ class OrdersListView(ListView):
 
  - Подключаем новый класс к mysite/shopapp/urls.py
     path("orders/<int:pk>/", OrderDetailView.as_view(), name="order_details"),
+========================================================================================================================
+
+                            *******************************************************
+                                Использование CreateView и UpdateView
+
+Generic editing views - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-editing/
+CreateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-editing/#createview
+UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-editing/#updateview
+
+                                    ***********************
+                                        CreateView
+
+ - Создадим новый класс в mysite/shopapp/views.py
+    from django.views.generic import TemplateView, ListView, DetailView, CreateView
+    class ProductCreateView(CreateView): # Так же под него создается шаблон. Используется суфикс _form
+        model = Product
+        fields = "name", "price", "description", "discount" # Для создания можно юзать либо fields (не нужно создавать форму предварительно) либо form_class
+        success_url = reverse_lazy("shopapp:products_list") # Импортируется из django urls, его юзаем, тк обычные реверс можно использовать только во вью функции (не в классе)
+
+ - Создадим шаблон для отрисовки mysite/shopapp/templates/shopapp/product_form.html
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Create product
+    {% endblock %}
+    {% block body %}
+        <h1>Create product:</h1>
+        <div>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Create</button>
+            </form>
+        </div>
+    {% endblock %}
+
+- Подключаем новый класс к mysite/shopapp/urls.py
+    path("orders/<int:pk>/", OrderDetailView.as_view(), name="order_details"),
