@@ -1589,7 +1589,7 @@ DetailView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
         class ProductDetailsView(DetailView):            # При такой отрисовке, не нужно писать логику поиска объекта, джанго сам вернет ошибку 404 при необходимоти
         template_name = "shopapp/products-details.html"
         model = Product
-        context_object_name = "products"
+        context_object_name = "product"
 
                                 ************************************************************
                                 Реализуем отображение списка заказов с DetailView и ListView
@@ -1722,5 +1722,28 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
         model = Product
         fields = "name", "price", "description", "discount" # Можно указывать те поля, которые будем редактировать
 
-- Подключаем новый класс к mysite/shopapp/urls.py
-    path("products/update/", ProductUpdateView.as_view(), name="product_update"),
+ - Подключаем новый класс к mysite/shopapp/urls.py
+    path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="product_update"),
+
+ - Добавим ссылку на страницу детелей продукта в шаблоне mysite/shopapp/templates/shopapp/product_details.html
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Product #{{product.pk}}
+    {% endblock %}
+    {% block body %}
+    <h1>Product <strong>{{ product.name }}</strong></h1>
+    <div>
+        <div>Description: <em>{{ product.description }}</em></div>
+        <div>Price: {{ product.price }}</div>
+        <div>Discount: {{ product.discount }}</div>
+        <div>Archived: {{ product.archived }}</div>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_update' pk=product.pk %}" # Тут нужно указать, какой продукт обноляем. Для джанго это все так же primary key (pk)
+        >Update product</a>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_list' %}"
+        >Back to products list</a>
+    </div>
+    {% endblock %}
