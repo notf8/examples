@@ -1685,9 +1685,9 @@ CreateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
 UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-editing/#updateview
 
                                     ***********************
-                                        CreateView
+                                            CreateView
 
- - Создадим новый класс в mysite/shopapp/views.py
+ - Создадим новый класс для создания продукта в mysite/shopapp/views.py
     from django.views.generic import TemplateView, ListView, DetailView, CreateView
     class ProductCreateView(CreateView): # Так же под него создается шаблон. Используется суфикс _form
         model = Product
@@ -1711,4 +1711,16 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
     {% endblock %}
 
 - Подключаем новый класс к mysite/shopapp/urls.py
-    path("orders/<int:pk>/", OrderDetailView.as_view(), name="order_details"),
+    path("products/create/", ProductCreateView.as_view(), name="product_create"),
+
+                                    ********************************
+                                                UpdateView
+
+ - Создадим новый класс для обновления продукта в mysite/shopapp/views.py
+    from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView
+    class ProductUpdateView(UpdateView):
+        model = Product
+        fields = "name", "price", "description", "discount" # Можно указывать те поля, которые будем редактировать
+
+- Подключаем новый класс к mysite/shopapp/urls.py
+    path("products/update/", ProductUpdateView.as_view(), name="product_update"),
