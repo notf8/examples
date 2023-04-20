@@ -1723,6 +1723,13 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
         fields = "name", "price", "description", "discount" # Можно указывать те поля, которые будем редактировать
         template_name_suffix = "_update_form" # Укажем суфикс шаблона, что бы джанго искал именно шаблон обновления а не создания (его создадим позже)
 
+
+        def get_success_url(self): # Этот метод нужен, что бы добавить реверс в шаблон обновления
+            return reverse(
+                "shopapp:product_details",
+                kwargs={"pk": self.object.pk},  # На self.object.pk доступен объект, который сейчас обновляется
+            )
+
  - Подключаем новый класс к mysite/shopapp/urls.py
     path("products/<int:pk>/update/", ProductUpdateView.as_view(), name="product_update"),
 
@@ -1750,3 +1757,21 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
     {% endblock %}
 
  - Создадим шаблон для отрисовки страницы обновления продукта (что бы джанго не использовал шаблон создания продукта) mysite/shopapp/templates/shopapp/product_update_form.html
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Update product
+    {% endblock %}
+    {% block body %}
+        <h1>Update product:</h1>
+        <div>Update
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Update</button>
+            </form>
+        </div>
+        <div>
+            <a href="{% url 'shopapp:product_details' pk=object.pk %}"    # Здесь так же указываем ссылку на детали продукта (то есть возвращаемся на страницу этого же продукта)
+            >Back to products #{{ object.pk }}</a>                         # Здесь обращаемся к объект по его ключу
+        </div>
+    {% endblock %}
