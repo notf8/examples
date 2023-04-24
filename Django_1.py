@@ -1580,6 +1580,7 @@ DetailView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
         template_name = 'shopapp/products-list.html'
         model = Product                               # Указываем модель, сущности которой надо вытащить
         context_object_name = "products"              # Указываем нужное имя в шаблоне, по которому они будут доступны
+        # queryset = Product.objects.filter(archived=False) # Такой метод используем, если нужно отобразить только продукты не в архиве
 
                                                 ***********************
                                                         DetailView
@@ -1756,7 +1757,7 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
     </div>
     {% endblock %}
 
- - Создадим шаблон для отрисовки страницы обновления продукта (что бы джанго не использовал шаблон создания продукта) mysite/shopapp/templates/shopapp/product_update_form.html
+ - Создадим шаблон для отрисовки страницы обновления продукта mysite/shopapp/templates/shopapp/product_update_form.html (что бы джанго не использовал шаблон создания продукта)
     {% extends 'shopapp/base.html' %}
     {% block title %}
         Update product
@@ -1775,3 +1776,47 @@ UpdateView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
             >Back to products #{{ object.pk }}</a>                         # Здесь обращаемся к объект по его ключу
         </div>
     {% endblock %}
+========================================================================================================================
+
+                            ************************************************************
+                                    Использование DeleteView для удаления объектов
+
+DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic-editing/#deleteview
+
+ - Создадим новый класс ProductDeleteView в mysite/shopapp/views.py
+    from django.views.generic import TemplateView, ListView, DetailView, CreateView, UpdateView, DeleteView
+    class ProductDeleteView(DeleteView):
+        model = Product
+        success_url = reverse_lazy("shopapp:products_list")
+
+    def form_valid(self, form):                  # Этот метод нужен, если делаем софт-делит(те помечаем как архивный продукт)
+        success_url = self.get_success_url()
+        self.object.archived = True
+        self.object.save()
+        return HttpResponseRedirect(success_url)
+
+
+- Создадим шаблон для отрисовки страницы удаления продукта mysite/shopapp/templates/shopapp/product_confirm_delete.html
+    {% extends 'shopapp/base.html' %}
+    {% block title %}
+        Confirm delete {{ object.name }}
+    {% endblock %}
+    {% block body %}
+        <h1>Are you sure you want to delete {{ object.name }}?</h1>
+        <br>
+        <div>
+            <a href="{% url 'shopapp:product_details' pk=object.pk %}"
+            >Back to products</a>
+        </div>
+        <br>
+        <div>
+          <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Delete</button>
+          </form>
+        </div>
+    {% endblock %}
+
+- Подключаем новый класс к mysite/shopapp/urls.py
+    path("products/<int:pk>/confirm-delete/", ProductDeleteView.as_view(), name="product_delete"),
