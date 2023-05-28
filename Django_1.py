@@ -1797,6 +1797,7 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
 
 
 - Создадим шаблон для отрисовки страницы удаления продукта mysite/shopapp/templates/shopapp/product_confirm_delete.html
+# Имя шаблона складывается из имени объекта и суфикса confirm_delete
     {% extends 'shopapp/base.html' %}
     {% block title %}
         Confirm delete {{ object.name }}
