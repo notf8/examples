@@ -1833,3 +1833,43 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
  - Авторизация - процесс, в ходе которого система решает, может ли пользователь выполнять поределенные действия или получать
 доступ (проверкуа ролей и разрешений) - Что вы можете делать?
  - Идентификация - процедура в которой проверяются идентификаторы субъекта в системе
+
+                                    ***************************************************
+                                            Создадим view для аутентификации
+ - Создадим новое приложение в папке с проекетом (my site) - python manage.py startapp myauth
+ - Переходим в папку приложения (myauth) открываем apps.py -> ПКМ по названию класса MyauthConfig -> copy reference
+ - Подклоючаем новое приложение к проекту - папка mysite -> settings.py -> вставляем в installed aps то что скопировали
+    Там же проверяем, подключен ли 'django.contrib.auth', там же
+ - Созаем новые папки для шаблонов в папке приложения myauth - templates/myauth
+ - В созданной папке создаем базовый шаблон 'base.html'
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}
+        {% endblock %}</title>
+    </head>
+    <body>
+    {% block body %}
+    {% endblock %}
+    </body>
+    </html>
+ - Создадим шаблон формы входа 'login.html'
+    {% extends 'myauth/base.html' %}
+    {% block title %}
+      Login
+    {% endblock %}
+    {% block body %}
+    <form method="post">
+      {% csrf_token %}
+    <p>
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required> # required - обязательное поле. name и id могут быть одинаковыми
+    </p>
+    <p>
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+    </p>
+      <button type="submit">Login</button> # Тип action не указываем, тк он направлен на это же приложение
+    </form>
+    {% endblock %}
