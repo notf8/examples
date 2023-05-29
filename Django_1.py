@@ -1854,6 +1854,7 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
     {% endblock %}
     </body>
     </html>
+
  - Создадим шаблон формы входа 'login.html'
     {% extends 'myauth/base.html' %}
     {% block title %}
@@ -1861,15 +1862,100 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
     {% endblock %}
     {% block body %}
     <form method="post">
-      {% csrf_token %}
-    <p>
-        <label for="username">Username</label>
-        <input type="text" id="username" name="username" required> # required - обязательное поле. name и id могут быть одинаковыми
-    </p>
-    <p>
+        {% csrf_token %}
+        {% if error %}
+            <p style="color: red">
+              {{ error }}
+            </p>
+        {% endif %}
+        <p>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required> # required - обязательное поле. name и id могут быть одинаковыми
+        </p>
+        <p>
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required>
-    </p>
-      <button type="submit">Login</button> # Тип action не указываем, тк он направлен на это же приложение
+        </p>
+          <button type="submit">Login</button> # Тип action не указываем, тк он направлен на это же приложение
     </form>
     {% endblock %}
+
+ - Создадим view функцию для обработки формы myauth/views.py
+    from django.http import HttpRequest
+    from django.shortcuts import render, redirect
+    from django.contrib.auth import authenticate, login
+
+
+    def login_view(request: HttpRequest):
+        if request.method == "GET":
+            if request.user.is_authenticated:
+                return redirect('/admin')
+            return render(request, 'myauth/login.html')
+        username = request.POST["username"]
+        password = request.POST["password"]
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("/admin")
+        return render(request, "myauth/login.html", {"error": "invalid login credentials"})
+
+ - Подключим функцию к urls.py который нужно создать в папке myauth
+    from django.urls import path
+    from .views import login_view
+
+    app_name = "myauth"
+
+    urlpatterns = [
+        path("login/", login_view, name="login"),
+    ]
+
+ - Не забыть подключить url в основне приложение mysite/urls.py:
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('shop/', include('shopapp.urls')),
+        path('req/', include('requestdataapp.urls')),
+        path('myauth/', include('myauth.urls')),
+    ]
+
+                                ******************************************************
+
+                                        Стандартные view для аутентификации
+Сверху мы писали функцию самостоятельно. Но есть класс вью которые можно использовать для аутентификации
+
+ - Импортируем loginview в myauth/urls.py
+    from django.contrib.auth.views import LoginView
+    app_name = "myauth"
+    urlpatterns = [
+        path("login/", LoginView.as_view(template_name="myauth/login.html"), name="login"), # В скобках вью указываем какой шаблон отрисовать
+    ]
+
+ - Изменим шаблон для отрисовки страницы логина myauth/templates/myauth/login.html:
+    {% extends 'myauth/base.html' %}
+    {% block title %}
+      Login
+    {% endblock %}
+    {% block body %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button> # Тип action не указываем, тк он направлен на это же приложение
+    </form>
+    {% endblock %}
+
+ - Изменим переадресацию в случае логина в настройках mysite/setting.py в самый конец файла:
+    LOGIN_REDIRECT_URL = '/admin/'
+
+ - Что бы пользователь не видел форму авторизации после ее прохождения, изменим view функцию в myauth/urls.py:
+    from django.contrib.auth.views import LoginView
+    from django.urls import path
+
+    app_name = "myauth"
+    urlpatterns = [
+        path("login/",
+             LoginView.as_view(
+                 template_name="myauth/login.html",
+                 redirect_authenticated_user=True,
+             ),
+             name="login",
+             ),
+    ]
