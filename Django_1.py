@@ -1959,3 +1959,6 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
              name="login",
              ),
     ]
+
+                                            ***********************************************
+                                                        Хранение пароля
