@@ -1899,6 +1899,16 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
             return redirect("/admin")
         return render(request, "myauth/login.html", {"error": "invalid login credentials"})
 
+    # Можно так же сделать на основе classview сделать
+    # class MyLogoutView(LogoutView):
+    #     next_page = reverse_lazy("myauth:login")
+    #
+    #
+    # def set_cookie_view(request: HttpRequest) -> HttpResponse: # Тут переопределяем метод класса, что бы сделать нужный редирект
+    #     response = HttpResponse("Cookie set")
+    #     response.set_cookie("fizz", "buzz", max_age=3600)
+    #     return response
+
  - Подключим функцию к urls.py который нужно создать в папке myauth
     from django.urls import path
     from .views import login_view
