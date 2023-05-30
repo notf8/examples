@@ -1962,3 +1962,46 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
 
                                             ***********************************************
                                                         Хранение пароля
+Хэширование паролей необходимо для безопасности. Хэш функция необратима. Если базу украдут, пароли прочитать не выйдет
+Хэширование - это преообразование входящих данных в уникальный набор символов. Хэш нельзя преобразовать оброатно в исходные данные
+Соль - случайно сгенерированная строчка, склееваемая с паролем
+
+                                            ************************************************
+                                                    Пользователи и сессии, куки
+Куки - простые текстовые файлы, хранятся в браузере пользователя и передаются с каждым запросом, в них может быть инфа
+о языке пользователя, с чем он работает сейчас и т.д. В зависимости от настроек сервера они могут сгорать как после закрытия
+браузера, так и в течении какого то времени (в общем это временное хранилище данных) В них не стоит хранить чувствительные
+данные
+
+ - Настроим куки в нашей view функции myauth/views.py
+    from django.http import HttpRequest, HttpResponse
+
+    def set_cookie_view(request: HttpRequest) -> HttpResponse: # Функция для настройки куки
+        response = HttpResponse("Cookie set")
+        response.set_cookie("fizz", "buzz", max_age=3600) # В параметрах обычные строи, время жизни(max_age=) в секундах
+        return response
+
+    def get_cookie_view(request: HttpRequest) -> HttpResponse: # Функция для чтения куки
+        value = request.COOKIES.get("fizz", "default value") # Тут принцип как и в словарях, если нет значения "fizz", вернется "default value"
+        return HttpResponse(f"Cookie value: {value!r}")
+
+ - Подключим новую функцию к urls (myauth/urls.py)
+    from django.contrib.auth.views import LoginView
+    from django.urls import path
+    from .views import (
+        get_cookie_view,
+        set_cookie_view,
+    )
+    app_name = "myauth"
+    urlpatterns = [
+        path("login/",
+             LoginView.as_view(
+                 template_name="myauth/login.html",
+                 redirect_authenticated_user=True,
+             ),
+             name="login",
+             ),
+        path("cookie/get", get_cookie_view, name="cookie-get"),
+        path("cookie/set", set_cookie_view(), name="cookie-set"),
+    ]
+
