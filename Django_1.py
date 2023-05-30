@@ -1983,7 +1983,7 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
 
     def get_cookie_view(request: HttpRequest) -> HttpResponse: # Функция для чтения куки
         value = request.COOKIES.get("fizz", "default value") # Тут принцип как и в словарях, если нет значения "fizz", вернется "default value"
-        return HttpResponse(f"Cookie value: {value!r}")
+        return HttpResponse(f"Cookie value: {value!r}")      # !r - значение в кавычкай выведет
 
  - Подключим новую функцию к urls (myauth/urls.py)
     from django.contrib.auth.views import LoginView
@@ -2002,6 +2002,40 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
              name="login",
              ),
         path("cookie/get", get_cookie_view, name="cookie-get"),
-        path("cookie/set", set_cookie_view(), name="cookie-set"),
+        path("cookie/set", set_cookie_view, name="cookie-set"),
     ]
 
+                                        *******************************************
+                                                    Сессии в джанго
+
+Сессия в джанго - способ хранения информации о пользователе (его запросы, корзину и т.д.) У пользователя хранится только токен
+(в куки) а инфа о пользователе только на бэкэнде. Так же токен используется для
+Способы хранения сессий:
+ - В БД
+ - В файле
+ - В кэше
+
+ - ЧТо бы использовать сесси в джанго, нужно убедится, что сесси подключены в мидларе mysite/setting.py/middlawre и installed apps
+
+ - Создадим вью функцию для сессий myauth/views.py
+    def set_session_view(request: HttpRequest) -> HttpResponse: # Функция для настройки сессий
+        request.session["foobar"] = "spameggs"
+        return HttpResponse("Session set!")
+
+
+    def get_session_view(request: HttpRequest) -> HttpResponse: # Функция для чтения сессий
+        value = request.session.get("foobar", "default")
+        return HttpResponse(f"Session value: {value!r}")
+
+- Подключим новую функцию к urls (myauth/urls.py)
+    path("login/",
+                 LoginView.as_view(
+                     template_name="myauth/login.html",
+                     redirect_authenticated_user=True,
+                 ),
+                 name="login",
+                 ),
+            path("cookie/get", get_cookie_view, name="cookie-get"),
+            path("cookie/set", set_cookie_view, name="cookie-set"),
+            path("session/get", get_session_view, name="session-get"),
+            path("session/set", set_session_view, name="session-set"),
