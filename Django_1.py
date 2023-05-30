@@ -2039,3 +2039,22 @@ DeleteView - https://docs.djangoproject.com/en/4.1/ref/class-based-views/generic
             path("cookie/set", set_cookie_view, name="cookie-set"),
             path("session/get", get_session_view, name="session-get"),
             path("session/set", set_session_view, name="session-set"),
+
+                                *********************************************************
+                                            Logout. Как это работает?
+
+ - Создадим вью функцию для логаута в myauth/views.py
+from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
+
+def logout_view(request: HttpRequest):
+    logout(request)
+    return redirect(reverse("myauth:login"))
+
+ # Так же можно создать свой класс (его потом так же нужно подключить к url и в пути указать как: MyLogoutView.as_view()
+    class MyLogoutView(LogoutView):
+        next_page = reverse_lazy("myauth:login") # Использовать просто reverse нельзя, тк он работает только во вью функции
+
+- Подключим новую функцию к urls (myauth/urls.py)
+    path("logout/", logout_view, name="logout"),
+
