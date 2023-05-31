@@ -2205,3 +2205,35 @@ def logout_view(request: HttpRequest):
 
                                         **********************************************
                                                 Групповые и персональные права
+Правва бывают групповые и персональные
+
+ - Создадим команды для назначения прав пользователям в отдельной папке myauth/management/commands в которой создадим файл bind_user.py
+    from django.contrib.auth.models import User, Group, Permission
+    from django.core.management import BaseCommand
+
+
+    class Command(BaseCommand):
+        def handle(self, *args, **options):
+            user = User.objects.get(pk=4)
+            group, created = Group.objects.get_or_create(
+                name="profile_manager",
+            )
+            # Тут берем разрешение на просмотр профиля
+            permission_profile = Permission.objects.get(
+                codename="view_profile",
+            )
+            # Тут берем разрешение на просмотр логов
+            permission_logentry = Permission.objects.get(
+                codename="view_logentry",
+            )
+            # Добавление разрешения в группу
+            group.permissions.add(permission_profile)
+            # Присоединение пользователя к группе
+            user.groups.add(group)
+            # Связать пользователя напрямую с разрешением
+            user.user_permissions.add(permission_logentry)
+
+            group.save()
+            user.save()
+
+ - Теперь можно выполнить команду в терминале: python manage.py bind_user
