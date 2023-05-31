@@ -2145,3 +2145,63 @@ def logout_view(request: HttpRequest):
     {% endblock %}
  - Подключим новую функцию к urls (myauth/urls.py)
     path("register/", RegisterView.as_view(), name="register"),
+
+                                    ****************************************************
+                                                Расширение модели пользователя
+Документация - https://docs.djangoproject.com/en/4.1/topics/auth/customizing/#extending-the-existing-user-model
+Важно! Использование собственной модели аутентификации должно произойти до выполнения первой миграции в приложении
+
+ - Создадим новую модель пользователя для расширения инфы о нем myauth/models.py
+    from django.contrib.auth.models import User
+    from django.db import models
+
+    class Profile(models.Model):
+        user = models.OneToOneField(User, on_delete=models.CASCADE)
+        bio = models.TextField(max_length=500, blank=True) # blank=True - поле может быть пустым
+        agreement_accepted = models.BooleanField(default=False)
+
+ - Выполним миграции. Команды в терминале: python manage.py makemigrations и python manage.py migrate
+
+ - Доработаем вью, для добавления профиля пользователя myauth/views.py
+    from .models import Profile
+    class RegisterView(CreateView):
+        form_class = UserCreationForm
+        template_name = "myauth/register.html"
+        success_url = reverse_lazy("myauth:about-me")
+
+        def form_valid(self, form):
+            response = super().form_valid(form)
+            Profile.objects.create(user=self.object)    # Сюда добавляем создание профиля пользователя (сразу после решистрации)
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1")
+            user = authenticate(
+                self.request,
+                username=username,
+                password=password
+            )
+            login(request=self.request, user=user)
+            return response
+
+ - Ну и отредактируем шаблон для отрисовки myauth/templates/myauth/about-me.html, тк у нас появилась новая модель, обращаться будем к profile
+    {% extends 'myauth/base.html' %}
+
+    {% block title %}
+      About me
+    {% endblock %}
+
+    {% block body %}
+    <h1>User info</h1>
+    {% if user.is_authenticated %}
+        <h2>Detail</h2>
+        <p>Username: {{user.username}}</p>
+        <p>First name: {{user.first_name}}</p>
+        <p>Last name: {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+        <p>Bio: {{user.profile.bio}}</p>            # Вот тут как раз обращение к новой модели
+    {% else %}
+        <h2>User is anonymous</h2>
+    {% endif %}
+    {% endblock %}
+
+                                        **********************************************
+                                                Групповые и персональные права
