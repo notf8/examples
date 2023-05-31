@@ -2067,3 +2067,81 @@ def logout_view(request: HttpRequest):
 - Подключим новую функцию к urls (myauth/urls.py)
     path("logout/", logout_view, name="logout"),
 
+                                ******************************************************
+                                                    Регистрация
+Документация - https://docs.djangoproject.com/en/4.1/topics/auth/default/#django.contrib.auth.forms.UserCreationForm
+
+ - Создадим страницу проверки данных пользователя myauth/views.py
+    from django.views.generic import TemplateView
+    class AboutMeView(TemplateView):
+        template_name = "myauth/about-me.html"
+
+- Создадим шаблон для отрисовки myauth/templates/myauth/about-me.html
+    {% extends 'myauth/base.html' %}
+
+    {% block title %}
+      About me
+    {% endblock %}
+
+    {% block body %}
+    <h1>User info</h1>
+    {% if user.is_authenticated %}
+        <h2>Detail</h2>
+        <p>Username: {{user.username}}</p>
+        <p>First name: {{user.first_name}}</p>
+        <p>Last name: {{user.last_name}}</p>
+        <p>Email: {{user.email}}</p>
+    {% else %}
+        <h2>User is anonymous</h2>
+    {% endif %}
+    {% endblock %}
+
+ - Подключим новую функцию к urls (myauth/urls.py)
+    path("about-me/", AboutMeView.as_view(), name="about-me"),
+
+ - Изменим вью функцию для переадресации пользователя после логина myauth/views.py
+    class MyLoginView(LoginView):
+        template_name = 'myauth/login.html'
+        redirect_authenticated_user = True
+
+        def get_redirect_url(self):                        # Можно вместо метода внести строку LOGIN_REDIRECT_URL = reverse_lazy("myauth:about-me") в файле settings.py в папке mysite
+            redirect_to = reverse_lazy("myauth:about-me")
+            return redirect_to
+
+ - Создадим класс для регистрации пользователя myauth/views.py
+    from django.views.generic import TemplateView, CreateView
+    class RegisterView(CreateView):
+        form_class = UserCreationForm # # Это нужно импортировать через ПКМ
+        template_name = "myauth/register.html"
+        success_url = reverse_lazy("myauth:about-me")
+
+        def form_valid(self, form):                       # Переопределяем метод, что бы после регистрации сразу залогинить пользователя
+            response = super().form_valid(form)
+
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1") # Тк в форме два пароля (второй как подтверждение), нам нужно взять один из них (все равно какой)
+            user = authenticate(
+                self.request,
+                username=username,
+                password=password
+            )
+            login(request=self.request, user=user)
+            return response
+
+ - Создадим шаблон для отрисовки формы регистрации myauth/templates/myauth/register.html
+    {% extends 'myauth/base.html' %}
+
+    {% block title %}
+      Register
+    {% endblock %}
+
+    {% block body %}
+      <h1>Register</h1>
+      <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+        <input type="submit" value="Register">
+      </form>
+    {% endblock %}
+ - Подключим новую функцию к urls (myauth/urls.py)
+    path("register/", RegisterView.as_view(), name="register"),
