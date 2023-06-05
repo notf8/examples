@@ -2234,7 +2234,7 @@ def logout_view(request: HttpRequest):
             # Добавление разрешения в группу
             group.permissions.add(permission_profile)
             # Присоединение пользователя к группе
-            user.groups.add(group)
+            user.groups.add(group) # Так как здесь связь многие ко многим - связь выполняется через add()
             # Связать пользователя напрямую с разрешением
             user.user_permissions.add(permission_logentry)
 
