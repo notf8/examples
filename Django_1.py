@@ -2206,6 +2206,11 @@ def logout_view(request: HttpRequest):
                                         **********************************************
                                                 Групповые и персональные права
 Правва бывают групповые и персональные
+Важно! Права начзначенные пользователю напрямую, имеют приоритет над правами, которые назначены пользователю через группу
+Типы групп в админке джанго:
+ 1) Superuser - обладают правами администратора (все разрешения)
+ 2) Staff - могут заходить в админ панель (а дальше завист от разрешений, которые ему назначены)
+ 3) Active - пользователь может выполнить вход (не забанен)
 
  - Создадим команды для назначения прав пользователям в отдельной папке myauth/management/commands в которой создадим файл bind_user.py
     from django.contrib.auth.models import User, Group, Permission
@@ -2237,3 +2242,70 @@ def logout_view(request: HttpRequest):
             user.save()
 
  - Теперь можно выполнить команду в терминале: python manage.py bind_user
+
+                                            ***********************************************
+                                                    Использование и проверка прав
+Документация - https://docs.djangoproject.com/en/4.1/topics/auth/default/#permissions-and-authorization
+
+ - Добавим примесь разрешающую доступ ке странице заказов shopapp/views.py
+    from django.contrib.auth.mixins import LoginRequiredMixin
+    class OrdersListView(LoginRequiredMixin, ListView): # Просто подмешиваем импортированный миесин
+        queryset = (
+            Order.objects
+            .select_related("user")
+            .prefetch_related("products")
+        )
+     - Далее добавим переадресацию на страницу логина (так как джанго по умолчанию переадресовывает на страницу "logins")
+        Для это в файл mysite/settings.py добави одну строчку в самый конец файла:
+        LOGIN_URL = reverse_lazy("myauth:login")
+
+ - Теперь добавим ограничение через декоратор (если не используется class based views). В файле myauth/views.py изменим функцию
+    from django.contrib.auth.decorators import login_required
+
+    @login_required
+    def get_session_view(request: HttpRequest) -> HttpResponse:
+        value = request.session.get("foobar", "default")
+        return HttpResponse(f"Session value: {value!r}")
+
+ - Теперь ограничим права просмотра деталей заказ для пользователя "bob"
+    Для этого перейдем на страницу admin джанго и там пользователю добавим права
+
+    Добавим примесь разрешающую доступ к деталям заказа shopapp/views.py
+    from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+
+    class OrderDetailView(PermissionRequiredMixin, DetailView):
+        permission_required = "order_view" # Тут указываем, какое имено требуется разрешение (название можно взять из админки. Может быть список разрешений (кортеж
+        queryset = (
+            Order.objects
+            .select_related("user")
+            .prefetch_related("products")
+    )
+
+ - Теперь добавим ограничение через декоратор (если не используется class based views). В файле myauth/views.py изменим функцию
+    from django.contrib.auth.decorators import login_required, permission_required
+
+    @permission_required("myauth.view_profile", raise_exception=True) # В скобках указываем, какое разрешение требуется, raise_exception=True - нужно что бы небыло переадресаций по кругу
+    def set_session_view(request: HttpRequest) -> HttpResponse:
+        request.session["foobar"] = "spameggs"
+        return HttpResponse("Session set!")
+
+ - Оставить доступ к админке только для суперпользолвателя (принадлежность к группе) с помощью Mixin -> shopapp/views.py
+    from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
+
+    class ProductCreateView(UserPassesTestMixin, CreateView): # Добавляем mixinn UserPassesTestMixin
+        def test_func(self):
+            # return self.request.user.groups.filter(name="secret-group").exist()
+            return self.request.user.is_superuser # Тут проверяем, является ли пользователь с правами админа
+
+        model = Product
+        fields = "name", "price", "description", "discount"
+        success_url = reverse_lazy("shopapp:products_list")
+
+- Оставить доступ к админке только для суперпользолвателя (принадлежность к группе) с помощью декоратора -> myauth/views.py
+    from django.contrib.auth.decorators import login_required, permission_required, user_passes_test
+
+    @user_passes_test(lambda u: u.is_superuser) # Важно, здесть нет флага raise_exception=True, поэтому логику редиректа нужно вносить в тело функции
+    def set_cookie_view(request: HttpRequest) -> HttpResponse:
+        response = HttpResponse("Cookie set")
+        response.set_cookie("fizz", "buzz", max_age=3600)
+        return response
