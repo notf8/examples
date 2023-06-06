@@ -2274,7 +2274,7 @@ def logout_view(request: HttpRequest):
     from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 
     class OrderDetailView(PermissionRequiredMixin, DetailView):
-        permission_required = "order_view" # Тут указываем, какое имено требуется разрешение (название можно взять из админки. Может быть список разрешений (кортеж
+        permission_required = "shopapp.order_view" # Тут указываем, какое имено требуется разрешение (название можно взять из таблицы в бд "auth_permissions". Может быть список разрешений (кортеж
         queryset = (
             Order.objects
             .select_related("user")
