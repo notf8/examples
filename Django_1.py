@@ -2247,6 +2247,17 @@ def logout_view(request: HttpRequest):
                                                     Использование и проверка прав
 Документация - https://docs.djangoproject.com/en/4.1/topics/auth/default/#permissions-and-authorization
 
+ - Можно проверять права прямо в шаблоне, и показывать ссылку если права к созданию продукта есть:
+    Почитать - https://docs.djangoproject.com/en/4.1/topics/auth/default/#permissions
+    {% if 'shopapp.add_product' in perms %}
+        <div>
+            <a href="{% url 'shopapp:product_create' %}">
+                Create a new product
+            </a>
+
+        </div>
+    {% endif %}
+
  - Добавим примесь разрешающую доступ ке странице заказов shopapp/views.py
     from django.contrib.auth.mixins import LoginRequiredMixin
     class OrdersListView(LoginRequiredMixin, ListView): # Просто подмешиваем импортированный миесин
