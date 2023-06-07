@@ -2309,3 +2309,14 @@ def logout_view(request: HttpRequest):
         response = HttpResponse("Cookie set")
         response.set_cookie("fizz", "buzz", max_age=3600)
         return response
+
+ - Если нужно при создании товара указать текущего пользователя автоматически, можно переопределить метод form_valid:
+    class ProductCreateView(PermissionRequiredMixin, CreateView):
+        permission_required = "shopapp.add_product"
+        model = Product
+        fields = "name", "price", "description", "discount"
+        success_url = reverse_lazy("shopapp:products_list")
+
+        def form_valid(self, form):
+            form.instance.created_by_id = self.request.user.id
+            return super().form_valid(form)
