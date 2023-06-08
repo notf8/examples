@@ -2331,3 +2331,20 @@ def logout_view(request: HttpRequest):
         def form_valid(self, form):
             form.instance.created_by_id = self.request.user.id
             return super().form_valid(form)
+
+ - Разрешить редактирование товара только автору карточки и суперпользователю:
+    class ProductUpdateView(PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
+
+        permission_required = "shopapp.change_product"
+        model = Product
+        fields = "name", "price", "description", "discount"
+        template_name_suffix = "_update_form"
+
+        def test_func(self):
+            return self.request.user.id == self.get_object().created_by_id or self.request.user.is_superuser # Тут через self.get_object() добираемся до самой карточки продукта
+
+        def get_success_url(self):
+            return reverse(
+                "shopapp:product_details",
+                kwargs={"pk": self.object.pk},
+            )
