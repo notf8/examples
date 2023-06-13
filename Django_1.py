@@ -2380,3 +2380,28 @@ def logout_view(request: HttpRequest):
         def test_get_cookie_view(self):
             response = self.client.get(reverse("myauth:cookie-get"), HTTP_USER_AGENT='Mozilla/5.0') #  HTTP_USER_AGENT= нужен, так как в базовом шаблоне к меня функция отображения HTTP_USER_AGENT заложена
             self.assertContains(response, "Cookie value") # Проверяем содержание ожидаемого ответа (его можно посмотреть в самой вьюфункции)
+
+ - Создадим вью функцию для обработки json ответа. Для этого в mysite/myauth/views.py создадим класс:
+    from django.views import View
+    from django.http import HttpRequest, HttpResponse, JsonResponse
+
+    class FooBarView(View):
+        def get(self, request: HttpRequest) -> JsonResponse:
+            return JsonResponse({"foo": "bar", "spam": "eggs"})
+
+ - Поключим класс к mysite/myauth/urls.py
+    path("foo-bar/", FooBarView.as_view(), name="foo-bar"),
+
+ - Создадим тест для проверки тела ответа (json). Для этого в mysite/myauth/tests.py создадим класс:
+    import json
+
+    class FooBarViewTestCase(TestCase):
+        def test_foo_bar_view(self):
+            response = self.client.get(reverse("myauth:foo-bar"), HTTP_USER_AGENT='Mozilla/5.0') # HTTP_USER_AGENT= нужен, так как в базовом шаблоне к меня функция отображения HTTP_USER_AGENT заложена
+            self.assertEqual(response.status_code, 200) # Тут проверяем статус ответа, должен быть 200
+            self.assertEqual(
+                response.headers['content-type'], 'application/json', # Тут проверяем заголовки
+            )
+            expected_data = {"foo": "bar", "spam": "eggs"} # Тут важно не копировать, а написать от руки (что бы случайно не скопировать ошибку)
+            received_data = json.loads(response.content) # Тут заливаем данные в json, тк сравнивать нужно json, а в ответе приходят байты
+            self.assertEqual(received_data, expected_data) # Тут проверяем ожидания с ответом
