@@ -2348,3 +2348,35 @@ def logout_view(request: HttpRequest):
                 "shopapp:product_details",
                 kwargs={"pk": self.object.pk},
             )
+
+========================================================================================================================
+
+                                                    Тестирование
+Почитать - https://docs.djangoproject.com/en/4.1/topics/testing/tools/
+Классы тестирования - https://docs.djangoproject.com/en/4.1/topics/testing/tools/#provided-test-case-classes
+
+ - Создадим файл mysite/shopapp/utils.py (простой тест для примера работы)
+    def add_two_numbers(a, b):
+        return a + b
+ - Далее открываем mysite/shopapp/tests.py
+    from django.test import TestCase
+    from shopapp.utils import add_two_numbers
+
+    class AddTwoNumbersTestCase(TestCase):
+        def test_add_two_numbers(self): # Метод вызывает проверяемую функцию
+            result = add_two_numbers(2, 3)
+            self.assertEqual(result, 5) # Проверяем равенство результа функции и ожидаемого ответа (5 - передаем вторым аргументом)
+
+- Теперь можно запустить тест в терминале: python manage.py test shopapp.tests.AddTwoNumbersTestCase
+
+                            ********************************************************************
+                                    Тесты для вьюфункций (имитация запроса пользователя)
+
+ - Откроем mysite/myauth/tests.py
+    from django.test import TestCase
+    from django.urls import reverse
+
+    class GetCookieViewTestCase(TestCase):
+        def test_get_cookie_view(self):
+            response = self.client.get(reverse("myauth:cookie-get"), HTTP_USER_AGENT='Mozilla/5.0') #  HTTP_USER_AGENT= нужен, так как в базовом шаблоне к меня функция отображения HTTP_USER_AGENT заложена
+            self.assertContains(response, "Cookie value") # Проверяем содержание ожидаемого ответа (его можно посмотреть в самой вьюфункции)
