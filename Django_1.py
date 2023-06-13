@@ -2367,7 +2367,7 @@ def logout_view(request: HttpRequest):
             result = add_two_numbers(2, 3)
             self.assertEqual(result, 5) # Проверяем равенство результа функции и ожидаемого ответа (5 - передаем вторым аргументом)
 
-- Теперь можно запустить тест в терминале: python manage.py test shopapp.tests.AddTwoNumbersTestCase
+- Теперь можно запустить тест в терминале: python manage.py test shopapp.tests.AddTwoNumbersTestCase (далее эта же команда используется для запуска тестов)
 
                             ********************************************************************
                                     Тесты для вьюфункций (имитация запроса пользователя)
@@ -2403,5 +2403,22 @@ def logout_view(request: HttpRequest):
                 response.headers['content-type'], 'application/json', # Тут проверяем заголовки
             )
             expected_data = {"foo": "bar", "spam": "eggs"} # Тут важно не копировать, а написать от руки (что бы случайно не скопировать ошибку)
-            received_data = json.loads(response.content) # Тут заливаем данные в json, тк сравнивать нужно json, а в ответе приходят байты
-            self.assertEqual(received_data, expected_data) # Тут проверяем ожидания с ответом
+            # received_data = json.loads(response.content) # Тут заливаем данные в json, тк сравнивать нужно json, а в ответе приходят байты (в str формате лучше не проверять, если порядок будет отличатся, тест провалится
+            # self.assertEqual(received_data, expected_data) # Тут проверяем ожидания с ответом
+            self.assertJSONEqual(response.content, expected_data) # Тут сразу проверяем все в json, что бы не писать вручную
+
+ - Создадим тест для создания товара в mysite/shopapp/tests.py
+    from django.urls import reverse
+
+    class ProductCreateTestCase(TestCase):
+        def test_create_product(self):
+            response = self.client.post(
+                reverse("shopapp:product_create"),
+                {
+                    "name": "Table",
+                    "price": "123.45",
+                    "description": "A good table",
+                    "discount": "10",
+                }, HTTP_USER_AGENT='Mozilla/5.0'
+            )
+            self.assertRedirects(response, reverse("shopapp:products_list")) # Ту проверяется перенаправление. Но тут проблема, я юзаю миксин и тест не проходит (надо разобраться)
