@@ -2434,13 +2434,39 @@ def logout_view(request: HttpRequest):
 
  - Реализуем тест для проверки получения страницы с продуктом в mysite/shopapp/tests.py
     class ProductDetailsViewTestCase(TestCase):
-        def setUp(self) -> None:
-            self.product = Product.objects.create(name="Best Product") # Создаем произвольный продутк
+        @classmethod
+        def setUpClass(cls):                                                              # Так поступаем, если есть опасность изменить тестируемую сущность (она создается только один раз)
+            cls.product = Product.objects.create(name="Best Product", created_by_id="1")
+        # def setUp(self) -> None:                                                          # Метод выполняется перед каждым тестом
+        #     self.product = Product.objects.create(name="Best Product", created_by_id="1") # Создаем произвольный продутк
+        @classmethod
+        def tearDownClass(cls):                                                           # Так поступаем, если есть опасность изменить тестируемую сущность (она создается только один раз)
+            cls.product.delete()
+        # def tearDown(self) -> None: # Метод выполняется после каждого теста. Удаляем продукт вне зависимости от результата теста
+        #     self.product.delete()
 
-        def tearDown(self) -> None: # Удаляем продукт вне зависимости от результата теста
-            self.product.delete()
+        # def test_get_product(self): # Такая проверка нужна если используем классметод для тестирования (он не работает, если допомпередавать created_by_id="1" в модель)
+        #     response = self.client.get(
+        #         reverse("shopapp:product_details", kwargs={"pk": self.product.pk})
+            )
+            # self.assertEqual(response.status_code, 200)
 
-        def test_get_product(self): # Получаем продукт
+    def test_get_product(self):                                                         # Тест проверяет статус код ответа
             self.client.get(
                 reverse("shopapp:product_detail", kwargs={"pk": self.product.pk})
             )
+
+    def test_get_product_and_check_content(self):                                  # Тест проверяет содержимое ответа (имя продукта)
+        response = self.client.get(
+            reverse("shopapp:product_details", kwargs={"pk": self.product.pk})
+        )
+        self.assertContains(response, self.product.name)
+
+ - Что бы выгрузить из базы даные для ручного тестирования, используем команду:
+    python manage.py dumpdata shopapp  # Так мы получаем все данные из приложения shopapp в формате JSON (через точку можно указать конкретную таблицу приложения, например .Product)
+
+ - Что бы сохранить данные из БД в формате JSON используем команду:
+    python manage.py dumpdata shopapp > shopapp-fixtures.json (открыв файл и нажав ctrl+alt+l - можно форматировать код для удобного чтения)
+
+ - Что бы восстановить данные из файл в базу даных, испольуем команду:
+    python manage.py loaddata shopapp-fixtures.json
