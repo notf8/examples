@@ -2408,17 +2408,39 @@ def logout_view(request: HttpRequest):
             self.assertJSONEqual(response.content, expected_data) # Тут сразу проверяем все в json, что бы не писать вручную
 
  - Создадим тест для создания товара в mysite/shopapp/tests.py
+    from string import ascii_letters
+    from random import choices
     from django.urls import reverse
 
-    class ProductCreateTestCase(TestCase):
+    class ProductCreateTestCase(TestCase): # Метод нужен для генерации имен создавваемого продукта при тесте
+        def setUp(self) -> None:
+            self.product_name = "".join(choices(ascii_letters, k=10))
+            Product.objects.filter(name=self.product_name).delete() # Так удаляем все сгенерированые имена после теста
+
         def test_create_product(self):
             response = self.client.post(
                 reverse("shopapp:product_create"),
                 {
-                    "name": "Table",
+                    "name": self.product_name,
                     "price": "123.45",
                     "description": "A good table",
                     "discount": "10",
                 }, HTTP_USER_AGENT='Mozilla/5.0'
             )
             self.assertRedirects(response, reverse("shopapp:products_list")) # Ту проверяется перенаправление. Но тут проблема, я юзаю миксин и тест не проходит (надо разобраться)
+            self.assertTrue(
+                Product.objects.filter(name=self.product_name).exist()       # Проверяем, существует ли продукт
+                )
+
+ - Реализуем тест для проверки получения страницы с продуктом в mysite/shopapp/tests.py
+    class ProductDetailsViewTestCase(TestCase):
+        def setUp(self) -> None:
+            self.product = Product.objects.create(name="Best Product") # Создаем произвольный продутк
+
+        def tearDown(self) -> None: # Удаляем продукт вне зависимости от результата теста
+            self.product.delete()
+
+        def test_get_product(self): # Получаем продукт
+            self.client.get(
+                reverse("shopapp:product_detail", kwargs={"pk": self.product.pk})
+            )
