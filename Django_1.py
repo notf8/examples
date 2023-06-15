@@ -2470,3 +2470,34 @@ def logout_view(request: HttpRequest):
 
  - Что бы восстановить данные из файл в базу даных, испольуем команду:
     python manage.py loaddata shopapp-fixtures.json
+
+                                                **********************************************
+                                                        Тесты для страниц сайта
+Важно!!! Что бы фикстуры корректно открыфвались в тестах, получившийся файл с фикстурами и в нижнем правом углу
+указать тип кодировки для нешго UTF-8. После выбрать вариант "Convert", что бы перезаписать файл в нужной кодировке
+
+ - Создадим папку fixtures в mysite/shopapp
+
+ - выполним команду: python manage.py dumpdata shopapp.Product > shopapp/fixtures/products-fixture.json
+
+ - Создадим новый класс для тестирования получения списка продуктов mysite/shopapp/tests.py
+    class ProductsListViewTestCase(TestCase):
+        fixtures = [
+            'products-fixture.json',
+        ]
+
+        def test_products(self):
+            response = self.client.get(reverse("shopapp:products_list"))
+            self.assertQuerysetEqual(
+                qs=Product.objects.filter(archived=False).all(),        # Тут указываем, какие данные ожидаем получить
+                values=(p.pk for p in response.context["products"]),    # Тут указываем, какие данные нужны из контекста вьюфункции (из списка продуктов)
+                transform=lambda p: p.pk                                # Тут указываем, как преобразовать данные из qs, что бы сравнить их с values
+            )
+
+        # Можно так же проверить контекст через зип функцию (минус в том, что сравнение будет проходить по коллекции, которая короче)
+        # def test_products(self):
+        #     response = self.client.get(reverse("shopapp:products_list"))
+        #     products = Product.objects.filter(archived=False).all()
+        #     products_ = response.context["products"] # Берем именно "products", потому что во вьюхе context_object_name = "products"
+        #     for p, p_ in zip(products, products_):
+        #         self.assertQuerysetEqual(p.pk, p_.pk)
