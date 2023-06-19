@@ -2479,6 +2479,9 @@ def logout_view(request: HttpRequest):
  - Создадим папку fixtures в mysite/shopapp
 
  - выполним команду: python manage.py dumpdata shopapp.Product > shopapp/fixtures/products-fixture.json
+    (Попробовать: python -Xutf8 manage.py dumpdata shopapp.Product > shopapp/fixtures/products-fixture.json)
+
+ - Важно!!!! Что бы выгрузить фикстуры пользователей, вводим команду: python manage.py dumpdata auth.User > shopapp/fixtures/users-fixture.json
 
  - Создадим новый класс для тестирования получения списка продуктов mysite/shopapp/tests.py
     class ProductsListViewTestCase(TestCase):
@@ -2489,11 +2492,11 @@ def logout_view(request: HttpRequest):
         def test_products(self):
             response = self.client.get(reverse("shopapp:products_list"))
             self.assertQuerysetEqual(
-                qs=Product.objects.filter(archived=False).all(),        # Тут указываем, какие данные ожидаем получить
+                qs=Product.objects.filter(archived=False).all(),        # Тут указываем, какие данные ожидаем получить из базы данных (из фикстуры)
                 values=(p.pk for p in response.context["products"]),    # Тут указываем, какие данные нужны из контекста вьюфункции (из списка продуктов)
                 transform=lambda p: p.pk                                # Тут указываем, как преобразовать данные из qs, что бы сравнить их с values
             )
-
+            self.assertTemplateUsed(response, 'shopapp/products-list.html') # Тут проверяем, какой шаблон был использован
         # Можно так же проверить контекст через зип функцию (минус в том, что сравнение будет проходить по коллекции, которая короче)
         # def test_products(self):
         #     response = self.client.get(reverse("shopapp:products_list"))
@@ -2501,3 +2504,39 @@ def logout_view(request: HttpRequest):
         #     products_ = response.context["products"] # Берем именно "products", потому что во вьюхе context_object_name = "products"
         #     for p, p_ in zip(products, products_):
         #         self.assertQuerysetEqual(p.pk, p_.pk)
+
+ - А теперь блядь, наконец то, создадим тест в котором будет выполняться аутентификация и авторизация польователя (делаем там же mysite/shopapp/tests.py)
+    from django.conf import settings
+    class OrdersListViewTestCase(TestCase):
+        @classmethod
+        def setUpClass(cls):
+            cls.credentials = dict(username="bob_test", password="qwerty") # Здесь один раз создаем пользователя для всех тестов
+            cls.user = User.objects.create_user(**cls.credentials)         # Здесь распакорвываем данные пользователя при создании епго
+        @classmethod
+        def tearDownClass(cls):
+            cls.user.delete()                                              # Здесь, как обычно, удаляем пользователя после тестов
+        def setUp(self) -> None:
+            self.client.login(**self.credentials)                          # Здесь забираем данные пользователя для логина
+            # self.client.force_login(self.user)                             # Так можно обеспечить логин без проверки данных пользователя
+        def test_orders_view(self):
+            response = self.client.get(reverse("shopapp:orders_list"))
+            self.assertContains(response, "Orders")
+
+        def test_orders_view_not_authenticated(self):                     # Здесь проверяем не авторизованного пользователя
+            self.client.logout()
+            response = self.client.get(reverse("shopapp:orders_list"))
+            # self.assertRedirects(response, str(settings.LOGIN_URL))
+            self.assertEqual(response.status_code, 302)
+            self.assertIn(str(settings.LOGIN_URL), response.url)
+
+                                            ******************************************
+                                                                TDD
+Test Driven Development - это когда сначала пишутся тесты, а потом уже сами функции (сам код программы). Пишутся эти тесты в
+три этапа:
+1) Пишутся тесты, которые проваливаются (потому что если не проваливаются, значит либо тест не правильный, либо функциональность такая уже существует)
+2) Пишутся тесты которые проходят
+3) Запуск тестов и рефакторинг кода (просто причесываем код и проверяем, что бы тесты проходили)
+
+ - Создадим тест, который будет проваливаться (для апи по выгрузке информации по продуктам) mysite/shopapp/tests.py
+    Надо проверить модель Products, что бы там был метод сортировки   class Meta: ordering = ["name", "price"]
+
