@@ -2510,8 +2510,10 @@ def logout_view(request: HttpRequest):
     class OrdersListViewTestCase(TestCase):
         @classmethod
         def setUpClass(cls):
-            cls.credentials = dict(username="bob_test", password="qwerty") # Здесь один раз создаем пользователя для всех тестов
-            cls.user = User.objects.create_user(**cls.credentials)         # Здесь распакорвываем данные пользователя при создании епго
+            cls.credentials = dict(username="bob_test", password="qwerty")   # Здесь один раз создаем пользователя для всех тестов
+            cls.user = User.objects.create_user(**cls.credentials)           # Здесь распакорвываем данные пользователя при создании епго
+            permission_order = Permission.objects.get(codename='view_order') # Так указываем, какие права хотим добавить (название можно глянуть в таблице auth_permissions)
+            cls.user.user_permissions.add(permission_order)                  # Так добавляем права создаваемому пользователю
         @classmethod
         def tearDownClass(cls):
             cls.user.delete()                                              # Здесь, как обычно, удаляем пользователя после тестов
