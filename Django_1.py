@@ -2512,6 +2512,7 @@ def logout_view(request: HttpRequest):
         def setUpClass(cls):
             cls.credentials = dict(username="bob_test", password="qwerty")   # Здесь один раз создаем пользователя для всех тестов
             cls.user = User.objects.create_user(**cls.credentials)           # Здесь распакорвываем данные пользователя при создании епго
+            cls.user = User.objects.create_user(**cls.credentials)           # Здесь распакорвываем данные пользователя при создании епго
             permission_order = Permission.objects.get(codename='view_order') # Так указываем, какие права хотим добавить (название можно глянуть в таблице auth_permissions)
             cls.user.user_permissions.add(permission_order)                  # Так добавляем права создаваемому пользователю
         @classmethod
@@ -2530,6 +2531,102 @@ def logout_view(request: HttpRequest):
             # self.assertRedirects(response, str(settings.LOGIN_URL))
             self.assertEqual(response.status_code, 302)
             self.assertIn(str(settings.LOGIN_URL), response.url)
+
+ -  Создадим тест для создания заказа и проверки его содержиого а так же сверки закза из ответа с тем, который создается в тесте по первичному ключу
+    class OrderDetailViewTestCase(TestCase):
+
+        @classmethod
+        def setUpClass(cls):
+            cls.user = User.objects.create_user(username="Test_user", password="qwerty")
+            permission_order = Permission.objects.get(codename='view_order')
+            cls.user.user_permissions.add(permission_order)          # Проверяем
+
+        @classmethod
+        def tearDownClass(cls):
+            cls.user.delete()
+
+        def setUp(self) -> None:
+            self.client.force_login(self.user)
+            self.order = Order.objects.create(
+                    delivery_address="Test address",
+                    promocode="sale_1",
+                    user_id=self.user.pk,
+            )
+
+        def tearDown(self) -> None:
+            self.order.delete()
+
+        def test_order_details(self):
+            response = self.client.get(
+                reverse("shopapp:order_details", kwargs={"pk": self.order.pk}),
+            )
+            received_data = response.context["order"].pk              # Тут вызываем context, тк ответ приходит не json, а текст
+            expected_data = self.order.pk
+            self.assertContains(response, self.order.delivery_address)
+            self.assertContains(response, self.order.promocode)
+            self.assertEqual(received_data, expected_data)
+
+- Создадим тест для экспорта продуктов в фикстуры и сравнения их с базой
+    class OrderExportTestCase(TestCase):
+        fixtures = [
+            "products-fixture.json",
+            "users-fixture.json",
+            "orders-fixture.json",
+        ]
+
+        @classmethod
+        def setUpClass(cls):
+            cls.user = User.objects.create_user(username="Test_user", password="qwerty", is_staff=True)
+
+        @classmethod
+        def tearDownClass(cls):
+            cls.user.delete()
+
+        def setUp(self) -> None:
+            self.client.force_login(self.user)
+
+        def test_get_orders_view(self):
+            response = self.client.get(
+                reverse("shopapp:orders-export"),
+            )
+            self.assertEqual(response.status_code, 200)
+            orders = Order.objects.order_by("pk").all()
+            expected_data = [
+                {
+                    "pk": order.pk,
+                    "address": order.delivery_address,
+                    "promocode": order.promocode,
+                    "user": order.user,
+                    "products": order.products
+                }
+                for order in orders
+            ]
+            orders_data = response.json()
+            self.assertEqual(
+                orders_data["orders"],
+                expected_data,
+            )
+
+ - Создадим вью функцию для ранее созданного теста
+    class OrderDataExportView(View, UserPassesTestMixin):
+        def test_func(self):
+            return self.request.user.is_staff
+        def get(self, request: HttpRequest) -> JsonResponse:
+            orders = Order.objects.order_by("pk").all()
+            orders_data = [
+                {
+                    "pk": order.pk,
+                    "address": order.delivery_address,
+                    "promocode": order.promocode,
+                    "user": order.user,
+                    "products": order.products
+                }
+                for order in orders
+            ]
+            return JsonResponse({"orders": orders_data})
+
+ - Подключим созданную вью функцию к mysite/shopapp/urls.py
+    path("orders/export", OrderDataExportView.as_view(), name="orders-export"),
 
                                             ******************************************
                                                                 TDD
