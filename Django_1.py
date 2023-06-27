@@ -2576,6 +2576,7 @@ def logout_view(request: HttpRequest):
 
         @classmethod
         def setUpClass(cls):
+            super().setUpClass()  # После переопределения метода нужно вызвать код предка класса через супер
             cls.user = User.objects.create_user(username="Test_user", password="qwerty", is_staff=True)
 
         @classmethod
@@ -2596,8 +2597,8 @@ def logout_view(request: HttpRequest):
                     "pk": order.pk,
                     "address": order.delivery_address,
                     "promocode": order.promocode,
-                    "user": order.user,
-                    "products": order.products
+                    "user": order.user.id, # Объекты user и product не сериализуются, их надо преобразовать к id записей в соответствующих таблицах
+                    "products": [product.id for product in order.products.all()]
                 }
                 for order in orders
             ]
@@ -2608,6 +2609,8 @@ def logout_view(request: HttpRequest):
             )
 
  - Создадим вью функцию для ранее созданного теста
+    from django.http import HttpResponse, HttpRequest, HttpResponseRedirect, JsonResponse
+
     class OrderDataExportView(View, UserPassesTestMixin):
         def test_func(self):
             return self.request.user.is_staff
@@ -2618,12 +2621,13 @@ def logout_view(request: HttpRequest):
                     "pk": order.pk,
                     "address": order.delivery_address,
                     "promocode": order.promocode,
-                    "user": order.user,
-                    "products": order.products
+                    "user": order.user.id,
+                    "products": [product.id for product in order.products.all()]
                 }
                 for order in orders
             ]
-            return JsonResponse({"orders": orders_data})
+            return JsonResponse({"orders": orders_data}) # Здесь мы пишем "orders" в ключе словаря,
+            # потому что это имя продиктовано тестом выше, где идет обращение к self.assertEqual (orders_data["orders"])
 
  - Подключим созданную вью функцию к mysite/shopapp/urls.py
     path("orders/export", OrderDataExportView.as_view(), name="orders-export"),
