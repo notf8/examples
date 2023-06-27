@@ -2537,6 +2537,7 @@ def logout_view(request: HttpRequest):
 
         @classmethod
         def setUpClass(cls):
+            super().setUpClass()
             cls.user = User.objects.create_user(username="Test_user", password="qwerty")
             permission_order = Permission.objects.get(codename='view_order')
             cls.user.user_permissions.add(permission_order)          # Проверяем
