@@ -2644,4 +2644,220 @@ Test Driven Development - это когда сначала пишутся тес
 
  - Создадим тест, который будет проваливаться (для апи по выгрузке информации по продуктам) mysite/shopapp/tests.py
     Надо проверить модель Products, что бы там был метод сортировки   class Meta: ordering = ["name", "price"]
+========================================================================================================================
 
+
+                                        ****************************************************
+                                                        Рбота с файлами
+                                        ****************************************************
+
+                                            Использование FileField для хранения файлов
+Документация - https://docs.djangoproject.com/en/4.1/topics/http/file-uploads/
+
+ - Добавим ряд настроек в корневом файле mysite/urls.py:
+    from django.conf import settings
+    from django.conf.urls.static import static
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('shop/', include('shopapp.urls')),
+        path('req/', include('requestdataapp.urls')),
+        path('accounts/', include('myauth.urls')),
+    ]
+
+    if settings.DEBUG:
+        urlpatterns.extend(
+            static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        )
+
+ - Далее в файле mysite/settings.py добавим данные параметры, созданные выше (что бы файлы приложения не стали доступны через браузер)
+    Добавлять пароаметры можно под значением STATIC_URL = 'static/'
+        MEDIA_URL = '/media/'
+        MEDIA_ROOT = BASE_DIR / 'uploads' # Это означает, что файлы будут лежать в корневой папке приложения mysite (этот путь так же прописан в самом начале файла settings.py
+
+ - Добавим новое поле в модель Order для  mysite/shopapp/models.py:
+    receip = models.FileField(null=True, upload_to='orders/receipts') # null=True - т.к. чека может не быть у заказ, upload_to= Это путь, к которому вначале будет приставляться MEDIA_ROOT, который узалаи выше
+
+- Далаее выполняем миграцию: python manage.py makemigrations и python manage.py migrate
+
+- Теперь в теле заказа (если зайти в админку, доступна кнопка для выбора файла для загрузки)
+
+- Так же можно изменить дефолтный класс для работы с файлами. Для этого в файле mysite/settings.py нужно объявить переменну:
+    DEFAULT_FILE_STORAGE = # Тут можно указать новый класс, который бдкт оперировать файлами
+                                        ******************************************************
+
+                                                        Группы файлов в django
+ - Статика: Файлы java scripts  и CSS (Файлы необходимые для работы сайта. Скрипты, стили, иконки и т.д.)
+
+    Для правильной работы, на локльной машине в проект нужно добавить свои статики:
+    Что бы добавить пути к таким файлам в проект, нужно добавить в mysite/urls.py:
+            if settings.DEBUG:
+                urlpatterns.extend(
+                    static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+                )
+    По умоляанию для статики используется папка STATIC_URL = 'static'. Важно!! Эти файлы не будут меняться во время работы приложения
+    ТЕ удалить или добавить файлы можно только при работе с исходынм кодом. Поэтому для их обносления придется выпускать новый релиз
+
+    Сборка статики, это копирование всех файлов в однку папку, которую сможет обслуживать отдельный вебсервер. Она выполняется каждый раз, при релизе приложения
+
+ - Медиа: Файлы для динамического контента на странице (картикуи, видео, гифки и прочее) - эти файлы могут меняться во
+    время работы приложения
+       Пути до этих файлов так же конфигурируются с помощью MEDIA_URL и MEDIA_ROOT или же можно использовать сторонние библиотеки (white noise)
+                                            ********************************************************
+
+                                                Использование ImageField для работы с картинками
+
+ - Для начала нужно установить библиотеку: в терминале pip install pillow и потом сохранить  зависимость pip freeze > requirements.txt
+
+ - Добавим новое поле на модель Product в mysite/shopapp/models.py:
+    def product_preview_directory(instance: "Product", filename: str) -> str:
+        return "products/product_{pk}/preview/{filename}".format(
+            pk=instance.pk,
+            filename=filename,
+        )
+    class Product(models.Model):
+        class Meta:
+            ordering = ["name", "price"]
+
+        name = models.CharField(max_length=100)
+        description = models.TextField(null=False, blank=True)
+        price = models.DecimalField(default=0, max_digits=8, decimal_places=2)
+        discount = models.SmallIntegerField(default=0)
+        created_at = models.DateTimeField(auto_now_add=True)
+        created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+        archived = models.BooleanField(default=False)
+        preview = models.ImageField(null=True, blank=True, upload_to=product_preview_directory)
+
+        def __str__(self) -> str:
+            return f"Product(pk={self.pk}, name={self.name!r})"
+
+ - Далаее выполняем миграцию: python manage.py makemigrations и python manage.py migrate
+
+ - Теперь отредактируем шаблоны деталей продукта и списка продуктов для отображения картинок в mysite/shopapp/templates/shopapp:
+    {% extends 'shopapp/base.html' %}
+
+    {% block title %}
+        Product #{{product.pk}}
+    {% endblock %}
+
+    {% block body %}
+    <h1>Product <strong>{{ product.name }}</strong></h1>
+    <div>
+        <div>Description: <em>{{ product.description }}</em></div>
+        <div>Price: {{ product.price }}</div>
+        <div>Discount: {{ product.discount }}</div>
+        <div>Archived: {{ product.archived }}</div>
+        {% if product.preview %}                                                      # Такой же блок if целиком нужно будет добавить в шаблон products-list.html, в цикл, под значением <p>Discount: {% firstof product.discount 'no discount'%}</p>
+            <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+        {% endif %}
+    </div>
+    <p>Created by: {% firstof object.created_by.first_name object.created_by.username %}</p>
+    <div>
+        <a href="{% url 'shopapp:product_update' pk=product.pk %}">Update product</a>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:product_delete' pk=product.pk %}">Archive product</a>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_list' %}"
+        >Back to products list</a>
+    </div>
+    {% endblock %}
+
+ - Теперь обновим классы ProductCreateView и ProductUpdateView, что бы в них можно было добавить картинки (mysite/shopapp/views.py)
+    ТК оба класса используют одну и ту же форму, достатчно просто добавить в fields = "name", "price", "description", "discount", "preview"
+
+ - Далее нужно изменить шаблоны product_form и product_update_form в mysite/shopapp/templates/shopapp:
+    {% extends 'shopapp/base.html' %}
+
+    {% block title %}
+        Create product
+    {% endblock %}
+
+    {% block body %}
+        <h1>Create product:</h1>
+        <div>
+            <form method="post" enctype="multipart/form-data"> # Такое же значение нужно добавить в product_update_form.html
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Create</button>
+            </form>
+        </div>
+        <div>
+            <a href="{% url 'shopapp:products_list' %}"
+            >Back to products list</a>
+        </div>
+    {% endblock %}
+
+                                        ************************************************
+                                Загрузка нескольких файлов и работа с административной панелью
+
+Upload file - https://docs.djangoproject.com/en/4.1/topics/http/file-uploads/
+Upload multiple files - https://docs.djangoproject.com/en/4.1/topics/http/file-uploads/#uploading-multiple-files
+The django admin site - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/#inlinemodeladmin-objects
+
+ - Что бы добавить несколько фото, это связь многие к одному, для этого создадим новую модель ProductImage в mysite/shopapp/models.py:
+    def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
+        return "products/product_{pk}/images/{filename}".format(
+            pk=instance.product.pk,                                       # Здесь нам нужен id именно продукта, для которого собираются картинки
+            filename=filename,
+        )
+
+    class ProductImage(models.Model):
+        product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+        image = models.ImageField(upload_to=product_images_directory_path)
+        description = models.CharField(max_length=200, null=False, blank=True)
+
+ - Далаее выполняем миграцию: python manage.py makemigrations и python manage.py migrate
+
+ - Теперь добавим эту модель в админку!! Нет смысла отдельно отображать картинки как функцию (mysite/shopapp/admin.py)
+    и отредактируем запись ProductAdmin. Но для этого сначала создадим новый класс ProductInLine, тк созданный ранее класс
+    имеет связь один ко многим, и просто в строчку его добавить нельзя
+    from .models import Product, Order, ProductImage
+    class ProductInLine(admin.StackedInline):
+        model = ProductImage
+
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin):
+        actions = [
+            mark_archived, mark_unarchived,
+        ]
+        inlines = [
+            OrderInLine,
+            ProductInLine,
+        ]
+        list_display = "pk", "name", "description_short", "price", "discount", "archived"
+        list_display_links = "pk", "name"
+        ordering = "pk",
+        search_fields = ["name", "description", "price", "discount"]
+
+        fieldsets = [
+            (None, {
+                "fields": ("name", "description"),
+            }),
+            ("Price options", {
+                "fields": ("price", "discount"),
+                "classes": ("wide", "collapse")
+            }),
+            ("Extra options", {
+                "fields": ("archived",),
+                "classes": ("collapse",),
+                "description": "Extra option. Field 'archived' is for soft delete",
+            })
+        ]
+
+        def description_short(self, obj: Product) -> str:
+            if len(obj.description) < 48:
+                return obj.description
+            return obj.description[:48] + "..."
+
+ -  И теперь создадим саму модель в mysite/shopapp/models.py
+    def product_images_directory_path(instance: "ProductImage", filename: str) -> str:
+        return "products/product_{pk}/images/{filename}".format(
+            pk=instance.product.pk,
+            filename=filename,
+        )
+
+    class ProductImage(models.Model):
+        product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+        image = models.ImageField(upload_to=product_images_directory_path)
+        description = models.CharField(max_length=200, null=False, blank=True)
