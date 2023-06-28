@@ -2842,7 +2842,10 @@ The django admin site - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/
                 "fields": ("archived",),
                 "classes": ("collapse",),
                 "description": "Extra option. Field 'archived' is for soft delete",
-            })
+            }),
+            ("Images", {
+                "fields": ("preview",),
+            }),
         ]
 
         def description_short(self, obj: Product) -> str:
@@ -2861,3 +2864,95 @@ The django admin site - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/
         product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
         image = models.ImageField(upload_to=product_images_directory_path)
         description = models.CharField(max_length=200, null=False, blank=True)
+
+ - Далее изменим вью функцию для отрисовки деталей продукта в  mysite/shopapp/views.py:
+    class ProductDetailsView(DetailView):
+        template_name = "shopapp/products-details.html"
+        # model = Product
+        queryset = Product.objects.prefetch_related("images") # prefetch_related используется, тк связь один ко многим
+        context_object_name = "product"
+
+ - Теперь изменим шаблон для отрисовки изменений  mysite/shopapp/templates/shopapp/products_details.html:
+    {% extends 'shopapp/base.html' %}
+
+    {% block title %}
+        Product #{{product.pk}}
+    {% endblock %}
+
+    {% block body %}
+    <h1>Product <strong>{{ product.name }}</strong></h1>
+    <div>
+        <div>Description: <em>{{ product.description }}</em></div>
+        <div>Price: {{ product.price }}</div>
+        <div>Discount: {{ product.discount }}</div>
+        <div>Archived: {{ product.archived }}</div>
+        {% if product.preview %}
+            <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+        {% endif %}
+        <h3>Images</h3>
+        <div>
+            {% for img in product.images.all %}          # Опять же, тк связь один ко многим нужны все картинки продукта
+                <div>
+                    <img src="{{img.image.url}}" alt="{{img.image.name}}">
+                    <div>{{ img.description }}</div>               # Здесь просто берем текстовое поле из модели, потому запись без кавычек
+                </div>
+            {% empty %}
+                <div>No images uploaded yet</div>
+            {% endfor %}
+        </div>
+    </div>
+    <p>Created by: {% firstof object.created_by.first_name object.created_by.username %}</p>
+    <div>
+        <a href="{% url 'shopapp:product_update' pk=product.pk %}">Update product</a>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:product_delete' pk=product.pk %}">Archive product</a>
+    </div>
+    <div>
+        <a href="{% url 'shopapp:products_list' %}"
+        >Back to products list</a>
+    </div>
+    {% endblock %}
+
+ - Методы выше, позволяют добавлять картинки по одной. Для загрузки сразу нескольких, нужно создать свою форму в mysite/shopapp/
+    Создаем файл forms.py (если он еще не создан)
+    class ProductForm(forms.ModelForm):
+        class Meta:
+            model = Product
+            fields = "name", "price", "description", "discount", "preview",
+
+        images = forms.ImageField(
+            widget=forms.ClearableFileInput(attrs={"multiple": True}), # Это поле позволяет загружать разом несколько
+        )
+
+ - Теперь доработаем вью файл mysite/shopapp/views.py:
+    from .forms import ProductForm
+    from .models import Product, Order, ProductImage
+
+    Далее укажем эту форму в классах ProductCreateView и ProductUpdateView
+
+    class ProductUpdateView(PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
+
+        permission_required = "shopapp.change_product"
+        model = Product
+        # fields = "name", "price", "description", "discount", "preview" # Это поле убираем, в вместо него будем использовать созданную форму ProductForm
+        form_class = ProductForm
+        template_name_suffix = "_update_form"
+
+        def test_func(self):
+            return self.request.user.id == self.get_object().created_by_id or self.request.user.is_superuser
+
+        def get_success_url(self):
+            return reverse(
+                "shopapp:product_details",
+                kwargs={"pk": self.object.pk},
+            )
+
+        def form_valid(self, form):                       # Переопределяем метод валидации формы
+            response = super().form_valid(form)
+            for image in form.files.getlist("images"):    # getlist("images") получает сразу список картинок
+                ProductImage.objects.create(              # В цикле, с помощью  ProductImage создаем новые объекты (картинки)
+                    product=self.object,
+                    image=image,
+                )
+            return response
