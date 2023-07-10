@@ -2694,8 +2694,8 @@ Test Driven Development - это когда сначала пишутся тес
                 urlpatterns.extend(
                     static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
                 )
-    По умоляанию для статики используется папка STATIC_URL = 'static'. Важно!! Эти файлы не будут меняться во время работы приложения
-    ТЕ удалить или добавить файлы можно только при работе с исходынм кодом. Поэтому для их обносления придется выпускать новый релиз
+    По умолчанию для статики используется папка STATIC_URL = 'static'. Важно!! Эти файлы не будут меняться во время работы приложения
+    ТЕ удалить или добавить файлы можно только при работе с исходынм кодом. Поэтому для их обновления придется выпускать новый релиз
 
     Сборка статики, это копирование всех файлов в однку папку, которую сможет обслуживать отдельный вебсервер. Она выполняется каждый раз, при релизе приложения
 
@@ -2931,7 +2931,7 @@ The django admin site - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/
 
     Далее укажем эту форму в классах ProductCreateView и ProductUpdateView
 
-    class ProductUpdateView(PermissionRequiredMixin, UserPassesTestMixin, UpdateView):
+    class ProductUpdateView(PermissionRequiredMixin, UserPassesTestMixin, UpdateView): # Важно!!! Миксины пишем пред  UpdateView иначе они не работают!!!!
 
         permission_required = "shopapp.change_product"
         model = Product
