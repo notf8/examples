@@ -3055,10 +3055,56 @@ gettext-tools-X.zip
     MIDDLEWARE = ['django.middleware.locale.LocaleMiddleware',]
     Далее в адресную строку просто можно добавить язык и увидеь перевод:  http://127.0.0.1:8000/ru/accounts/hello/
 
- - Теперь разберемся, как использовать get_text_lazy параллельно с обычным get_text (lazy переводит только тогда, когда мы
+ - Теперь разберемся, как использовать get_text_lazy (lazy переводит только тогда, когда мы
  обращаемся к приложению). Для этого модифицируем класс в mysite/myauth/views.py:
     from django.utils.translation import gettext_lazy as _
     class HelloView(View):
         welcome_message = _("welcome hello word")                # Если вынести отдельно из функции, то перевод будет сделан при нинциализации класса. Что бы он отображался, нужен как раз gettext_lazy
-        def get(self, request: HttpRequest) -> HttpResponse:
+        def get(self, request: HttpRequest) -> HttpResponse:     # Это нужно в тех случаях, когда заранее не известна локализация пользователя
             return HttpResponse(f"<h1>{self.welcome_message}</h1>")
+
+ - Плюрализация (преведение к множественной форме). Отредактируем всю ту же mysite/myauth/views.py:
+    from django.utils.translation import gettext_lazy as _, ngettext
+    class HelloView(View):
+        welcome_message = _("welcome hello word")
+        def get(self, request: HttpRequest) -> HttpResponse:
+            items_str = request.GET.get("items") or 0          # Тут просто вытаскиваем из реквеста количество айтемов (то бишь букв
+            items = int(items_str)
+            products_line = ngettext(
+                "one product",
+                "{count} products",
+                items
+            )
+            products_line = products_line.format(count=items)
+            return HttpResponse(
+                f"<h1>{self.welcome_message}</h1>"
+                f"\n<h2>{products_line}</h2>"
+            )
+
+ - Далеке создаем переводы в терминале:
+    python manage.py makemessages -l ru и python manage.py makemessages -l enctype
+    Далее добавляем перевод сначала для английского:
+    #: .\myauth\views.py:23
+    msgid "one product"
+    msgid_plural "{count} products"
+    msgstr[0] "One product"
+    msgstr[1] "{count} products."
+
+    Потом русский - Важно!!! Здесь вручную меняем форму plural, так как в русском всего три формы
+    "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+    "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+    #: .\myauth\views.py:17
+    msgid "welcome hello word"
+    msgstr "Привет мир!"
+
+    #: .\myauth\views.py:23
+    msgid "one product"
+    msgid_plural "{count} products"
+    msgstr[0] "{count} товар"
+    msgstr[1] "{count} товара"
+    msgstr[2] "{count} товаров"
+
+    После компилируем
+    В адресной сроке через querystring (/?) добавив количество items можно посмотреть на работу функции
+    http://127.0.0.1:8000/ru/accounts/hello/?items=1
