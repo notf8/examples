@@ -2956,3 +2956,54 @@ The django admin site - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/
                     image=image,
                 )
             return response
+========================================================================================================================
+
+                                    *********************************************************
+                                                Локализация (l10n) и интернационализация (i18n) - кол букв между i и n или l и n
+
+Internationalization and localization - https://docs.djangoproject.com/en/4.1/topics/i18n/#definitions
+Internationalization: in Python code - https://docs.djangoproject.com/en/4.1/topics/i18n/translation/#internationalization-in-python-code
+Lazy translation - https://docs.djangoproject.com/en/4.1/topics/i18n/translation/#internationalization-in-python-code
+Pluralization - https://docs.djangoproject.com/en/4.1/topics/i18n/translation/#pluralization
+Интернационализация - занимается разработчик, подготавливая ПО
+Локализация - занимается переводчик
+
+Важно!!! Для винды нужно сделать следующее:
+Загрузите следующие zip-файлы с серверов GNOME.
+
+gettext-runtime-X.zip
+gettext-tools-X.zip
+
+Извлеките содержимое каталогов bin\обоих файлов в одну и ту же папку в вашей системе (т.е. C:\Program Files\gettext-utils\bin)
+После того, как вы распаковали пакет gettext, необходимо добавить его путь в переменную среды вашей системы. Для этого:
+
+Нажмите клавишу Win+X и выберите пункт «Система».
+Нажмите на ссылку «Дополнительные параметры системы».
+В открывшемся окне нажмите кнопку «Переменные среды».
+Найдите переменную Path в списке системных переменных и нажмите «Изменить».
+Нажмите кнопку «Новый» и добавьте путь к папке, в которую вы распаковали gettext (C:\Program Files\gettext-utils\bin).
+Нажмите «ОК» во всех открытых окнах.
+
+Проверка установки: Win+R, введите cmd и нажмите Enter и выполните команду: msgfmt --version
+
+                                        Стандартные средства интернационализации в Django
+
+ - В файле mysite/settings.py ищем строку LANGUAGE_CODE = 'en-us'. под USE_TZ добавляем строки
+    USE_L10N = True
+    LOCALE_PATHS = [
+        BASE_DIR / 'locale/'
+    ]
+
+ - Создадим новый класс в mysite/myauth/views.py:
+    from django.utils.translation import gettext as _
+    class HelloView(View):
+        def get(self, request: HttpRequest) -> HttpResponse:
+            welcome_message = _("Hello world")                 # Тут просто записали функцию покороче, типа "_"
+            return HttpResponse(f"<h1>{welcome_message}</h1>")
+
+ - Подключаем его к myauth/urls.py:
+    from .views import (HelloView)
+    path("hello/", HelloView.as_view(), name="hello"),
+
+ - Теперь сделаем сам перевод. Зайдем в терминал и введкм команду:
+    python manage.py makemessages -l ru
