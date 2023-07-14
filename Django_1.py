@@ -2969,7 +2969,7 @@ Pluralization - https://docs.djangoproject.com/en/4.1/topics/i18n/translation/#p
 Локализация - занимается переводчик
 
 Важно!!! Для винды нужно сделать следующее:
-Загрузите следующие zip-файлы с серверов GNOME.
+Загрузите следующие zip-файлы с серверов GNOME (https://download.gnome.org/binaries/win32/dependencies/)
 
 gettext-runtime-X.zip
 gettext-tools-X.zip
@@ -3059,7 +3059,7 @@ gettext-tools-X.zip
  обращаемся к приложению). Для этого модифицируем класс в mysite/myauth/views.py:
     from django.utils.translation import gettext_lazy as _
     class HelloView(View):
-        welcome_message = _("welcome hello word")                # Если вынести отдельно из функции, то перевод будет сделан при нинциализации класса. Что бы он отображался, нужен как раз gettext_lazy
+        welcome_message = _("welcome hello word")                # Если вынести отдельно из функции, то перевод будет сделан при инциализации класса. Что бы он отображался, нужен как раз gettext_lazy
         def get(self, request: HttpRequest) -> HttpResponse:     # Это нужно в тех случаях, когда заранее не известна локализация пользователя
             return HttpResponse(f"<h1>{self.welcome_message}</h1>")
 
