@@ -3007,3 +3007,58 @@ gettext-tools-X.zip
 
  - Теперь сделаем сам перевод. Зайдем в терминал и введкм команду:
     python manage.py makemessages -l ru
+
+ - В файле mysite/locale/ru/LC_MESSAGES/django.po:                 # Важно! Файл как и JSON нужно переделать в UTF-8 (внизу справа кликнуть по кодировки и выбрать UTF-8 -> converte
+    В последжней строке msgstr "Привет мир" сами вписываем перевод
+
+ - Теперь нужно скомпаилировать перевод, для этого в терминале вводим команду:
+    python manage.py compilemessages
+    После этого в папке появится файл с раширением .po Если в файле с расширением .mo что-то будем менять, нужно каждый раз после этого делать компиляцию
+
+ - Далее, что бы увидеть перевод, нужно изменить параметр в файле mysite/settings.py:
+    LANGUAGE_CODE = 'en-us' - в занчении указываем, какой язык нам нужен (после этого нужно перезапустить сервер)
+    Важно! Это настройка по умолчанию. И там указываем, какой язык показать, если не найден перевод
+
+ - Теперь под LOCALE_PATHS объявим список языков в mysite/settings.py:
+    from django.utils.translation import gettext_lazy as _
+    LANGUAGES = [
+        ('en', _('English')),
+        ('ru', _('Russian')),
+    ]
+
+ - Теперь изменим mysite/urls.py:
+    from django.conf.urls.i18n import i18n_patterns
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('shop/', include('shopapp.urls')),
+        path('req/', include('requestdataapp.urls')),
+    ]
+
+    urlpatterns += i18n_patterns(                    # Важно!! i18n можно использовать только в основном файле urls в корне проекта
+        path('accounts/', include('myauth.urls')),   # Тут указываем, какие url нужно подключать через i18n (те с указанием языка)
+    )
+
+    if settings.DEBUG:
+        urlpatterns.extend(
+            static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        )
+
+ - Далее в термниале гененрируем перевод для английского:
+    python manage.py makemessages -l en                       # Не забываем переделать файл в UTF-8
+    В переводе Hello world можно не заполнять перевод, так как если поле пустое, то язык будет по умолчанию (а у накс и так англйский)
+
+ - Теперь повторяем компиляцию в терминале:
+    python manage.py compilemessages
+    можно сделать то же самое для python manage.py makemessages -l ru (и перевести там новые строчки)
+
+ - После этого перезапускаем сервер и устанавливаем middleware в настройках проекта mysite/settings.py:
+    MIDDLEWARE = ['django.middleware.locale.LocaleMiddleware',]
+    Далее в адресную строку просто можно добавить язык и увидеь перевод:  http://127.0.0.1:8000/ru/accounts/hello/
+
+ - Теперь разберемся, как использовать get_text_lazy параллельно с обычным get_text (lazy переводит только тогда, когда мы
+ обращаемся к приложению). Для этого модифицируем класс в mysite/myauth/views.py:
+    from django.utils.translation import gettext_lazy as _
+    class HelloView(View):
+        welcome_message = _("welcome hello word")                # Если вынести отдельно из функции, то перевод будет сделан при нинциализации класса. Что бы он отображался, нужен как раз gettext_lazy
+        def get(self, request: HttpRequest) -> HttpResponse:
+            return HttpResponse(f"<h1>{self.welcome_message}</h1>")
