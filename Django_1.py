@@ -3207,10 +3207,83 @@ blocktranslate template tag - https://go.skillbox.ru/profession/profession-pytho
 
             <div>
                 <strong>
-                    You have {{ items }} item{{ items|pluralize }}  # Тут используем фильтр (|pluralise) и джанго сам добавит S если несколько айтемов
+                    You have {{ items }} cherr{{ items|pluralize:"y,ies" }}  # Тут используем фильтр (|pluralise). Так же через запятую передаем параметры и джанго сам добавит окончания если несколько айтемов
                 </strong>
             </div>
             <div>
                 Time running: {{time_running}}
             </div>
         {% endblock %}
+
+                                    ******************************************************
+                                        Плюрализация с переводом в шаблонах
+
+ - Изменим mysite/shopapp/templates/shopapp/products-list.html
+    {% extends 'shopapp/base.html' %}
+    {% load i18n %}
+    {% block title %}
+        {% translate 'Products list' %}
+    {% endblock %}
+    {% block body %}
+        <h1>{% translate 'Products' %}:</h1>
+        {% if products %}
+            <div>
+                {% blocktranslate count product_count=products|length %}     # Здесь count - счетчик, product_count=products|length - переменная в которую сохраняем длину коллекции с фильтром |length
+                    There is only one product.                               # Здесь пишем что продукт один, если счетчик насчитал 1 товар
+                    {% plural %}                                             # Единственный тег, который можно использовать в blocktranslate
+                    There are {{ product_count }} products.
+                {% endblocktranslate %}
+            </div>
+            <div>
+            {% for product in products %}
+                <div>
+                    <p><a href="{% url 'shopapp:product_details' pk=product.pk %}">{% translate 'Name' context 'product name' %}: {{product.name}}</a></p>
+                    <p>{% translate 'Price' %}: {{product.price}}</p>
+                    {% translate 'no discount' as no_discount %}
+                    <p>{% translate 'Discount' %}: {% firstof product.discount no_discount %}</p>
+                    {% if product.preview %}
+                        <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        {% if 'shopapp.add_product' in perms %}
+        <div>
+            <a href="{% url 'shopapp:product_create' %}">
+                {% translate 'Create a new product' %}
+            </a>
+        </div>
+        {% endif %}
+        {% else %}
+            { % url 'shopapp:product_create' as create_product_url %} # Выносим ссылку на созджание продукта в переменную, тк в blocktranslate нельзя использовать другие теги
+            {% blocktranslate %}
+            <h3>No products yet</h3>
+            <a href="{{ create_product_url }}"
+                >Create a new one</a>
+            {% endblocktranslate %}
+        {% endif %}
+    {% endblock %}
+
+- Создаем переводы в терминале командами: python manage.py makemessages -l en и python manage.py makemessages -l ru
+    Важно! Текст в файлах # В случае с тегами, переводим весь текст, просто копируя его из msgid ""
+
+ - В файлах mysite/locale/ru/LC_MESSAGES/django.po  EN и RU вносим руками перевод для msgstr
+    Для русской версии вносим так:
+    msgid_plural ""
+    "\n"
+    "                There are %(product_count)s products.\n"
+    "            "
+    msgstr[0] ""
+    "\n"
+    "                Доступен %(product_count)s товар.\n"
+    "            "
+    msgstr[1] ""
+    "\n"
+    "                Доступно %(product_count)s товара.\n"
+    "            "
+    msgstr[2] ""
+    "\n"
+    "                Доступно %(product_count)s товаров.\n"
+    "            "
+
+ - Далее делаем компиляцию: python manage.py compilemessages
