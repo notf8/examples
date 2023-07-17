@@ -3108,3 +3108,109 @@ gettext-tools-X.zip
     После компилируем
     В адресной сроке через querystring (/?) добавив количество items можно посмотреть на работу функции
     http://127.0.0.1:8000/ru/accounts/hello/?items=1
+
+                                    *************************************************
+                                            Интернационализация в шаблонах
+Документация - https://docs.djangoproject.com/en/4.1/topics/i18n/translation/#internationalization-in-template-code
+blocktranslate template tag - https://go.skillbox.ru/profession/profession-python/django-framework/b7b81138-acda-4193-bffc-a662f613224f/videolesson
+
+ - Добавим интернацианализацию в шаблон mysite/shopapp/templates/shopapp/products-list.html
+    {% extends 'shopapp/base.html' %}
+    {% load i18n %}                        # Подключаем переводы
+    {% block title %}
+        {% translate 'Products list' %}
+    {% endblock %}
+    {% block body %}
+        <h1>{% translate 'Products' %}:</h1>
+        {% if products %}
+            <div>
+            {% for product in products %}
+                <div>
+                    <p><a href="{% url 'shopapp:product_details' pk=product.pk %}">{% translate 'Name' context 'product name' %}: {{product.name}}</a></p> # context добавляем для себя, что бы не ошибится в файле перевода
+                    <p>{% translate 'Price' %}: {{product.price}}</p>
+                    {% translate 'no discount' as no_discount %}                                   # Тут заводим надпись как переменную, так как в теге ниже еще один тег не объявить
+                    <p>{% translate 'Discount' %}: {% firstof product.discount no_discount %}</p>  # Здесь просто используем переменную, созданную выше, если нет скидки
+                    {% if product.preview %}
+                        <img src="{{ product.preview.url }}" alt="{{ product.preview.name }}">
+                    {% endif %}
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <h3>{% translate 'No products yet' %}</h3>
+        {% endif %}
+
+        {% if 'shopapp.add_product' in perms %}
+        <div>
+            <a href="{% url 'shopapp:product_create' %}">
+                {% translate 'Create a new product' %}
+            </a>
+        </div>
+        {% endif %}
+    {% endblock %}
+
+ - Создаем переводы в терминале командами: python manage.py makemessages -l en и python manage.py makemessages -l ru
+    Важно! Текст в файлах #, fuzzy - означает, что геттекст пытался угадать перевод. После редактирования перевода, этот текст нужно удалять, что бы не запутаться
+
+ - В файлах mysite/locale/ru/LC_MESSAGES/django.po  EN и RU вносим руками перевод для msgstr
+
+ - Далее делаем компиляцию: python manage.py compilemessages
+
+ - Теперь изменим mysite/urls.py:
+    from django.conf.urls.i18n import i18n_patterns
+    urlpatterns = [
+        path('admin/', admin.site.urls),
+        path('req/', include('requestdataapp.urls')),
+    ]
+
+    urlpatterns += i18n_patterns(                    # Важно!! i18n можно использовать только в основном файле urls в корне проекта
+        path('accounts/', include('myauth.urls')),   # Тут указываем, какие url нужно подключать через i18n (те с указанием языка)
+        path('shop/', include('shopapp.urls')),      # ТК добавили перевод в шаблон, тоже переносим путь в i18n_patterns
+    )
+
+    if settings.DEBUG:
+        urlpatterns.extend(
+            static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        )
+
+ - Плюрализация в шаблонах (без перевода. Подходит только для английфского языка). Протестируем на mysite/shopapp/templates/shopapp/shop-index.html
+    Для это сначала отредактируекм вьюху в shopapp/views.py
+    class ShopIndexView(View):
+        def get(self, request: HttpRequest) -> HttpResponse:
+            links = [
+                {"title": "Список продуктов", "address": "products/"},
+                {"title": "Список заказов", "address": "orders/"},
+            ]
+            context = {
+                "time_running": default_timer(),
+                "links": links,
+                "items": 5,                                     # Просто добавим каие-то условыне айтемы
+            }
+            return render(request, 'shopapp/shop-index.html', context=context)
+
+    И далее сам шаблон:
+        {% extends 'shopapp/base.html' %}
+        {% block title %}
+            Shop index
+        {% endblock %}
+        {% block body %}
+            <h1> Список доступных страниц </h1>
+            <div>
+                <ul>
+                    {% for link in links %}
+                        <li><a href={{link.address}}>{{link.title}}</a></li>
+                    {% empty %}
+                        No links here
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div>
+                <strong>
+                    You have {{ items }} item{{ items|pluralize }}  # Тут используем фильтр (|pluralise) и джанго сам добавит S если несколько айтемов
+                </strong>
+            </div>
+            <div>
+                Time running: {{time_running}}
+            </div>
+        {% endblock %}
