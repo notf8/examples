@@ -3020,7 +3020,7 @@ gettext-tools-X.zip
     Важно! Это настройка по умолчанию. И там указываем, какой язык показать, если не найден перевод
 
  - Теперь под LOCALE_PATHS объявим список языков в mysite/settings.py:
-    from django.utils.translation import gettext_lazy as _
+    from django.utils.translation import gettext_lazy as _              # Используем gettext_lazy, тк код выполнится сразу при обращении к приложению, а какой язык будет выбран потом, в этот момент мы еще не знаем
     LANGUAGES = [
         ('en', _('English')),
         ('ru', _('Russian')),
@@ -3070,7 +3070,7 @@ gettext-tools-X.zip
         def get(self, request: HttpRequest) -> HttpResponse:
             items_str = request.GET.get("items") or 0          # Тут просто вытаскиваем из реквеста количество айтемов (то бишь букв
             items = int(items_str)
-            products_line = ngettext(
+            products_line = ngettext(                          # Используется для плюролизации внутри вьюфункции
                 "one product",
                 "{count} products",
                 items
@@ -3081,7 +3081,7 @@ gettext-tools-X.zip
                 f"\n<h2>{products_line}</h2>"
             )
 
- - Далеке создаем переводы в терминале:
+ - Далее создаем переводы в терминале:
     python manage.py makemessages -l ru и python manage.py makemessages -l enctype
     Далее добавляем перевод сначала для английского:
     #: .\myauth\views.py:23
@@ -3267,6 +3267,7 @@ blocktranslate template tag - https://go.skillbox.ru/profession/profession-pytho
 - Создаем переводы в терминале командами: python manage.py makemessages -l en и python manage.py makemessages -l ru
     Важно! Текст в файлах # В случае с тегами, переводим весь текст, просто копируя его из msgid ""
 
+ - В файлах mysite/locale/ru/LC_MESSAGES/django.po  EN и RU вносим руками перевод для msgstr
  - В файлах mysite/locale/ru/LC_MESSAGES/django.po  EN и RU вносим руками перевод для msgstr
     Для русской версии вносим так:
     msgid_plural ""
