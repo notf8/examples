@@ -3288,3 +3288,68 @@ blocktranslate template tag - https://go.skillbox.ru/profession/profession-pytho
     "            "
 
  - Далее делаем компиляцию: python manage.py compilemessages
+========================================================================================================================
+
+                                ******************************************************
+                                        REST как основа дизайна API приложений
+
+Что такое REST API - https://aws.amazon.com/ru/what-is/restful-api/
+
+REST - REpresentational State Transfer - Архитекктурный стиль, работающий поверх HTTP, позволяющий создавать межсистемные
+взаимодействия
+
+API - Aplication Programing Interface - Интерфейс для взаимодействия програмных компонентов
+
+REST API исползуют для взаимодействия между приложениями, обмениваясь HTTP запросами. Для предсавления (вью) используется HTML
+а для пенредачи данных - JSON
+REST обычно используют для интеграции между сервисами: Например подключить уведомления в соцсети или настроить платежную
+систему. Так же его используют для мобильных приложений: ТЕ при верстке в моб приложениях используется другой язык (не HTML)
+REST в этом случае может передавать только данные (не отправляя вью функции, которые им не подходят)
+
+                                        Установим паке REST FrameWork
+
+ - В терминале: pip install djangorestframework==3.14.0
+
+ - Сохраняем требования для проекта, в терминале: pip freeze > requirements.txt
+
+ - Далее идем в mysite/mysite/settings.py
+    INSTALLED_APPS = ['rest_framework',] # Добавляем рест в установленные приложения
+
+ - Далее сконфигурируем приложение, для этого в конце файла settings.py добавим след инфу:
+    REST_FRAMEWORKS = {
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination", # Это нужно для реализации списков из объектов
+        "PAGE_SIZE": 10,  # Тут увказываем, сколько значений по умолчанию, должно быть возвращено в списке (то есть сколько элементов показать на одной странице ,что бы не перегружать сервер)
+    }
+
+ - Создадим новое приложение для знакомства с REST, в терминале: python manage.py startapp myapiapp
+
+ - Подкоючим приложение. Идем в mysite/myapiapp/apps.py -> ПКМ по названию класса (приложения) и выбираем copy reference
+
+ - Мдем в mysite/mysite/settings.py и добавляем скопированное в installed_apps:
+    INSTALLED_APPS = ['myapiapp.apps.MyapiappConfig',]
+
+ - Теперь создавдим вью в mysite/myapiapp/views.py:
+    from rest_framework.decorators import api_view
+    from rest_framework.response import Response
+    from rest_framework.request import Request
+
+    @api_view()                                              # Важно! Декаратор ставим со скобками()
+    def helo_world_view(request: Request) -> Response:
+        return Response({"message": "Hello world!"})
+
+ - Теперь подключим вьюху к mysite/myapiapp/urls.py (файл сначала надо создать):
+    from django.urls import path
+    from .views import helo_world_view
+
+    app_name = "myapiapp"
+    urlpatterns = [
+        path("hello/", helo_world_view, name="hello"),
+    ]
+
+ - Теперь нужно подключить созданные url  к основному приложению в mysite/mysite/urls.py
+    urlpatterns = [
+        path('api/', include('myapiapp.urls')),
+    ]
+
+                                ********************************************************
+                                        Class Based Views в Django REST Framework
