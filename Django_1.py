@@ -3353,3 +3353,49 @@ REST в этом случае может передавать только да�
 
                                 ********************************************************
                                         Class Based Views в Django REST Framework
+Документация - https://www.django-rest-framework.org/api-guide/views/#class-based-views
+
+ - Создадим новую class based views в mysite/myapiapp/views.py:
+    from django.contrib.auth.models import Group
+    from rest_framework.views import APIView
+
+    class GroupsListView(APIView):
+        def get(self, request: Request) -> Response:
+            groups = Group.objects.all()
+            data = [group.name for group in groups]
+            return Response({"groups": data})
+
+ - Подключим вьюху в mysite/myapiapp/urls.py:
+    from .views import helo_world_view, GroupsListView
+    urlpatterns = [
+        path("hello/", helo_world_view, name="hello"),
+        path("groups/", GroupsListView.as_view(), name="groups")
+    ]
+
+                                    *********************************************
+                                            Django REST Framework Serializer
+
+Сериалайзеры - https://www.django-rest-framework.org/api-guide/serializers/#serializers
+Модели сериалайзеров - https://www.django-rest-framework.org/api-guide/serializers/#modelserializer
+Сериалайзеры позволяют преобразовывать сложные типы данных (типа полей моделей), которые легко передаются в запросах, для
+примера, сериалайзер может сам подготовить словарь с ифной по полям модели "Group"
+
+ - Создадим новый файл в mysite/myapiapp/serializers.py:
+    from django.contrib.auth.models import Group
+    from rest_framework import serializers
+
+    class GroupSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Group
+            fields = "pk", "name"
+
+ - Далее изменим вьюху GroupsListView в mysite/myapiapp/views.py:
+    from .serializers import GroupSerializer
+
+    class GroupsListView(APIView):
+        def get(self, request: Request) -> Response:
+            groups = Group.objects.all()
+            serialized = GroupSerializer(groups, many=True)                # Этим параметром мы говорим, что здесь будет список. Не один обект, а нескеолько
+            return Response({"groups": serialized.data})                   # Тут обращаемся к данным (.data), которые подготовил сериалайзер
+
+
