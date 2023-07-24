@@ -3422,3 +3422,102 @@ REST в этом случае может передавать только да�
     class GroupsListView(ListCreateAPIView):
         queryset = Group.objects.all()
         serializer_class = GroupSerializer
+
+                                        ******************************************************
+                                                ViewSet в Django REST Framework
+
+Документация - https://www.django-rest-framework.org/api-guide/viewsets/#viewset
+Вьюсеты позволяют еще больше сократить количество кода (даже больше, чем последний ListCreateAPIView). И в одной вьюхе,
+можно реализовать весь функционал CRUD
+
+ - Сначала создадим новый серриализатор в mysite/shopapp/serializers.py (сначал нужно создать питон-файл)
+    from rest_framework import serializers
+    from .models import Product
+
+    class ProductSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Product
+            fields = (
+                "pk",
+                "name",
+                "description",
+                "discount",
+                "created_at",
+                "created_by",
+                "archived",
+                "preview",
+            )
+
+ - Сосздадим вьюсет в mysite/shopapp/views.py
+    from rest_framework.viewsets import ModelViewSet
+    from .serializers import ProductSerializer
+    from django.urls import path, include                # Так же импортируем include, тк в routers будет возвращаться список адресов
+
+    class ProductViewSet(ModelViewSet):
+        queryset = Product.objects.all()
+        serializer_class = ProductSerializer
+
+ - Подключим новый класс к mysite/shopapp/urls.py
+    from rest_framework.routers import DefaultRouter      # Важно! ТК во вьюсете куча методовов и ссылок, подключить через path не получится
+    from .views import (ProductViewSet,)
+
+    routers = DefaultRouter()
+    routers.register("products", ProductViewSet)
+    urlpatterns = [ path("api/", include(routers.urls)),] # А вот теперь через path добавляем routers
+
+    Далее идем на страницу http://127.0.0.1:8000/ru/shop/api/products/
+    На странице можно будет создать продукт, что бы перейти к какому-то продукту, через слэш добавляем его id в строку:
+        http://127.0.0.1:8000/ru/shop/api/products//11/ - на этой странице можно его удалить или обновить
+        Важно! Через метод patch - можно частично обновить сущность, поэтому передаем только то поле, которе хотим обновить,
+        остальное можно удалить
+        А вот метод PUT полностью заменяет сущность на обновленную (со всеми полями)
+
+                                        ********************************************************
+                                                        Фильтрация и сортировка
+Filtering — Django REST framework - https://www.django-rest-framework.org/api-guide/filtering/
+Filtering — Django REST framework | API Guide - https://www.django-rest-framework.org/api-guide/filtering/#api-guide
+Filtering — Django REST framework | SearchFilter - https://www.django-rest-framework.org/api-guide/filtering/#searchfilter
+Filtering — Django REST framework | OrderingFilter - https://www.django-rest-framework.org/api-guide/filtering/#orderingfilter
+
+ - Установим библиотеку в терминале: pip install django-filter
+
+ - Поключим приложени в настройках проекта в mysite/mysite/settings.py
+    INSTALLED_APPS = ['django_filters',]
+    И в конце файла добавим конфигурацию фильтра
+        REST_FRAMEWORK = {
+            "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+            "PAGE_SIZE": 10,
+            "DEFAULT_FILTER_BACKENDS": [
+                "django_filters.rest_framework.DjangoFilterBackend",
+            ],
+        }
+
+ - Теперь сконфигурируем фильты во вьюсете в mysite/shopapp/views.py:
+    from rest_framework.filters import SearchFilter, OrderingFilter         # Этот бэкенд нужен для частичного поиска и сортиролвки результатов
+    from django_filters.rest_framework import DjangoFilterBackend           # Этот импорт нужен для дэфолтного бэкенд фильтра
+
+
+    class ProductViewSet(ModelViewSet):
+        queryset = Product.objects.all()
+        serializer_class = ProductSerializer
+        filter_backends = [                         # Что бы была возможность искать по частичному совпадению (например упоминание одного продукта в описанни другого
+            SearchFilter,
+            DjangoFilterBackend,                    # Так же указываем дефолтный фильтр, что бы поиск работал и частичный и полный
+            OrderingFilter,                         # Это нужно для сортировки результатов
+        ]
+        search_fields = ["name", "description"]    # Тут пишем, по каким полям будет производится поиск с частичным совпадением
+        filterset_fields = [                       # Тут пишем по каким полям будет искать дефолтныйф фильтр
+            "name",
+            "description",
+            "price",
+            "discount",
+            "archived",
+        ]
+        ordering_fields = [                        # Тут пишем, по каким полям сортировать
+                "name",
+                "price",
+                "discount",
+            ]
+        Далбьше, к результатам поиска можно добавить сортировку, для этого в строку через & добавляем поле сортировки,
+        например: http://127.0.0.1:8000/ru/shop/api/products/?search=desctop&ordering=-name
+
