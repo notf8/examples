@@ -3520,4 +3520,44 @@ Filtering — Django REST framework | OrderingFilter - https://www.django-rest-f
             ]
         Далбьше, к результатам поиска можно добавить сортировку, для этого в строку через & добавляем поле сортировки,
         например: http://127.0.0.1:8000/ru/shop/api/products/?search=desctop&ordering=-name
+========================================================================================================================
 
+                                    ********************************************************
+                                                    docstring и Django admindocs
+
+The Django admin documentation generator - https://docs.djangoproject.com/en/4.1/ref/contrib/admin/admindocs/
+
+ - Для работы с документацией в админке установим пакет: pip install docutils и сохраним требования: pip freeze > requirements.txt
+
+ - Теперь изменим настройки проекта в mysite/mysite/settings.py:
+    INSTALLED_APPS = ['django.contrib.admindocs',]
+    MIDDLEWARE = ['django.contrib.admindocs.middleware.XViewMiddleware',]
+
+ - Теперь добавим ссылки в mysite/shopapp/urls.py:
+    urlpatterns += i18n_patterns(
+        path('admin/doc/', include('django.contrib.admindocs.urls')), # Обязательно ставить над 'admi/' иначе не будет доступа
+        path('admin/', admin.site.urls),
+        path('accounts/', include('myauth.urls')),
+        path('shop/', include('shopapp.urls')),
+)
+
+ - После этого можно зайти в админпанель, и вверху справа перейти на вкладку документация, там можно увидеть документацию
+на все модели в проекте. Но перед этим ее нужно прописать. Идем в mysite/shopapp/models.py:
+    class Product(models.Model):
+        """
+        Модель Product представляет товар, который можно продавать в интернет-магазине
+
+        Заказы тут: :model:`shopapp.Order`        ### Так оставляем ссылку на модель Order. Это символ (``) - на букве Ё (англ раскладка)
+        """
+    Важно! В винде все так же будет ошибка с кодировкой! Опять идем нижний правый угол pycharm, выбираем UTF-8 и convert
+
+                                                    ************************************
+                                                                Best practice
+ - Используем коментарии в коде (описываем что делает каждый класс и или функция/метод), использовать readme файл (в корне проекта)
+Юзаем сфинкс, сваггер и т.д.
+ - Если проект на githab - то лучше юзать readme
+ - Если проект реалищован на api (целиком или почти) - лучше юзать swagger
+ - Поддерживаем актуальную докумментацию!
+
+                                        **************************************************
+                                                Документация в Django REST framework
