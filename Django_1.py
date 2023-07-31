@@ -3561,3 +3561,88 @@ The Django admin documentation generator - https://docs.djangoproject.com/en/4.1
 
                                         **************************************************
                                                 Документация в Django REST framework
+
+Documenting your API — Django REST framework - https://www.django-rest-framework.org/topics/documenting-your-api/
+Flake8 - https://flake8.pycqa.org/en/latest/
+GitHub — PyCQA/flake8-docstrings: Integration of pydocstyle and flake8 for combined linting and reporting - https://github.com/pycqa/flake8-docstrings
+
+ - Расширим интерактивную документацию в mysite/mysite/views.py
+    class ProductViewSet(ModelViewSet):
+        """
+        Набор представлений для действий над Product
+        Полный CRUD для сущностей товара
+        """
+
+ - Установим новые пакеты docstrings в терминале: pip install flake8 и pip install flake8-docstrings
+    И не забудем ввести после установки: pip freeze > requirements.txt
+
+ - Теперь можно запустить flake8 для проверки. В терминал (перейдя в mysite): flake8 shopapp/views.py
+    Далее исправляем по одному все ошибки. Например первая скажет, что перед импортами нет докстрнига
+    Напишем его в тройных кавычках:
+        """
+        В этом модуле лежат различные наборы представлений.
+        
+        для интернет-магазина: по товарам, заказам и т.д.
+        """
+
+                            **************************************************************************
+                                Знакомство со сторонними инструментами для генерации спецификаций
+
+OpenAPI Initiative - https://www.openapis.org/
+OpenAPI Specification v3.1.0 | Introduction, Definitions, & More - https://spec.openapis.org/oas/latest.html
+What Is the Difference Between Swagger and OpenAPI? - https://swagger.io/blog/api-strategy/difference-between-swagger-and-openapi/
+drf-yasg - https://drf-yasg.readthedocs.io/en/stable/
+drf-spectacular - https://drf-spectacular.readthedocs.io/en/latest/
+GitHub — Redocly/redoc: 📘 OpenAPI/Swagger-generated API Reference Documentation - https://github.com/Redocly/redoc
+
+OpenAPI используют для документации различных API приложений (разные языки и втом числе rest), сваггер ясвляется частью
+спецификации
+
+Две основные библиотеки для Django, которые позволяют генерировать Open API спецификацию и открывать swagger: drf-yasg (устаревшая, не поддерживает последний питон) и drf-spectacular
+
+ - Установим drf-spectacular в терминале: pip install drf-spectacular  и потом pip freeze > requirements.txt
+
+ - Добавим drf-spectacular в установленные приложения в mysite/mysite/settings.py:
+    INSTALLED_APPS = ['drf_spectacular',]
+
+    Там же добавим настройки
+    REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",}
+
+    Там же укажем доп параметры для библиотеки (сразу под REST_FRAMEWORK)
+    SPECTACULAR_SETTINGS = {
+        'TITLE': 'My Site Project API',
+        'DESCRIPTION': 'My site with shopapp and custom auth',
+        'VERSION': '1.0.0',
+        'SERVE_INCLUDE_SCHEMA': False,       # Что бы не включать информацию об этой странице в саму документацию
+    }
+
+ - Теперь добавим адреса в корень приложения для генерации документации mysite/mysite/urls.py
+    from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView # Важно! drf_spectacular нужно установить НЕ в виртуальном окружении, иначе его не видит импорт
+
+    urlpatterns = [
+        path('req/', include('requestdataapp.urls')),
+        path('api/schema/', SpectacularAPIView.as_view(), name="schema"),                              # Важно! Все схемы указываются в адресах пере адресом просто API
+        path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name="swagger"),
+        path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name="redoc"),
+        path('api/', include('myapiapp.urls')),
+    ]
+    Дальше, по адресу http://127.0.0.1:8000/api/schema/redoc/ или http://127.0.0.1:8000/api/schema/swagger/ можно перейти к документации
+
+ - Расширим стандартную схему ответа swagger в mysite/mysite/views.py
+    from drf_spectacular.utils import extend_schema
+
+    @extend_schema(description="Product views CRUD")  # Так мы добавим описание на swagger. extend_schema это по сути декоратор, потому так и юзаем его
+    class ProductViewSet(ModelViewSet):
+        """
+        Набор представлений для действий над Product.
+
+        Полный CRUD для сущностей товара.
+        """
+
+    Можно также расширить например запрос инфы по одному товару, для этого переопределим метод в классе ProductViewSet
+        @extend_schema(
+                summary="Get one product by ID",                               # Так добавляем описание к самому названию раскрывающегося поля в swagger
+                description="Retrieves **product**, returns 404 if not found " # **product** - означает жирный шрифт
+            )
+        def retrieve(self, *args, **kwargs): # Важно! удаляем из аргументов request!!! ЧТо бы не нарушить работу приложения, так переопределяем родительский метод
+            return super().retrieve(*args, **kwargs)
