@@ -3629,7 +3629,7 @@ OpenAPI используют для документации различных 
     Дальше, по адресу http://127.0.0.1:8000/api/schema/redoc/ или http://127.0.0.1:8000/api/schema/swagger/ можно перейти к документации
 
  - Расширим стандартную схему ответа swagger в mysite/mysite/views.py
-    from drf_spectacular.utils import extend_schema
+    from drf_spectacular.utils import extend_schema, OpenApiResponse
 
     @extend_schema(description="Product views CRUD")  # Так мы добавим описание на swagger. extend_schema это по сути декоратор, потому так и юзаем его
     class ProductViewSet(ModelViewSet):
@@ -3641,8 +3641,14 @@ OpenAPI используют для документации различных 
 
     Можно также расширить например запрос инфы по одному товару, для этого переопределим метод в классе ProductViewSet (так же используем дикоратор, только над методом класса)
         @extend_schema(
-                summary="Get one product by ID",                               # Так добавляем описание к самому названию раскрывающегося поля в swagger
-                description="Retrieves **product**, returns 404 if not found " # **product** - означает жирный шрифт
+            summary="Get one product by ID",                               # Так добавляем описание к самому названию раскрывающегося поля в swagger
+            description="Retrieves **product**, returns 404 if not found " # **product** - означает жирный шрифт
+            responses={
+                200: ProductSerializer, # Так указываем в документации ,что вернется в запросе
+            # 404: None,                                                                 # Это прям простое описание ответа с ошибкой
+            404: OpenApiResponse(description="Empty response, product by id not found"), # Так прям описываем, что придет и почему
+                }
             )
         def retrieve(self, *args, **kwargs): # Важно! удаляем из аргументов request!!! ЧТо бы не нарушить работу приложения, так переопределяем родительский метод
             return super().retrieve(*args, **kwargs)
+========================================================================================================================
