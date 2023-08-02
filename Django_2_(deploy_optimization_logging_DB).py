@@ -69,3 +69,50 @@ QuerySet API reference, Django documentation - https://docs.djangoproject.com/en
 
                                             *************************************************
                                                                 Проблема N+1
+
+Проблема выбора N + 1 в объектно-реляционном сопоставлении (ORM) - https://intellect.icu/problema-vybora-n-1-o-v-obektno-relyatsionnogo-sopostavleniya-orm-8653
+QuerySet API reference, Django documentation - https://docs.djangoproject.com/en/4.1/ref/models/querysets/#select-related
+
+N+1 - Суть проблемы: записи могут ссылаться на другие сущности в других таблицах. Те когда мы запросили одну запись, а к
+этой записи нужно сделать еще запрос, потому как в ней есть ссылки на другие записи, где 1 - это первый запрос, а N - это
+количество загруженных элементов (например к 1 заказу нужно подгрузить N полльзователей)
+
+ - lazy Loading - Ленивая подгрузка. Например нужно подгрузить только промокоды из заказов (а инфа по товарам и пользователям не нужна)
+    Именно такой способ использует django. То есть она работает по умоляанию. Это в свою очерель может увеличивать кол-во
+    запросов. Потому и используем select_related и prefetch_related. Отложенную подгрузку используем только там, где точно
+    знаем, что доп запросы нам не потребуются
+
+                                        *****************************************************
+                                                        Транзакции в базах данных
+
+Что такое транзакция («Хабр») - https://habr.com/ru/post/537594/
+Что такое транзакция базы данных? AppMaster - https://appmaster.io/ru/blog/chto-takoe-tranzaktsiia-bazy-dannykh
+Database transactions, Django documentation - https://docs.djangoproject.com/en/4.1/topics/db/transactions/
+
+ - Изменим команду создания заказа для проверки транзакции в mysite/shopapp/management/commands/create_order.py
+    from typing import Sequence
+    from django.db import transaction
+    from django.contrib.auth.models import User
+    from django.core.management import BaseCommand
+    from shopapp.models import Order, Product
+
+    class Command(BaseCommand):
+        @transaction.atomic                                      # atomic - защищает от создания (откатывает) объект, при возникновении ошибки
+        def handle(self, *args, **options):                      # Так же atomic можно юзать не как декоратор, а как контекстный менеджер: with transaction.atomic(): ....
+            self.stdout.write("Create order with products")
+            user = User.objects.get(username="admin")
+            products: Sequence[Product] = Product.objects.all()
+            order, created = Order.objects.get_or_create(        # Здесь если не добавить created в переменную, получим ошибку, тк в переменные попадает кортеж с заказом (если он есть) и статусом (есть/нет)
+                delivery_address="ul Ivanova, d 17/1",
+                promocode="promo1",
+                user=user,
+            )
+            for product in products:
+                order.products.add(product)
+            order.save()
+            self.stdout.write(f"Created order{order}")
+
+ - Далее в терминале выполним команду python manage.py create_order
+
+                                        ******************************************************************
+                                                Приемы оптимизации скорости и количества запросов
