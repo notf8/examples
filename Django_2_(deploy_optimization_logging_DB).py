@@ -120,6 +120,13 @@ Database transactions, Django documentation - https://docs.djangoproject.com/en/
 QuerySet API reference, Django documentation, values - https://docs.djangoproject.com/en/4.1/ref/models/querysets/#values
 QuerySet API reference, Django documentation, bulk-create - https://docs.djangoproject.com/en/4.1/ref/models/querysets/#bulk-create
 
+ - Если столкнемся с долгой загрузкой из БД и рядом в коде будут циклы, то лучше сделать разовый запрос только к тем полям,
+   которые нам нужны, сохранить их в переменные и дальше использовать переменные в циклах, что бы не делать запросы к базе
+
+ - Что бы уменьшить колво запросов, можно присоединять даные из бд в одном запросе с помощью JOIN
+
+ - Если нужно фильтровать много объектов, то можно заранее собрать инфу по их id и с помощью оператора IN передавать их в filter()
+
  - Частичная загрузка полей. Для этого создадим новую команду в mysite/shopapp/management/commands/selecting_fields.py (файл нужно создать)
     from django.contrib.auth.models import User
     from django.core.management import BaseCommand
