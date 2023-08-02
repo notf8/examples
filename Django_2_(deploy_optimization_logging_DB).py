@@ -139,5 +139,39 @@ QuerySet API reference, Django documentation, bulk-create - https://docs.djangop
             self.stdout.write("Done")
 
     # Метод defer позволяет отложить загрузку полей до тех пор, пока они не понадобятся
-    products: Sequence[Product] = Product.objects.defer("description", "price", "created_at")  # В скобках указываем поля, которые не нужны
-    products: Sequence[Product] = Product.objects.only("name", "price") # only - наоборот (в отличии от defer), в скобках пишем только те поля, которые нужно загрузить
+    products: Sequence[Product] = Product.objects.defer("description", "price", "created_at").all()  # В скобках указываем поля, которые не нужны
+    products: Sequence[Product] = Product.objects.only("name", "price").all() # only - наоборот (в отличии от defer), в скобках пишем только те поля, которые нужно загрузить
+
+ - Методы массовых вставок (создадим новый файл в  mysite/shopapp/management/commands/bulk_actions.py)
+
+    bulk_create - позволяет создать несколько объектов за один раз (за один запрос)
+        from django.contrib.auth.models import User
+        from django.core.management import BaseCommand
+        from shopapp.models import Product
+
+        class Command(BaseCommand):
+            def handle(self, *args, **options):
+                self.stdout.write("Start demo bulk_actions")
+                info = [
+                    ("smartphone1", 1999),
+                    ("smartphone2", 2999),
+                    ("smartphone3", 3999),
+                    ("smartphone4", 4999),
+                ]
+                products = [
+                    Product(name=name, price=price, created_by_id=1) # Тут надо добавить вне цикла created_by_id, тк это обязательное поле
+                    for name, price in info                          # Поля ,которые мы не указали, заполнятся значениями по умолчанию
+                ]
+                result = Product.objects.bulk_create(products)
+                for obj in result:
+                    print(obj)
+                self.stdout.write("Done")
+
+    bulk_update - позволяет обновить несколько объектов за один раз (за один запрос)
+        class Command(BaseCommand):
+            def handle(self, *args, **options):
+                self.stdout.write("Start demo bulk_actions")
+                result = Product.objects.filter(
+                    name__contains="smartphone",            # Тут говорим фильтру, искать продукты, в названиях которых содержится "smartphone"
+                ).update(discount=10)                       # Тут через queryset обновляем объекты
+                print(result)
