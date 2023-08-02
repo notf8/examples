@@ -116,3 +116,28 @@ Database transactions, Django documentation - https://docs.djangoproject.com/en/
 
                                         ******************************************************************
                                                 Приемы оптимизации скорости и количества запросов
+
+QuerySet API reference, Django documentation, values - https://docs.djangoproject.com/en/4.1/ref/models/querysets/#values
+QuerySet API reference, Django documentation, bulk-create - https://docs.djangoproject.com/en/4.1/ref/models/querysets/#bulk-create
+
+ - Частичная загрузка полей. Для этого создадим новую команду в mysite/shopapp/management/commands/selecting_fields.py (файл нужно создать)
+    from django.contrib.auth.models import User
+    from django.core.management import BaseCommand
+    from shopapp.models import Product
+
+    class Command(BaseCommand):
+        def handle(self, *args, **options):
+            self.stdout.write("Start demo select fields")
+
+            users_info = User.objects.values_list("username", flat=True) # Так выгружаем только username, flat=True - означает что все имена нужно сложить в один список, а не выводить по отдельности
+            for user_info in users_info:                                 # Тут Важно! К обхектам обращаемся через values_list, а не как ниже, с моделью Product, через просто values
+                print(user_info)
+
+            # products_values = Product.objects.values("pk", "name")     # Так выгружаем только id  и на звания продуктов
+            # for p_values in products_values:
+            #     print(p_values)
+            self.stdout.write("Done")
+
+    # Метод defer позволяет отложить загрузку полей до тех пор, пока они не понадобятся
+    products: Sequence[Product] = Product.objects.defer("description", "price", "created_at")  # В скобках указываем поля, которые не нужны
+    products: Sequence[Product] = Product.objects.only("name", "price") # only - наоборот (в отличии от defer), в скобках пишем только те поля, которые нужно загрузить
