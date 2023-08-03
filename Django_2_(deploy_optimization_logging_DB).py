@@ -182,3 +182,43 @@ QuerySet API reference, Django documentation, bulk-create - https://docs.djangop
                     name__contains="smartphone",            # Тут говорим фильтру, искать продукты, в названиях которых содержится "smartphone"
                 ).update(discount=10)                       # Тут через queryset обновляем объекты
                 print(result)
+
+                                        *************************************************
+                                                        Агрегации и аннотации
+
+Aggregation, Django documentation - https://docs.djangoproject.com/en/4.1/topics/db/aggregation/
+Annotation, Django documentation - https://docs.djangoproject.com/en/4.1/topics/db/aggregation/#joins-and-aggregates
+Django Annotations: steroids to your Querysets by Gautam Rajeev Singh, Medium - https://medium.com/@singhgautam7/django-annotations-steroids-to-your-querysets-766231f0823a
+
+ - Агрегации позволяют выполнять действия над несколькими строчками (например среднюю стоимость посмотреть). создадим команду mysite/shopapp/management/commands/agg.py
+    from django.contrib.auth.models import User
+    from django.core.management import BaseCommand
+    from django.db.models import Avg, Max, Min, Count, Sum
+    from shopapp.models import Product
+
+    class Command(BaseCommand):
+        def handle(self, *args, **options):
+            self.stdout.write("Start demo aggregate")
+            # result = Product.objects.filter(
+            #     name__contains="smartphone",
+            # ).aggregate(
+            #     average_price=Avg("price"), # Тут сразу указываем, с каким именем вывести инфу (что бы не выводило название из модели)
+            #     max_price=Max("price"),
+            #     min_price=Min("price"),
+            #     count=Count("id"),
+            # )
+            # print(result)
+
+            orders = Order.objects.annotate(
+                total=Sum("products__price", default=0),   # Тут 2 подчеркивания!! default=0 - ставим, если не хотим видеть значение None, когда в заказе пусто
+                products_count=Count("products"),        # Так добавляем имя для анностации и одновременно считаем сумму по products__price
+            )
+            for order in orders:
+                print(
+                    f"Order {order.id} "
+                    f"with {order.products_count} "
+                    f"products worth {order.total}"
+                )
+            self.stdout.write("Done")
+    Потом просто введем команду в терминале: python manage.py agg
+    Аннотации часто используют, если нужно подготовить данные для какой-либо записи, что бы не подгружать всю базу для этого
