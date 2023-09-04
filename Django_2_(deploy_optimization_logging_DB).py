@@ -238,6 +238,9 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
 
   Важно! Уровни, которые ниже, чем выставленный в логгере, вообще не будут выводиться (те если стоит Critical, то info выведен не будет)
 
+ - Запись логов в файл и настройка ротации лог-файлов в пmysite/mysite/settings.py
+
+
  - Настроем logging в приложении mysite/mysite/settings.py
     LOGGING = {
         "version": 1,
@@ -274,6 +277,7 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
                 "links": links,
                 "items": 5,
             }
-            log.debug("Products for shop index: %s", links) # В логгинг пероедаем правила форматирования, делаем так, если все же придлется выводить уровень debug
+            log.debug("Products for shop index: %s", links) # В логгинг передаем правила форматирования, делаем так, если все же придлется выводить уровень debug
             log.info("Rendering shop index")
             return render(request, 'shopapp/shop-index.html', context=context)
+
