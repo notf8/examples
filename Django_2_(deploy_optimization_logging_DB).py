@@ -239,7 +239,9 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
   Важно! Уровни, которые ниже, чем выставленный в логгере, вообще не будут выводиться (те если стоит Critical, то info выведен не будет)
 
  - Запись логов в файл и настройка ротации лог-файлов в пmysite/mysite/settings.py
-
+    LOGFILE_NAME = BASE_DIR / "log.txt"             # Указываем имя файла
+    LOGFILE_SIZE = 400                              # Размер файла для ротации в байтах
+    LOGFILE_COUNT = 3                               # Сколько файлов будем хранить (3 - количество предыдущих + 1 текущий
 
  - Настроем logging в приложении mysite/mysite/settings.py
     LOGGING = {
@@ -255,12 +257,22 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
                 "class": "logging.StreamHandler",
                 "formatter": "verbose",
             },
+            "logfile": {
+                "class": "logging.handlers.RotatingFileHandler",                    # Указываем класс для обработки логов
+                "filename": LOGFILE_NAME,                        # Дальше просто берем переменные, которые создали ранее
+                "maxBytes": LOGFILE_SIZE,
+                "backupCount": LOGFILE_COUNT,
+                "formatter": "verbose",                     # Форматирование оставляем то же самое, что и было в начале
+            },
         },
         "root": {
-            "handlers": ["console"],
-            "level": "INFO",
-        },
-    }
+                "handlers": [
+                    "console",
+                    "logfile",                              # Тут проост в список добавляем хэндлер, который создали выше
+                ],
+                "level": "INFO",
+            },
+        }
 
  - Добавим логгирование в приложение mysite/shopapp/views.py
     import logging
@@ -278,6 +290,6 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
                 "items": 5,
             }
             log.debug("Products for shop index: %s", links) # В логгинг передаем правила форматирования, делаем так, если все же придлется выводить уровень debug
-            log.info("Rendering shop index")
+            log.info("Rendering shop index") # Логгировать нужно до того, как функция вернет данные, если случиться ошибка до return, мы этого нек увидим в логах
             return render(request, 'shopapp/shop-index.html', context=context)
 
