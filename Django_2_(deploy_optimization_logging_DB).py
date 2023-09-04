@@ -241,7 +241,7 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
  - Запись логов в файл и настройка ротации лог-файлов в пmysite/mysite/settings.py
     LOGFILE_NAME = BASE_DIR / "log.txt"             # Указываем имя файла
     LOGFILE_SIZE = 400                              # Размер файла для ротации в байтах
-    LOGFILE_COUNT = 3                               # Сколько файлов будем хранить (3 - количество предыдущих + 1 текущий
+    LOGFILE_COUNT = 3                               # Сколько файлов будем хранить (3 - количество предыдущих + 1 текущий)
 
  - Настроем logging в приложении mysite/mysite/settings.py
     LOGGING = {
