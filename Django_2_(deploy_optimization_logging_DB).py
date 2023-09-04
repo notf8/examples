@@ -222,3 +222,58 @@ Django Annotations: steroids to your Querysets by Gautam Rajeev Singh, Medium - 
             self.stdout.write("Done")
     Потом просто введем команду в терминале: python manage.py agg
     Аннотации часто используют, если нужно подготовить данные для какой-либо записи, что бы не подгружать всю базу для этого
+
+                                        *************************************************
+                                                Логированиен и профилирование
+
+Logging | Django documentation - https://docs.djangoproject.com/en/4.2/topics/logging/
+Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/logging.html
+
+ - Logging, уровни:
+  - Debug - низкоуровневое логирование,инфа о каждом шаге приложения
+  - Info - на продакшене так же отключен (до инфо, не обязательнгое для отладки)
+  - Warmibg - Просто уведомление об обработаных ошибках
+  - Error - Инфа о серьезной проблеме
+  - Criticsl - сообщения о критической ошибке
+
+  Важно! Уровни, которые ниже, чем выставленный в логгере, вообще не будут выводиться (те если стоит Critical, то info выведен не будет)
+
+ - Настроем logging в приложении mysite/mysite/settings.py
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "verbose": {
+                "format": "%(asctime)s [%(levelname)s] %(name)s: %(message)s", # Тут пишем asctime что бы выводить время, а [] - для красоты вывода используем, в () - указываем переменные для вывода
+            }
+        },
+        "handlers": {
+            "console": {
+                "class": "logging.StreamHandler",
+                "formatter": "verbose",
+            },
+        },
+        "root": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+    }
+
+ - Добавим логгирование в приложение mysite/shopapp/views.py
+    import logging
+    log = logging.getLogger(__name__) # В скобках указываем имя текущего модуля, это стандартный формат логирования
+
+    class ShopIndexView(View):
+        def get(self, request: HttpRequest) -> HttpResponse:
+            links = [
+                {"title": "Список продуктов", "address": "products/"},
+                {"title": "Список заказов", "address": "orders/"},
+            ]
+            context = {
+                "time_running": default_timer(),
+                "links": links,
+                "items": 5,
+            }
+            log.debug("Products for shop index: %s", links) # В логгинг пероедаем правила форматирования, делаем так, если все же придлется выводить уровень debug
+            log.info("Rendering shop index")
+            return render(request, 'shopapp/shop-index.html', context=context)
