@@ -294,3 +294,37 @@ Logging HOWTO — Python 3.11.3 documentation - https://docs.python.org/3/howto/lo
             log.info("Rendering shop index") # Логгировать нужно до того, как функция вернет данные, если случиться ошибка до return, мы этого нек увидим в логах
             return render(request, 'shopapp/shop-index.html', context=context)
 
+                                **************************************************
+                                            Зачем нужно профилирование?
+Optimize your code using profilers | PyCharm Documentation - https://www.jetbrains.com/help/pycharm/profiler.html
+Django Debug Toolbar - https://django-debug-toolbar.readthedocs.io/en/latest/
+
+Профилирование - это процесс анализа производительности кода (выявления узких мест)
+
+ - Установим Django Debug Toolbar, в терминале ввести: pip install django-debug-toolbar и заморозм: pip freeze requirements.txt
+
+ - Добавим приложение в установленные в mysite/mysite/settings.py:
+    INSTALLED_APPS = ['debug_toolbar',]
+
+ - Так же добавим его в список middleware в mysite/mysite/settings.py:
+    MIDDLEWARE = ['debug_toolbar.middleware.DebugToolbarMiddleware',]
+
+ - Добавим настройку в целях безопасности в mysite/mysite/settings.py:
+    INTERNAL_IPS = [
+        "127.0.0.1",                                # Тут указываем, по какому IP можно получить доступ к DebugToolbar
+    ]
+
+ - Добавим приложение в mysite/mysite/urls.py:
+    if settings.DEBUG:
+        urlpatterns.extend(
+            static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        )
+        urlpatterns.append(
+            path("__debug__/", include("debug_toolbar.urls")),
+        )
+
+ - Запуск оболочки дебага SQL без запуска с сервера (сервер должен быть остановлен):
+    В терминале вводим: python manage.py debugsqlshell
+
+                                **************************************************
+                                                    Docker
