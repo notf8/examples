@@ -426,3 +426,44 @@ Docker compose - описывает связи между приложениями и позволяет запускать их в п
 
  - Для запуска приложения в compose вводим в терминале: docker compose up -d app # -d означает запус в отрыве от терминала (для запуска в терминале (docker compose up app)
    Что бы получить логи в режме -d, нужно ввести команду: docker compose logs -f app # -f означает получать логи в реалдьном времени
+
+                                        ********************************************
+                                                    Логи в Grafana Loki
+
+Grafana | Query, visualize, alerting observability platform - https://grafana.com/grafana/
+Grafana Loki OSS | Log aggregation system - https://grafana.com/oss/loki/
+https://github.com/grafana/loki/tree/main/production
+
+Grafana - просто визуализирует логи. А Loki их собирает
+
+ - Запустим локально Grafana Loki. В файле /mysite/Dockerfil:
+    version: "3.9"
+
+    services:
+      app:
+        build:
+          dockerfile: ./Dockerfile
+        command:
+          - "python"
+          - "manage.py"
+          - "runserver"
+          - "0.0.0.0:8080"
+        ports:
+          - "8000:8080"
+      grafana:
+        image: grafana/grafana:9.2.15
+        environment:
+          - GF_AUTH_ANONYMOUS_ENABLED=true          # Разрешаем запуск без паоля
+          - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin        # Даем себе права админа
+        ports:
+          - "3000:3000"
+      loki:
+        image: grafana/loki:2.8.0
+        ports:
+          - "3100:3100"
+
+ - Загрузим сервисы. В терминале вводим: docker compose pull
+
+ - Запускаем сервисы в детач режиме, в терминале: docker compose up -d grafana loki
+
+ - По адресу http://localhost:3000/?orgId=1 можно перейти на дашборд grafana
