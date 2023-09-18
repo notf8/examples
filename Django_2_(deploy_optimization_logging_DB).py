@@ -436,7 +436,7 @@ https://github.com/grafana/loki/tree/main/production
 
 Grafana - просто визуализирует логи. А Loki их собирает
 
- - Запустим локально Grafana Loki. В файле /mysite/Dockerfil:
+ - Запустим локально Grafana Loki. В файле /mysite/Dockerfile:
     version: "3.9"
 
     services:
@@ -473,5 +473,65 @@ Grafana - просто визуализирует логи. А Loki их собирает
 
  - Установим плагин для сбора логов для Loki. В терминале введем: docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions # После установки обязательно перезапустить docker
 
+ - После перезапуска docker, в терминал вводим: docker plugin ls # Проверяем, установился ли плагин
 
+ - Добавим сервис в файл /mysite/Dockerfile:
+    version: "3.9"
+
+    services:
+      app:
+        build:
+          dockerfile: ./Dockerfile
+        command:
+          - "python"
+          - "manage.py"
+          - "runserver"
+          - "0.0.0.0:8080"
+        ports:
+          - "8000:8080"
+        logging:
+          driver: loki
+          options:
+            loki-url: http://host.docker.internal:3100/loki/api/v1/push
+
+      grafana:
+        image: grafana/grafana:9.2.15
+        environment:
+          - GF_AUTH_ANONYMOUS_ENABLED=true
+          - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+        ports:
+          - "3000:3000"
+      loki:
+        image: grafana/loki:2.8.0
+        ports:
+          - "3100:3100"
+
+ - Теперь пересобираем и запускаем контейнер. В терминале: docker compose build app и docker compose up -d app
+    Если логи в loki на странице http://localhost:3000/ не появились, то можно использовать другой адрес для loki
+    в файле Dockerfile: http://localhost/loki/api/v1/push
+
+ - Если вдруг нужно удалить контейнер, в терминале: docker compose rm -s -v app # После выполднения нажать "Y", соглашаемся
+
+ - Остановка вообще всех сервисов, в терминале: docker compose down -v
+
+                                        **************************************
+                                                        Sentry
+
+Sentry - https://sentry.io/        # сервис для сбора инфы по ошибкам
+Django | Sentry Documentation - https://docs.sentry.io/platforms/python/guides/django/
+
+Лучше всего использовать облачную версию sentry, тк локальная требует множество ресурсови ее лучше развекртывать на отдельной виртуальной машине отдельным специалистам
+Мы будем тестить облачную версию
+
+ - Регаемся на sentry, создаем новый проект python, называем django-app, выбираем "I'll create my own alerts later", Скипаем предложение добавить sdk фрэймворка
+
+- Ставим в терминале sentry: pip install --upgrade sentry-sdk и морозим pip freeze requirements.txt
+
+ - Скопируем начальную настроку и вставим в mysite/mysite/settings.py
+    import sentry_sdk
+
+    sentry_sdk.init(
+        dsn="https://6dc8a78edfbae6dbc24c78bba9072649@o4505901180715008.ingest.sentry.io/4505901229473792",
+        traces_sample_rate=1.0,
+    )
 
