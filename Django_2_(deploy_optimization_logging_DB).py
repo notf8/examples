@@ -466,4 +466,12 @@ Grafana - просто визуализирует логи. А Loki их собирает
 
  - Запускаем сервисы в детач режиме, в терминале: docker compose up -d grafana loki
 
- - По адресу http://localhost:3000/?orgId=1 можно перейти на дашборд grafana
+- По адресу http://localhost:3000/?orgId=1 можно перейти на дашборд grafana.com
+
+- В нижнем левом углу шестеренака (настройки), открываем и кликаем add data sources, там выбираем loki. Далее в настроках
+    url вносим адрес: http://loki:3100 # Потом прокручиваем вниз и жем save and test
+
+ - Установим плагин для сбора логов для Loki. В терминале введем: docker plugin install grafana/loki-docker-driver:latest --alias loki --grant-all-permissions # После установки обязательно перезапустить docker
+
+
+
