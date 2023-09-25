@@ -609,9 +609,10 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
         return new_urls + urls   # new_urls обязательно ставим вначале!!!! Иначе некоторые правила могут его не добавить в список адресов
 
  - Добавим шаблон в mysite/shopapp/tempalates/shopapp/products_changelist.html
-    {% extends 'admin/change_list.html' %}
+    {% extends 'admin/change_list.html' %}                                      # Именно так называется шаблон в админке, со списком товаров
 
     {% block object-tools-items %}                                              # Это блок с кнопками в админке
+    {% load admin_urls %}                                                       # Что бы точно подгрузились админские ссылки
         <li>
             <a href="{% url 'admin:import_products_csv' %}" class="addlink">    # class="addlink" делает стиль кнопки как и у всех остальных
                 Import CSV
@@ -621,3 +622,44 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
     {% endblock %}
 
  - Добавим шаблон в класс ProductAdmin (mysite/shopapp/admin.py)
+    change_list_template = "shopapp/products_changelist.html"
+
+ - Создадим в корне проекта файл для проверки devices.csv
+    name,description,price,discount
+    "laptop 14","A new one","29900.00",5
+    "laptop 16","A bigger one","49900.00",7
+
+ - Добавим шаблон в класс ProductAdmin (mysite/shopapp/admin.py) метод для чтения файла:
+    from io import TextIOWrapper
+    from csv import DictReader
+
+    @admin.register(Product)
+    class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
+
+        def import_csv(self, request: HttpRequest) -> HttpResponse:
+            if request.method == "GET":
+                form = CSVImportForm()
+                context = {
+                    "form": form,
+                }
+                return render(request, "admin/csv_form.html", context)
+            form = CSVImportForm(request.POST, request.FILES)
+            if not form.is_valid():
+                context = {
+                    "form": form,
+                }
+                return render(request, "admin/csv_form.html", context, status=400)
+
+            csv_file = TextIOWrapper(
+                form.files("csv_file").file,
+                encoding=request.encoding,
+            )
+            reader = DictReader(csv_file, )
+
+            products = [
+                Product(**row, created_by_id=1) # Добавляем, тк в БД есть обязательное поле и в файл CSV его вписать нельзя
+                for row in reader
+            ]
+            Product.objects.bulk_create(products)
+            self.message_user(request, "data from CSV was imported")
+            return redirect("..")
