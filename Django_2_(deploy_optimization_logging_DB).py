@@ -301,7 +301,7 @@ Django Debug Toolbar - https://django-debug-toolbar.readthedocs.io/en/latest/
 
 Профилирование - это процесс анализа производительности кода (выявления узких мест)
 
- - Установим Django Debug Toolbar, в терминале ввести: pip install django-debug-toolbar и заморозм: pip freeze requirements.txt
+ - Установим Django Debug Toolbar, в терминале ввести: pip install django-debug-toolbar и заморозм: pip freeze > requirements.txt
 
  - Добавим приложение в установленные в mysite/mysite/settings.py:
     INSTALLED_APPS = ['debug_toolbar',]
@@ -525,7 +525,7 @@ Django | Sentry Documentation - https://docs.sentry.io/platforms/python/guides/d
 
  - Регаемся на sentry, создаем новый проект python, называем django-app, выбираем "I'll create my own alerts later", Скипаем предложение добавить sdk фрэймворка
 
-- Ставим в терминале sentry: pip install --upgrade sentry-sdk и морозим pip freeze requirements.txt
+- Ставим в терминале sentry: pip install --upgrade sentry-sdk и морозим pip freeze > requirements.txt
 
  - Скопируем начальную настроку и вставим в mysite/mysite/settings.py
     import sentry_sdk
@@ -535,3 +535,27 @@ Django | Sentry Documentation - https://docs.sentry.io/platforms/python/guides/d
         traces_sample_rate=1.0,
     )
 
+============================================================================================================================
+
+                                    *******************************************
+                                                Экспорт данных
+
+                                        Форматы данных XML, JSON, YAML
+YAML.org - https://yaml.org/
+XML — Wikipedia - https://en.wikipedia.org/wiki/XML
+JSON — Wikipedia - https://en.wikipedia.org/wiki/JSON
+Введение в REST API — RESTful веб-сервисы  - https://habr.com/ru/articles/483202/
+Различия REST и SOAP / Хабр - https://habr.com/ru/articles/483204/
+
+JavaScriptObjectNatation (JSON) - хранение и передача массива данных с правилами разметки (похож на словари, но ключи только строки!)
+
+ExtandsibleMarkupLanguish (XML) - Описание и структурирования данных в виде дерева (есть пространство имен). Внешне похож на HTM
+    (но создан для хранения и передачи данных, а не для отображения, как HTML). В HTML уже готовые тэги, в XML тэги создаем сами
+    Больше подходит для передачи больших и сложных структур данных
+
+SimpleObjectAcessProtocol (SOAP) - Используется для обена данными между клиент/сервер. Можно передавать различные данные, в том числе бинарные
+    Используется для удаленного вызова процедур (RPC) и получекния данных в ответ (например в банковских процедурах). Есть спец
+    конверт для передачи данных (envilop). На смену ему так же пришел JSON (он легче и быстрее)
+
+YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций приложений (на нем мы описывали конфигурациюв Docker compose)
+    Удобен для написания и чтения человеком. проще JSON (меньше знаков припинания)
