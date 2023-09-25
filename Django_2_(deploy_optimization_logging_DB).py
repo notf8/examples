@@ -588,6 +588,7 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
     from django.urls import path
     from django.shortcuts import render
     from .forms import CSVImportForm
+
     # И добавим новые методы в класс ProductAdmin
     def import_csv(self, request: HttpRequest) -> HttpResponse:
         form = CSVImportForm()
@@ -606,3 +607,17 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
             )
         ]
         return new_urls + urls   # new_urls обязательно ставим вначале!!!! Иначе некоторые правила могут его не добавить в список адресов
+
+ - Добавим шаблон в mysite/shopapp/tempalates/shopapp/products_changelist.html
+    {% extends 'admin/change_list.html' %}
+
+    {% block object-tools-items %}                                              # Это блок с кнопками в админке
+        <li>
+            <a href="{% url 'admin:import_products_csv' %}" class="addlink">    # class="addlink" делает стиль кнопки как и у всех остальных
+                Import CSV
+            </a>
+        </li>
+        {{ block.super }}                                                       # Переопределим родительский класс с кнопками
+    {% endblock %}
+
+ - Добавим шаблон в класс ProductAdmin (mysite/shopapp/admin.py)
