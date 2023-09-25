@@ -559,3 +559,50 @@ SimpleObjectAcessProtocol (SOAP) - Используется для обена данными между клиент/с
 
 YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций приложений (на нем мы описывали конфигурациюв Docker compose)
     Удобен для написания и чтения человеком. проще JSON (меньше знаков припинания)
+
+                                        ***********************************************
+                                                        Импорт данных
+
+ - Что бы жкспортировать фикстуры в формте XML, в терминале набираем: python manage.py dumpdata --format xml shopapp.Product > shopapp-products-fixtures.xml (для этого нужнол установить пакет xml)
+
+ - Создадим форму для импорта/экспорта для django_admin в mysite/shopapp/forms.py
+    class CSVImportForm(forms.Form):
+        csv_file = forms.FileField()
+
+ - Добавим папку в шаблоны в mysite/shopapp/templates/admin (что бы расширить админские шаблоны) и создадим файл csv_form.html
+    {% extends 'admin/base.html' %} # Расширяем базовый админский шаблон
+
+    {% block content %}
+        <div>
+            <form action="." method="post" enctype="multipart/form-data"> # form action="." - указываем, что действие на текущей странице
+                {% csrf_token %}
+                {{ form.as_p }}
+                <div class="submit-row">                              # Делаем такой же стиль кнопок как и в стандартной джанго-админке
+                    <input type="submit" value="Upload CSV">
+                </div>
+            </form>
+        </div>
+    {% endblock %}
+
+ - Импортируем форму в mysite/shopapp/admin.py
+    from django.urls import path
+    from django.shortcuts import render
+    from .forms import CSVImportForm
+    # И добавим новые методы в класс ProductAdmin
+    def import_csv(self, request: HttpRequest) -> HttpResponse:
+        form = CSVImportForm()
+        context = {
+            "form": form,
+        }
+        return render(request, "admin/csv_form.html", context)
+
+    def get_urls(self):
+        urls = super().get_urls()      # Переопределяем родительский метод, что бы вернуть список адресов + новый адрес для импорта
+        new_urls = [
+            path(
+                "import-products-csv/",
+                self.import_csv,
+                name="import_products_csv"
+            )
+        ]
+        return new_urls + urls   # new_urls обязательно ставим вначале!!!! Иначе некоторые правила могут его не добавить в список адресов
