@@ -662,4 +662,202 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
             ]
             Product.objects.bulk_create(products)
             self.message_user(request, "data from CSV was imported")
-            return redirect("..")
+            return redirect("..")               # ТК страница создания, на одну ступень ниже стьраницы с формой, просто пишем 2 точки, что бы подняться на уровень выше
+
+                                    ****************************************************
+                                                        Файлы в DRF
+
+Viewsets — Django REST framework - https://www.django-rest-framework.org/api-guide/viewsets/#marking-extra-actions-for-routing
+TextIOWrapper | io — Core tools for working with streams — Python 3.11.3 documentation - https://docs.python.org/3/library/io.html#io.TextIOWrapper
+
+Важно! Модули viewset не нужно отдельно регистировать в urls, тк они сами передают иныу в default routers
+
+ - Добавим новые действия в mysite/shopapp/views.py:
+    from csv import DictWriter
+    from rest_framework.decorators import action
+    from rest_framework.request import Request
+
+    @extend_schema(description="Product views CRUD")
+    class ProductViewSet(ModelViewSet):
+        """
+        Набор представлений для действий над Product.
+
+        Полный CRUD для сущностей товара.
+        """
+        queryset = Product.objects.all()
+        serializer_class = ProductSerializer
+        filter_backends = [
+            SearchFilter,
+            DjangoFilterBackend,
+            OrderingFilter,
+        ]
+        search_fields = ["name", "description"]
+        filterset_fields = [
+            "name",
+            "description",
+            "price",
+            "discount",
+            "archived",
+        ]
+        ordering_fields = [
+            "name",
+            "price",
+            "discount",
+        ]
+        @extend_schema(
+            summary="Get one product by ID",
+            description="Retrieves **product**, returns 404 if not found ",
+            responses={
+                200: ProductSerializer,
+                # 404: None,
+                404: OpenApiResponse(description="Empty response, product by id not found"),
+            }
+        )
+        def retrieve(self, *args, **kwargs):
+            return super().retrieve(*args, **kwargs)
+
+        @action(methods=["get"], detail=False) # detail=False - путь к download_csv должен быть построен на сонове списка элементов
+            def download_csv(self, request: Request):
+                response = HttpResponse(content_type="text/csv")
+                filename = "products-export.csv"
+                response["Content-Disposition"] = f"attachment; filename={filename}"
+                queryset = self.filter_queryset(self.get_queryset())
+                fields = [
+                    "name",
+                    "description",
+                    "price",
+                    "discount",
+                ]
+                queryset = queryset.only(*fields)
+                writer = DictWriter(response, fieldnames=fields)
+                writer.writeheader()
+
+                for product in queryset:
+                    writer.writerow({                  # Записываем построчно каждое поле продукта в файл csv
+                        field: getattr(product, field) # Получаем значения полей по ключу field
+                        for field in fields
+                    })
+                return response
+
+ - Теперь сделаем функцию импорта csv в django rest, для этого изменим файл mysite/shopapp/admin.py:
+    Добавим отдельную функцию (вне класса и изменим сам класс ProductAdmin)
+        @admin.register(Product)
+        class ProductAdmin(admin.ModelAdmin, ExportAsCSVMixin):
+            change_list_template = "shopapp/products_changelist.html"
+            actions = [
+                mark_archived, mark_unarchived, "export_csv"
+            ]
+            inlines = [
+                OrderInLine,
+                ProductInLine,
+            ]
+            list_display = "pk", "name", "description_short", "price", "discount", "archived"
+            list_display_links = "pk", "name"
+            ordering = "pk",
+            search_fields = ["name", "description", "price", "discount"]
+
+            fieldsets = [
+                (None, {
+                    "fields": ("name", "description"),
+                }),
+                ("Price options", {
+                    "fields": ("price", "discount"),
+                    "classes": ("wide", "collapse")
+                }),
+                ("Extra options", {
+                    "fields": ("archived",),
+                    "classes": ("collapse",),
+                    "description": "Extra option. Field 'archived' is for soft delete",
+                }),
+                ("Images", {
+                    "fields": ("preview",),
+                }),
+            ]
+
+            def description_short(self, obj: Product) -> str:
+                if len(obj.description) < 48:
+                    return obj.description
+                return obj.description[:48] + "..."
+
+            def import_csv(self, request: HttpRequest) -> HttpResponse:
+                if request.method == "GET":
+                    form = CSVImportForm()
+                    context = {
+                        "form": form,
+                    }
+                    return render(request, "admin/csv_form.html", context)
+
+                form = CSVImportForm(request.POST, request.FILES)
+                if not form.is_valid():
+                    context = {
+                        "form": form,
+                    }
+                    return render(request, "admin/csv_form.html", context, status=400)
+
+                save_csv_products(
+                    file=form.files["csv_file"].file,
+                    encoding=request.encoding,
+                )
+                self.message_user(request, "data from CSV was imported")
+                return redirect("..")
+
+            def get_urls(self):
+                urls = super().get_urls()
+                new_urls = [
+                    path(
+                        "import-products-csv/",
+                        self.import_csv,
+                        name="import_products_csv",
+                    )
+                ]
+                return new_urls + urls
+
+
+        def save_csv_products(file, encoding):
+            csv_file = TextIOWrapper(
+                file,
+                encoding=encoding,
+            )
+            reader = DictReader(csv_file)
+            products = [
+                Product(**row, created_by_id=1)
+                for row in reader
+            ]
+            Product.objects.bulk_create(products)
+            return products
+
+ - Далее в папке shopapp создадим новый файл common.py, далее ПКМ по нему и copy reference (abolute path)
+ - После этого ПКМ по функции save_csv_products() -> refactor -> move -> и в путь вставляем то, что скопировали выше
+    Так в новый файл перенесется не только функция но и все ее зависимости
+
+ - Теперь можно добавить новое действие на modelviewset в mysite/shopapp/views.py
+    from rest_framework.parsers import MultiPartParser
+    from .common import save_csv_products
+    from rest_framework.response import Response
+
+    @extend_schema(description="Product views CRUD")
+    class ProductViewSet(ModelViewSet):
+        # Не буду снова копировать весь класс, он есть выше
+        serializer_class = ProductSerializer
+        @action(
+                detail=False,
+                methods=["post"],
+                parser_classes = [MultiPartParser],
+            )
+        def upload_csv(self, request: Request):
+            products = save_csv_products(
+                request.FILES["file"].file,
+                encoding=request.encoding,
+            )
+            serializer = self.get_serializer(products, many=True) # Тут мы берем сериалайзер, который объявляли раньше (ProductSerializer), потому юзаем толькол встроенный метод
+            return Response(serializer.data)
+
+ - После с помощью помошника через терминал можно загрузить файл. Для это вначале на странице shop/api/products в extraoptions
+выбираем upload csv -> по нему ПКМ - копируем ссылку и потом вводим в терминале:
+ curl -X POST -F 'file=@devices.csv' http://127.0.0.1:8000/ru/shop/api/products/upload_csv/      # У меня не сработало
+
+                                    ************************************************
+                                                    Лента новостей
+
+RSS — Википедия - https://ru.wikipedia.org/wiki/RSS
+The syndication feed framework | Django documentation - https://docs.djangoproject.com/en/4.2/ref/contrib/syndication/
