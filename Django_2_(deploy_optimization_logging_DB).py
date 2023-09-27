@@ -1006,3 +1006,5 @@ The sitemap framework | Django documentation - https://docs.djangoproject.com/en
 
  - Теберь добавим приложение в установленные приложения в mysite/mysite/settings.py:
     INSTALLED_APPS = ['django.contrib.sitemaps',]
+
+ - После, можно перейти по адресу http://127.0.0.1:8000/sitemap.xml и увидеть xml файл с имнфой по странице сайта
