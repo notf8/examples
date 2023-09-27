@@ -563,7 +563,7 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
                                         ***********************************************
                                                         Импорт данных
 
- - Что бы жкспортировать фикстуры в формте XML, в терминале набираем: python manage.py dumpdata --format xml shopapp.Product > shopapp-products-fixtures.xml (для этого нужнол установить пакет xml)
+ - Что бы экспортировать фикстуры в формте XML, в терминале набираем: python manage.py dumpdata --format xml shopapp.Product > shopapp-products-fixtures.xml (для этого нужнол установить пакет xml)
 
  - Создадим форму для импорта/экспорта для django_admin в mysite/shopapp/forms.py
     class CSVImportForm(forms.Form):
@@ -670,7 +670,7 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
 Viewsets — Django REST framework - https://www.django-rest-framework.org/api-guide/viewsets/#marking-extra-actions-for-routing
 TextIOWrapper | io — Core tools for working with streams — Python 3.11.3 documentation - https://docs.python.org/3/library/io.html#io.TextIOWrapper
 
-Важно! Модули viewset не нужно отдельно регистировать в urls, тк они сами передают иныу в default routers
+Важно! Модули viewset не нужно отдельно регистировать в urls, тк они сами передают инфу в default routers
 
  - Добавим новые действия в mysite/shopapp/views.py:
     from csv import DictWriter
@@ -717,27 +717,27 @@ TextIOWrapper | io — Core tools for working with streams — Python 3.11.3 documen
             return super().retrieve(*args, **kwargs)
 
         @action(methods=["get"], detail=False) # detail=False - путь к download_csv должен быть построен на сонове списка элементов
-            def download_csv(self, request: Request):
-                response = HttpResponse(content_type="text/csv")
-                filename = "products-export.csv"
-                response["Content-Disposition"] = f"attachment; filename={filename}"
-                queryset = self.filter_queryset(self.get_queryset())
-                fields = [
-                    "name",
-                    "description",
-                    "price",
-                    "discount",
-                ]
-                queryset = queryset.only(*fields)
-                writer = DictWriter(response, fieldnames=fields)
-                writer.writeheader()
+        def download_csv(self, request: Request):
+            response = HttpResponse(content_type="text/csv")
+            filename = "products-export.csv"
+            response["Content-Disposition"] = f"attachment; filename={filename}"
+            queryset = self.filter_queryset(self.get_queryset())
+            fields = [
+                "name",
+                "description",
+                "price",
+                "discount",
+            ]
+            queryset = queryset.only(*fields)
+            writer = DictWriter(response, fieldnames=fields)
+            writer.writeheader()
 
-                for product in queryset:
-                    writer.writerow({                  # Записываем построчно каждое поле продукта в файл csv
-                        field: getattr(product, field) # Получаем значения полей по ключу field
-                        for field in fields
-                    })
-                return response
+            for product in queryset:
+                writer.writerow({                  # Записываем построчно каждое поле продукта в файл csv
+                    field: getattr(product, field) # Получаем значения полей по ключу field
+                    for field in fields
+                })
+            return response
 
  - Теперь сделаем функцию импорта csv в django rest, для этого изменим файл mysite/shopapp/admin.py:
     Добавим отдельную функцию (вне класса и изменим сам класс ProductAdmin)
