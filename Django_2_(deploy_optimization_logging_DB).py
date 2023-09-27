@@ -813,7 +813,7 @@ TextIOWrapper | io Ч Core tools for working with streams Ч Python 3.11.3 documen
                 return new_urls + urls
 
 
-        def save_csv_products(file, encoding):
+        def save_csv_products(file, encoding):                          # ‘ункцию добавл€ем вне класса. отдельно
             csv_file = TextIOWrapper(
                 file,
                 encoding=encoding,
