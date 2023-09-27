@@ -936,3 +936,73 @@ The syndication feed framework | Django documentation - https://docs.djangoproje
 
  - Что бы нормально читать фид, нужно досустановить плагин на браузер, например RSS Feed Reader и уже в него добавить ссылку
 http://127.0.0.1:8000/blog/articles/latest/feed/
+
+                                        ********************************************
+                                                        Карта сайта
+Нужна для индексации сайта в поисковых системах типа Google, Yandex и тд. Карта сайта создается для каждого приложения в проекте
+
+Site map — Wikipedia - https://en.wikipedia.org/wiki/Site_map
+The sitemap framework | Django documentation - https://docs.djangoproject.com/en/4.2/ref/contrib/sitemaps/
+
+ - Создадим файл в mysite/blogapp/sitemap.py:
+    from django.contrib.sitemaps import Sitemap
+    from .models import Article
+
+    class BlogSiteMap(Sitemap):
+        changefreq = "never"                                       # Как часто обновляется страница (always, hourly, daily, weekly, monthly, yearly)
+        priority = 0.5                                             # На сколько главной страница являеется (от 0.1 до 1)
+
+        def items(self):
+            return Article.objects.filter(pub_date__isnull=False).order_by("-pub_date")
+
+        def lastmode(self, obj: Article):
+            return obj.pub_date
+
+ - Далее сделаем абсолюный юрл в mysite/blogapp/models.py:
+    class Article(models.Model):
+        """
+        Модель представляет статью для блога.
+        """
+        class Meta:
+            verbose_name = "Article"
+            verbose_name_plural = "Articles"
+
+        title = models.CharField(max_length=200, verbose_name="title")
+        content = models.TextField(max_length=500, blank=True, verbose_name="content")
+        pub_date = models.DateTimeField(auto_now_add=True, verbose_name="pub_date")
+        author = models.ForeignKey(Author, on_delete=models.CASCADE, verbose_name="author")
+        category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name="category")
+        tags = models.ManyToManyField(Tag, related_name="articles", verbose_name="tags")
+
+        def get_absolute_url(self):
+            return reverse("blogapp:article_details", kwargs={"pk": self.pk})
+
+ - Далее перенесем все классы sitemap (тк их ко одному на каждое приложение) в корень проекта mysite/mysite/sitemaps.py
+    from blogapp.sitemap import BlogSiteMap
+
+    sitemaps = {
+        "blog": BlogSiteMap,
+    }
+
+ - Осталось добавить адрес в корневой url -> mysite/mysite/urls.py:
+    from django.contrib.sitemaps.views import sitemap                     # Это вью функция из django.contrib
+    from .sitemaps import sitemaps                                        # А это объект из файла sitemaps
+    from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+
+    urlpatterns = [
+        path('req/', include('requestdataapp.urls')),
+        path('api/schema/', SpectacularAPIView.as_view(), name="schema"),
+        path('api/schema/swagger/', SpectacularSwaggerView.as_view(url_name='schema'), name="swagger"),
+        path('api/schema/redoc/', SpectacularRedocView.as_view(url_name='schema'), name="redoc"),
+        path('api/', include('myapiapp.urls')),
+        path('blog/', include('blogapp.urls')),
+        path(
+            "sitemap.xml",
+            sitemap,
+            {"sitemaps": sitemaps},
+            name="django.contrib.sitemaps.views.sitemap",
+        ),
+    ]
+
+ - Теберь добавим приложение в установленные приложения в mysite/mysite/settings.py:
+    INSTALLED_APPS = ['django.contrib.sitemaps',]
