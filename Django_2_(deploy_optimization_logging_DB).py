@@ -861,3 +861,78 @@ TextIOWrapper | io — Core tools for working with streams — Python 3.11.3 documen
 
 RSS — Википедия - https://ru.wikipedia.org/wiki/RSS
 The syndication feed framework | Django documentation - https://docs.djangoproject.com/en/4.2/ref/contrib/syndication/
+
+ - Создадим новое приложение для RSS фида. Для этого перейдем в проект blogapp (создавали раньше).
+
+ - В файле mysite/blogapp/views.py:
+    from django.urls import reverse_lazy
+    from .models import Article
+    from django.views.generic import ListView, CreateView, DetailView
+
+
+    class ArticlesListView(ListView):
+        template_name = "blogapp/articles-list.html"
+        context_object_name = "articles"
+        queryset = (
+            Article.objects
+            .select_related("author", "category")
+            .prefetch_related("tags")
+            .filter(pub_date__isnull=False)         # Не даст перейти к черновикам другим пользователям
+            .order_by("-pub_date")                  # Просто сортировка по дате публикации
+        )
+
+- Добавим управление статьями в админку. В файле mysite/blogapp/admin.py:
+    from django.contrib import admin
+    from .models import Article
+
+    @admin.register(Article)
+    class ArticleAdmin(admin.ModelAdmin):
+        list_display = "id", "title", "content", "author", "category", "pub_date"
+
+ - Настроим ленту RSS в файле mysite/blogapp/views.py:
+    from django.contrib.syndication.views import Feed
+    from django.urls import reverse_lazy, reverse
+
+    class LatestArticlesFeed(Feed):
+        title = "Blog articles (latest)"
+        description = "Updates on changes and addition blog articles"
+        link = reverse_lazy("blogapp:articles_list")
+
+        def items(self):
+            return (
+                Article.objects
+                .select_related("author", "category")
+                .prefetch_related("tags")
+                .filter(pub_date__isnull=False)
+                .order_by("-pub_date")[:5]
+            )
+
+        def item_title(self, item: Article):                            # Метод возвращает заголовок статьи
+            return item.title
+
+        def item_description(self, item: Article):                      # Метод возвращает сокращенный текст статьи
+            return item.content[:200]
+
+        def item_link(self, item: Article):                             # Метод переадресовывает на статью, которая понравилась
+            return reverse("blogapp:article", kwargs={"pk": item.pk})
+
+ - Добавим новый класс в mysite/blogapp/urls.py:
+    from django.urls import path
+    from .views import (
+        ArticlesListView,
+        CreateArticleView,
+        ArticleDetailView,
+        LatestArticlesFeed,
+    )
+
+    app_name = "blogapp"
+
+    urlpatterns = [
+        path("articles/", ArticlesListView.as_view(), name="articles_list"),
+        path("articles/<int:pk>/", ArticleDetailView.as_view(), name="article_details"),
+        path("articles/create/", CreateArticleView.as_view(), name="create_article"),
+        path("articles/latest/feed/", LatestArticlesFeed(), name="articles-feed"),  # ТК это не вью функция то и добавляем ее как экземпляр функции
+    ]
+
+ - Что бы нормально читать фид, нужно досустановить плагин на браузер, например RSS Feed Reader и уже в него добавить ссылку
+http://127.0.0.1:8000/blog/articles/latest/feed/
