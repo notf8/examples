@@ -1000,7 +1000,7 @@ The sitemap framework | Django documentation - https://docs.djangoproject.com/en
             "sitemap.xml",
             sitemap,
             {"sitemaps": sitemaps},
-            name="django.contrib.sitemaps.views.sitemap",
+            name="django.contrib.sitemaps.views.sitemap", # Тут в принципе не осбо важно, какое имя указать, но лучше так
         ),
     ]
 
