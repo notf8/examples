@@ -665,7 +665,7 @@ YetAnotherMarkupLanguage - Язык разметки для создания и хранения конфигураций пр
             return redirect("..")               # ТК страница создания, на одну ступень ниже стьраницы с формой, просто пишем 2 точки, что бы подняться на уровень выше
 
                                     ****************************************************
-                                                        Файлы в DRF
+                                                        Файлы в DjangoRestFramework
 
 Viewsets — Django REST framework - https://www.django-rest-framework.org/api-guide/viewsets/#marking-extra-actions-for-routing
 TextIOWrapper | io — Core tools for working with streams — Python 3.11.3 documentation - https://docs.python.org/3/library/io.html#io.TextIOWrapper
@@ -831,7 +831,31 @@ TextIOWrapper | io — Core tools for working with streams — Python 3.11.3 documen
  - После этого ПКМ по функции save_csv_products() -> refactor -> move -> и в путь вставляем то, что скопировали выше
     Так в новый файл перенесется не только функция но и все ее зависимости
 
- - Теперь можно добавить новое действие на modelviewset в mysite/shopapp/views.py
+ - Если нужно добавить к какой либо строке список объектов то сделать это можно так (Все в том же файле mysite/shopapp/common.py)
+    from csv import DictReader
+    from io import TextIOWrapper
+    from shopapp.models import Order, Product
+
+
+    def save_csv_orders(file, encoding):
+        csv_file = TextIOWrapper(
+            file,
+            encoding=encoding,
+        )
+        reader = DictReader(csv_file)
+        product_pk = [product.pk for product in Product.objects.all()]
+        print(product_pk)
+        orders = [
+            Order(**row, user_id=1)
+            for row in reader
+        ]
+        instance = Order.objects.bulk_create(orders)
+        for order in instance:                        # Тут уже после создания объектов, добавляем в каждый заказ список продуктов product_pk
+            order.products.set(product_pk)
+
+        return instance
+
+ - Теперь можно Сделать импорт из файла через вью функцию (не админку), добавим новое действие на modelviewset в mysite/shopapp/views.py
     from rest_framework.parsers import MultiPartParser
     from .common import save_csv_products
     from rest_framework.response import Response
