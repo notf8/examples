@@ -670,9 +670,10 @@ YetAnotherMarkupLanguage - язык разметки дл€ создани€ и хранени€ конфигураций пр
 Viewsets Ч Django REST framework - https://www.django-rest-framework.org/api-guide/viewsets/#marking-extra-actions-for-routing
 TextIOWrapper | io Ч Core tools for working with streams Ч Python 3.11.3 documentation - https://docs.python.org/3/library/io.html#io.TextIOWrapper
 
+
 ¬ажно! ћодули viewset не нужно отдельно регистировать в urls, тк они сами передают инфу в default routers
 
- - ƒобавим новые действи€ в mysite/shopapp/views.py:
+ - ƒобавим новые действи€ дл€ экспорта данных в файл из API. в mysite/shopapp/views.py:
     from csv import DictWriter
     from rest_framework.decorators import action
     from rest_framework.request import Request
@@ -721,7 +722,7 @@ TextIOWrapper | io Ч Core tools for working with streams Ч Python 3.11.3 documen
             response = HttpResponse(content_type="text/csv")
             filename = "products-export.csv"
             response["Content-Disposition"] = f"attachment; filename={filename}"
-            queryset = self.filter_queryset(self.get_queryset())
+            queryset = self.filter_queryset(self.get_queryset())      # “ак делаем, что бы фильтры из filterset_fields (которые выше, так же примен€лись и к queryset)
             fields = [
                 "name",
                 "description",
