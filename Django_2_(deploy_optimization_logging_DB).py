@@ -1064,6 +1064,8 @@ Django’s per-site-cache  - https://docs.djangoproject.com/en/4.2/topics/cache/#t
                 },
             }
 
+    CACHE_MIDDLEWARE_SECONDS = 200                  # Это время кэширования в секундах. По умолчанию настроено на 10 минут
+
  - Теперь подключим кэш в middleware. Важно! Добавляем в самое начало списка! В том оже файле mysite/mysite/settings.py
     MIDDLEWARE = ['django.middleware.cache.UpdateCacheMiddleware',] # ТК список мидлвайр выполняется СНИЗУ ВВЕРХ при обработке ОТВЕТОВ,
                                         # кэш должен исполняться последним (что бы другие классы не изменили заголовки ответов)
@@ -1071,3 +1073,7 @@ Django’s per-site-cache  - https://docs.djangoproject.com/en/4.2/topics/cache/#t
  - Так же подключим класс для чтения кэша. Важно! Его ставим в самый конец списка! В том оже файле mysite/mysite/settings.py
     MIDDLEWARE = ['django.middleware.cache.FetchFromCacheMiddleware',] # ТК список мидлвайр выполняется СВЕРХУ ВНИЗ при обработке ЗАПРОСОВ,
                                         # кэш так же должен отдать данные, до изменения заголовков запрооса
+
+ - Добавим явное действие для проверки работы функции кэширования. В файле mysite/shopapp/views.py:
+    Можно просто добавить строку print("shop index context", context) в функцию shopindex перед "return" и пообновлять страницу
+    Так по принту будет видно, что выполняется просто запрос, а траница открывается из кэша. То есть print не отрабатывает
