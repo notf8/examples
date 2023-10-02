@@ -1049,13 +1049,13 @@ Redis - https://redis.io/
 PostgreSQL - https://www.postgresql.org/
 Memcached - https://memcached.org/
 MongoDB - https://www.mongodb.com/
-
+                                        *******************************************
                                                 Система кеширования Django
 
 Django’s cache framework - https://docs.djangoproject.com/en/4.2/topics/cache/
 Django’s per-site-cache  - https://docs.djangoproject.com/en/4.2/topics/cache/#the-per-site-cache
 
- - Настроим харнилище на уровне файлов системы. В файле mysite/mysite/settings.py
+ - Настроим харнилище на уровне файлов системы (такой кэш работает для обычных GET и POST хапросов. В файле mysite/mysite/settings.py
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
@@ -1077,3 +1077,37 @@ Django’s per-site-cache  - https://docs.djangoproject.com/en/4.2/topics/cache/#t
  - Добавим явное действие для проверки работы функции кэширования. В файле mysite/shopapp/views.py:
     Можно просто добавить строку print("shop index context", context) в функцию shopindex перед "return" и пообновлять страницу
     Так по принту будет видно, что выполняется просто запрос, а траница открывается из кэша. То есть print не отрабатывает
+
+                                      *******************************************
+                                            Кеширование представлений (view)
+
+Каширование работает независимо от CACHE_MIDDLEWARE! Работает на основе декоратора!
+Django’s cache framework. The per-view cache - https://docs.djangoproject.com/en/4.2/topics/cache/#the-per-view-cache
+
+ - Протестируем работу декоратора на ФУНКЦИЯХ (НА def! НЕ view) в mysite/myauth/views.py:
+    from django.views.decorators.cache import cache_page
+
+    @cache_page(60 * 2)                                       # В скобках указываем таймаут
+    def get_cookie_view(request: HttpRequest) -> HttpResponse:
+        value = request.COOKIES.get("fizz", "default value")
+        return HttpResponse(f"Cookie value: {value!r} + {random()}")  # В сюда просто добавли рандом ,что бы посомтреть работу
+
+ - Что бы добавить декоратор ко view функциям, его нужно подключить в url! В файле mysite/shopapp/urls.py:
+    from django.views.decorators.cache import cache_page
+
+    urlpatterns = [path("", cache_page(60 * 3)(ShopIndexView.as_view()), name="shop_index"),]  # Ставим декоратор перед вызовом ShopIndexView
+
+                                         Кэширование на view классах!!!
+
+ - Важно!!! В Django Rest, подключение view функций идет через default router (а не как ShopIndexView.as_view()), Поэтому декоратор подключить некуда
+    Поэтому для Django Rest используется отдельный декоратор "method decorator"
+    Применим декоратор для функции ProductViewSet в файле mysite/shopapp/views.py:
+
+    from django.utils.decorators import method_decorator
+    from django.views.decorators.cache import cache_page
+
+    @method_decorator(cache_page(60 * 2))               # В декоратор передаем тот декоратор, который хотим юзать
+    def list(self, *args, **kwargs):                    # Просто переопределяем родительский матод, что бы появилась возможность навесить декоратор
+        return super().list(*args, **kwargs)
+
+    Таким образом, можно не добавлять каширование в url, а просто навесить его на отдельные методы класса, как примеры выше
