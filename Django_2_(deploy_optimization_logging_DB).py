@@ -1033,3 +1033,41 @@ The sitemap framework | Django documentation - https://docs.djangoproject.com/en
     INSTALLED_APPS = ['django.contrib.sitemaps',]
 
  - После, можно перейти по адресу http://127.0.0.1:8000/sitemap.xml и увидеть xml файл с имнфой по странице сайта
+========================================================================================================================
+
+                                                    Оптимизация
+
+                                *************************************************
+                                                Что такое кеширование?
+
+Кэш - высокоскоростонй уровень хранения данных временного характера. Кэш может хранитьтся в файлах на диске/В оперативной памяти/ В базе даных
+
+«Что такое кеширование и как оно работает» - https://aws.amazon.com/ru/caching/
+«Что такое кэширование?» - https://azure.microsoft.com/ru-ru/resources/cloud-computing-dictionary/what-is-caching/
+«Кеш» - https://ru.wikipedia.org/wiki/%D0%9A%D1%8D%D1%88
+Redis - https://redis.io/
+PostgreSQL - https://www.postgresql.org/
+Memcached - https://memcached.org/
+MongoDB - https://www.mongodb.com/
+
+                                                Система кеширования Django
+
+Django’s cache framework - https://docs.djangoproject.com/en/4.2/topics/cache/
+Django’s per-site-cache  - https://docs.djangoproject.com/en/4.2/topics/cache/#the-per-site-cache
+
+ - Настроим харнилище на уровне файлов системы. В файле mysite/mysite/settings.py
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+            "LOCATION": "C:/foo/bar",                                          # Путь можно указать так же до папки юзера или любой другой
+            # "LOCATION": "E:/temp/django_cache",
+                },
+            }
+
+ - Теперь подключим кэш в middleware. Важно! Добавляем в самое начало списка! В том оже файле mysite/mysite/settings.py
+    MIDDLEWARE = ['django.middleware.cache.UpdateCacheMiddleware',] # ТК список мидлвайр выполняется СНИЗУ ВВЕРХ при обработке ОТВЕТОВ,
+                                        # кэш должен исполняться последним (что бы другие классы не изменили заголовки ответов)
+
+ - Так же подключим класс для чтения кэша. Важно! Его ставим в самый конец списка! В том оже файле mysite/mysite/settings.py
+    MIDDLEWARE = ['django.middleware.cache.FetchFromCacheMiddleware',] # ТК список мидлвайр выполняется СВЕРХУ ВНИЗ при обработке ЗАПРОСОВ,
+                                        # кэш так же должен отдать данные, до изменения заголовков запрооса
