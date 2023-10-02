@@ -1097,7 +1097,7 @@ Django’s cache framework. The per-view cache - https://docs.djangoproject.com/en
 
     urlpatterns = [path("", cache_page(60 * 3)(ShopIndexView.as_view()), name="shop_index"),]  # Ставим декоратор перед вызовом ShopIndexView
 
-                                         Кэширование на view классах!!!
+                                         Кэширование на методах во view классах !!!
 
  - Важно!!! В Django Rest, подключение view функций идет через default router (а не как ShopIndexView.as_view()), Поэтому декоратор подключить некуда
     Поэтому для Django Rest используется отдельный декоратор "method decorator"
