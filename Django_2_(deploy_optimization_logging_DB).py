@@ -1197,4 +1197,52 @@ Django’s cache framework. Template fragment caching - https://docs.djangoproject
     </div>
     {% endblock %}
 
+                                    ********************************************************
+                                        Использование низкоуровневого Cache API в Django
 
+Можно использовать для того, что бы внутри вью-функции сохранить в кэш отдельные данные, а не весь результат работы функции
+Django’s cache framework. The low-level cache API - https://docs.djangoproject.com/en/4.2/topics/cache/#the-low-level-cache-api
+
+Можно использовать в методах:
+ - GET (передаем ключ и забираем кеш),
+ - SET (передаем данные, ключ, таймаут) и записываем кэш
+ - ADD (так же передаем данные, ключ, таймаут ) и ставим кеш, НО! ADD не перезаписывает кэш в отличии от SET (если кэш уже есть)
+ - GET OR CREATE (получаем кэш по ключу, а если его нет, то создаем новый кэш, по указанному ключу)
+ - DELETE (удаляет каш по уазанному ключу)
+ - DELETE MANY (удаляет несколько кэшей по ключам)
+ - CLEAR (чистит вообще весь кэш)
+
+ - Протестируем LowLevelCache в файле mysite/shopapp/views.py:
+    from django.core.cache import cache
+    class ProductDataExportView(View, UserPassesTestMixin):
+        def test_func(self):
+            return self.request.user.is_staff
+        def get(self, request: HttpRequest) -> JsonResponse:
+            cache_key = "products_data_export"
+            products_data = cache.get(cache_key)
+            products = Product.objects.order_by("pk").all()
+            if products_data is None:
+                products_data = [
+                    {
+                        "pk": product.pk,
+                        "name": product.name,
+                        "price": product.price,
+                        "archived": product.archived,
+                    }
+                    for product in products
+                ]
+                cache.set(cache_key, products_data, 3000)
+            return JsonResponse({"products": products_data})
+
+                                        *******************************************
+                                         Кэш без кэширования!! (нужно для отладки)
+
+ - В корне проекта в файле mysite/settings.py закомментируем все настройки кэша и добавим запись
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.dummy.DummyCache",         # В этом случае реальное кэширование не происходит, и в функциях не нужно менять настройки кэша (просто заглушка)
+            # "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+            # # "LOCATION": "C:/foo/bar",
+            # "LOCATION": "E:/temp/django_cache",
+        },
+    }
