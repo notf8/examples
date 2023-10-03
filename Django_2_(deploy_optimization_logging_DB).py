@@ -1111,3 +1111,90 @@ Django’s cache framework. The per-view cache - https://docs.djangoproject.com/en
         return super().list(*args, **kwargs)
 
     Таким образом, можно не добавлять каширование в url, а просто навесить его на отдельные методы класса, как примеры выше
+
+                                        ********************************************
+                                                Кеширование фрагмента шаблона
+
+Используется, когда нужно закэшировать не весь ответ, а только часть страницы
+Django’s cache framework. Template fragment caching - https://docs.djangoproject.com/en/4.2/topics/cache/#template-fragment-caching
+
+ - Добавим кэширование части страницы в mysite/shopapp/templates/shopapp/shop-index.html
+    {% extends 'shopapp/base.html' %}
+    {% load cache %}                    # Сначала загружаем модуль кэша
+
+    {% block title %}
+        Shop index
+    {% endblock %}
+
+    {% block body %}
+        <h1> Список доступных страниц </h1>
+        <div>
+            <ul>
+                {% for link in links %}
+                    <li><a href={{link.address}}>{{link.title}}</a></li>
+                {% empty %}
+                    No links here
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% cache 100 cherr %}             # 100 - время в секундах для кэша. cherr - это ключ для кэша (не переменная!!!)
+        <div>
+            <strong>
+                You have {{ items }} cherr{{ items|pluralize:"y,ies" }}
+            </strong>
+        </div>
+        {% endcache %}
+
+        <div>
+            Time running: {{time_running}}
+        </div>
+    {% endblock %}
+                                  *****************************************************
+                                        Сделать индивидуальный каш для пользователя
+
+ - Дабавим в шаблон в mysite/myauth/templates/myauth/about-me.html
+    {% extends 'myauth/base.html' %}
+    {% load cache %}                                                                    # Сначала загружаем модуль кэша
+
+    {% block title %}
+      About me
+    {% endblock %}
+
+    {% block body %}
+    <h1>User info</h1>
+    <div>
+        Products available: {% now "u" %}  # Это просто баловство, вместо random используем текущее время, что бы сгененрировать случайные числа
+    </div>
+    {% if user.is_authenticated %}
+        {% cache 300 userinfo user.username %}        # Здесь: 300-время кэша, userinfo-ключ для кэша, user.username-уникальная переменная (доп ключ) для каждого пользователя
+            <h2>Detail</h2>
+            <p>Username: {{user.username}}</p>
+            <p>First name: {{user.first_name}}</p>
+            <p>Last name: {{user.last_name}}</p>
+            <p>Email: {{user.email}}</p>
+            <p>Bio: {{user.profile.bio}}</p>
+            {% if user.profile.avatar %}
+                <img src="{{ user.profile.avatar.url }}" alt="{{ user.profile.avatar.name }}">
+            {% else %}
+                <h2>No avatar yet</h2>
+            {% endif %}
+        {% endcache %}
+    {% else %}
+        <h2>User is anonymous</h2>
+    {% endif %}
+    {% if request.user.is_staff or user.pk == request.user.id %}
+        <div>
+            <a href="{% url 'myauth:profile_update' pk=user.profile.pk %}">Update profile</a>
+        </div>
+    {% endif %}
+    <div>
+        <a href="{% url 'myauth:profiles_list' %}"
+        >Back to profile list</a>
+    </div>
+    <div>
+        <a href="{% url 'myauth:logout'%}">Logout</a>
+    </div>
+    {% endblock %}
+
+
