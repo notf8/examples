@@ -1201,6 +1201,7 @@ Django’s cache framework. Template fragment caching - https://docs.djangoproject
                                         Использование низкоуровневого Cache API в Django
 
 Можно использовать для того, что бы внутри вью-функции сохранить в кэш отдельные данные, а не весь результат работы функции
+
 Django’s cache framework. The low-level cache API - https://docs.djangoproject.com/en/4.2/topics/cache/#the-low-level-cache-api
 
 Можно использовать в методах:
@@ -1246,3 +1247,82 @@ Django’s cache framework. The low-level cache API - https://docs.djangoproject.c
             # "LOCATION": "E:/temp/django_cache",
         },
     }
+
+                                            ************************************************
+                           Создадим вью закзазов с фильтрацией по пользователю, id которого берется из адресной строки
+
+ - Создаем в mysite/shopapp/views.py
+class UserOrdersListView(LoginRequiredMixin, ListView):
+    template_name = "shopapp/user_orders.html"
+
+    def get_queryset(self, owner=None, **kwargs):
+        self.owner = get_object_or_404(User, pk=self.kwargs['user_id']) # Сохраняем объект пользователя или возвращаем 404
+        return Order.objects.select_related('user').prefetch_related('products').filter(user_id=self.owner)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['owner'] = self.owner                   # Передаем пользователя в контекст для шаблона
+        return context
+    # Не забываем подключить в mysite/shopapp/urls.py [path("users/<int:user_id>/orders/", UserOrdersListView.as_view(), name="user_orders"),]
+
+ - Рисуем шаблон в mysite/shopapp/templates/shopapp/user_orders.html
+    {% extends 'shopapp/base.html' %}
+    {% load cache %}                         # Подгружаем кэш
+
+    {% block title %}
+        Orders list
+    {% endblock %}
+
+    {% block body %}
+        <h1>The user {{ owner }} made an order(s):</h1>
+        {% if object_list %}
+        {% cache 300 userinfo owner.pk %}                   # Создаем таймаут ключ и уникальный ключ для конкретного пользователя (что бы кэши были разные)
+            <div>
+            {% for order in object_list %}
+                <div>
+                    <p><a href="{% url 'shopapp:order_details' pk=order.pk %}">
+                        Details # {{ order.pk }}</a></p>
+                    <p>Order by: {% firstof order.user.first_name order.user.username %}</p>
+                    <p>Promocode: <code>{{ order.promocode }}</code></p>
+                    <p>Delivery address: {{ order.delivery_address }}</p>
+                </div>
+                    Products in order:
+                    <ul>
+                        {% for product in order.products.all %}
+                            <li>{{ product.name }} for ${{product.price}}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+            </div>
+        {% endcache %}
+        {% else %}
+            <h3>The user has no orders yet</h3>
+        {% endif %}
+
+        <div>
+            <a href="{% url 'shopapp:order_create' %}">
+                Create a new order
+            </a>
+        </div>
+    {% endblock %}
+
+                                *************************************************
+                                    ExportView с кэшированием и сериалайзером
+
+class OrderCacheExportView(View, UserPassesTestMixin):
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get(self, request: HttpRequest, **kwargs) -> JsonResponse:
+        user_id = get_object_or_404(User, pk=self.kwargs['user_id'])  # Забираем 'user_id' из адресной строки
+        cache_key = f"orders_data_export_for_user_{user_id}"          # Создаем индивидуальный ключ пользователя для кэша
+        orders_data = cache.get(cache_key)                            # Получаем данные из кэша, если они там есть
+        if orders_data is None:
+            owner: User = get_object_or_404(User, pk=user_id.id)
+            orders = Order.objects.select_related("user").prefetch_related("products").order_by('pk').filter(
+                user=owner).all()                                    # Фильтруем заказы по пользователю
+            orders_data = OrderSerializer(orders, many=True).data    # Серриализуем данные (серриализатор делали раньше, он в файле mysite/shopapp/serializers.py
+            cache.set(cache_key, orders_data, timeout=120)           # Сохраняем данные в кэш
+        return JsonResponse({"products": orders_data})
