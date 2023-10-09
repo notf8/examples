@@ -1326,3 +1326,44 @@ class OrderCacheExportView(View, UserPassesTestMixin):
             orders_data = OrderSerializer(orders, many=True).data    # Серриализуем данные (серриализатор делали раньше, он в файле mysite/shopapp/serializers.py
             cache.set(cache_key, orders_data, timeout=120)           # Сохраняем данные в кэш
         return JsonResponse({"products": orders_data})
+
+========================================================================================================================
+
+                                    ********************************************
+                                        Развертывание сайта на сервере (дэплой)
+
+«Разница между VPS-хостингом и облачным хостингом. Какой выбрать?» - https://oblakoteka.ru/about/v_mire_it/raznica-mezhdu-vpshostingom-i-oblachnym/
+VPS - Выделенные виртуальные серверы
+
+ - Для начала создадим новый проект на https://gitlab.com/ (create new project и снять галочку unutialize new repository - потому как у нас уже есть готовый проект)
+
+ - Далее в в терминале cd Test_area и дальше git init. После этого в папке проекта создадим .gitignore Наполнить его можно по примеру из github/gitignore
+
+ - Делаем первый коммит (initial commit: create .gitignore) прям в интерприретаторе (зеленая галочка)
+
+ - Потом еще раз жмем коммит, слева вверху кнопочка с глазом - выделяем аункт directory и выбрав все файлы делаем коммит (add all files)
+
+ - После возвращаемся на сайт и копируем команду (каждый новый реп будет новая): git remote add origin git@gitlab.com:notf8/django-app.git
+
+ - Отправляем настройки в репозиторий, копируем команду сс сайта: git push --set-upstream origin main (у меня не сработала, ошибка src запишил через интерпритатор)
+
+ - И уже после этих манипуляций собираем на сервере (арендованом) с docker compose контейнер с созданного роепозитория и запускаем приложение
+
+ - Чаще для запуска проектов на Django используются спец сервера: WSGI. Например GUNICORN (для небольших приложний) или UWSGI (для нагруженных приложений)
+
+ - Для нашего подойдет gunicorn. Утановим его в терминале: pip install gunicorn и заморозим pip freeze > requirements.txt
+
+ - Далее в корне нужно создать Dockerfile (но у меня он уже созан ранее). Пример заполнее есть выше
+
+                                ***********************************************************
+                                        Подготовка Python проекта к развертыванию
+
+«Анализ производительности WSGI-серверов» - https://habr.com/ru/articles/428047/
+Ways to set environment variables in Compose. Docker Documentation - https://docs.docker.com/compose/environment-variables/set-environment-variables/
+Start containers automatically. Docker Documentation - https://docs.docker.com/config/containers/start-containers-automatically/
+Logging. Django documentation - https://docs.djangoproject.com/en/4.2/topics/logging/
+What is .env? How to Set up and run a .env file in Node? Codementor - https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
+OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
+
+
+
