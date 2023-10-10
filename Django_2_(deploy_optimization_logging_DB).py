@@ -1401,19 +1401,26 @@ OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
     )
     DEBUG = getenv("DJANGO_DEBUG", "0") == "1"    # Так делаем возможность получать занчения дебага из окружения (если значение debug=True не придет, то запустится обычный роежим)
 
+    ALLOWED_HOSTS = [
+        "0.0.0.0",
+        "127.0.0.1",
+    ] + getenv("DJANGO_ALLOWED_HOSTS", "").split(",") # Так же вытаскиваем список хостов из окружения
+
     LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
     logging.config.dictConfig({
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {
             "console": {
-                "format": "%(asctime)s %(levlelname)s [%(name)s:%(lineno)s] %(module)s %(message)s"
+                "format": "%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(message)s"
             },
         },
         "handlers": {
-            "class": "logging.StreamHandler",
-            "formatter": "console",
-        },
+                "console": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "console",
+                },
+            },
         "loggers": {
             "": {
                 "level": LOGLEVEL,
@@ -1423,9 +1430,6 @@ OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
             },
         },
     })
-
- - Сначала создадим в корне несколько файлов:  .env и .env.template
-
 
  - Теперь отредактируем файл docker-compose.yaml (котрый лехит в корне проекта, если создавали раньше) либо создать его
     version: "3.9"
@@ -1443,9 +1447,8 @@ OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
         ports:
           - "8000:8080"
         restart: always
-        environment:
-          env_file:
-            - .env
+        env_file:
+          - .env
         logging:
           driver: "json-file"
           options:
@@ -1453,3 +1456,34 @@ OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
             max-size: "200k"
         volumes:
           - ./mysite/database:/app/database
+
+ - Далее создадим в корне несколько файлов:  .env и .env.template
+    Файл .env.template (это тот, который попадет на сервер):
+        DJANGO_LOGLEVEL=
+        DJANGO_SECRET_KEY=
+        DJANGO_DEBUG=
+        DJANGO_ALLOWED_HOSTS=
+
+    Файл .env (этот останется у нас на локальном компе, из него будет забирать инфу .env.template)
+        DJANGO_LOGLEVEL=INFO
+        DJANGO_SECRET_KEY=sdaoihasijhfijahisjufajikanfj #Вот это вообще от балды на клаве набираем (даже кол-во символов не важно)
+        DJANGO_DEBUG=1
+        DJANGO_ALLOWED_HOSTS=
+
+ - Ну и собираем контейнер. В терминале: docker compose build app и docker compose up app (проверяем, что б все работало)
+
+ - Потом комитим и пушим изменения. Заходим на гитлаб и копируем адрес (Clone with SSH)
+
+ - Потом идем в терминал. Пишем ssh имя пользователя и адрес сервера (Для примера: ssh root@46.19.67.97)
+
+ - Уже на сервере, в терминале переходим в свою папку с проектами (обычный "CD") и вводи:
+    git clone git@gitlab.com:notf8/django-app.git # То, что скопировали на гите
+
+ - Далее на сервере переходим в склонированный проект, копируем файл .env.template и заполняем его на сервере
+    В терминале: cp .env.template .env
+
+ - Окткрываем скопированный файл в терминальном редакторе. В теминале вводим: nano .env
+
+ - Что бы скопировать secret key, в терминале вводим: openssl rand -hex 32 # Так мы получим рандомную строку. Ее копируем и вставляем
+                                        # на удаленном сервере
+ - Копируем
