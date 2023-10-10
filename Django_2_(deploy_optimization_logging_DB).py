@@ -1353,7 +1353,6 @@ VPS - Выделенные виртуальные серверы
 
  - Для нашего подойдет gunicorn. Утановим его в терминале: pip install gunicorn и заморозим pip freeze > requirements.txt
 
- - Далее в корне нужно создать Dockerfile (но у меня он уже созан ранее). Пример заполнее есть выше
 
                                 ***********************************************************
                                         Подготовка Python проекта к развертыванию
@@ -1365,5 +1364,92 @@ Logging. Django documentation - https://docs.djangoproject.com/en/4.2/topics/log
 What is .env? How to Set up and run a .env file in Node? Codementor - https://www.codementor.io/@parthibakumarmurugesan/what-is-env-how-to-set-up-and-run-a-env-file-in-node-1pnyxw9yxj
 OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
 
+- Далее в корне нужно отредактировать Dockerfile . ТК команда для запуска на gunicorn отличается:
+    FROM python:3.11
+
+    ENV PYTHONUNBUFFERED=1
+
+    WORKDIR /app
+
+    COPY requirements.txt requirements.txt
+
+    RUN pip install --upgrade pip
+    RUN pip install -r requirements.txt
+
+    COPY mysite .
+
+    CMD ["gunicorn", "mysite.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+ - Далее нужно будет создать новый путь для базы данных на сервере (тк локальной копии еще нет), в файле mysite/mysite/settings.py, сверху, под BASE_DIR
+    DATABASE_DER = BASE_DIR/"database"
+    DATABASE_DER.mkdir(exist_ok=True) # Если папка уже существует, то ошибку не выкинет
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': DATABASE_DIR / 'db.sqlite3',    # Так же нужно изменить расположение БД в настройках БД
+        }
+    }
+
+- Теперь изменим настройки логгирования тк приложение будет на сервере. Там же в mysite/mysite/settings.py:
+    from os import getenv
+    import logging.config
+
+    SECRET_KEY = getenv(                                                     # Ключ обязательно спрятать через getenv()
+        "DJANGO_SECRET_KEY",
+        'django-insecure-*kzcgnp=a(yak7daj@y-@g9h0+9@c*g-q1*m%^&)$3p*ogittr'
+    )
+    DEBUG = getenv("DJANGO_DEBUG", "0") == "1"    # Так делаем возможность получать занчения дебага из окружения (если значение debug=True не придет, то запустится обычный роежим)
+
+    LOGLEVEL = getenv("DJANGO_LOGLEVEL", "info").upper()
+    logging.config.dictConfig({
+        "version": 1,
+        "disable_existing_loggers": False,
+        "formatters": {
+            "console": {
+                "format": "%(asctime)s %(levlelname)s [%(name)s:%(lineno)s] %(module)s %(message)s"
+            },
+        },
+        "handlers": {
+            "class": "logging.StreamHandler",
+            "formatter": "console",
+        },
+        "loggers": {
+            "": {
+                "level": LOGLEVEL,
+                "handlers": [
+                    "console",
+                ],
+            },
+        },
+    })
+
+ - Сначала создадим в корне несколько файлов:  .env и .env.template
 
 
+ - Теперь отредактируем файл docker-compose.yaml (котрый лехит в корне проекта, если создавали раньше) либо создать его
+    version: "3.9"
+
+    services:
+      app:
+        build:
+          dockerfile: ./Dockerfile
+        command:
+          - gunicorn
+          - mysite.wsgi:application
+          - --bind
+          - "0.0.0.0:8000"
+
+        ports:
+          - "8000:8080"
+        restart: always
+        environment:
+          env_file:
+            - .env
+        logging:
+          driver: "json-file"
+          options:
+            max-file: "10"
+            max-size: "200k"
+        volumes:
+          - ./mysite/database:/app/database
