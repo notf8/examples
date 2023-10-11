@@ -1574,4 +1574,68 @@ OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
 root — это имя пользователя, а 46.19.67.97 — это IP-адрес сервера.
 
 При первом подключении вы увидите запрос: Are you sure you want to continue connecting (yes/no/[fingerprint])? # Напечатайте yes и нажмите Enter.
+========================================================================================================================
 
+                                    ******************************************************
+                                    Совместимость кода и миграций при командной разработке
+
+Git merge conflicts. Atlassian Git Tutorial - https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts
+Django Migrations and How to Manage Conflicts - https://www.algotech.solutions/blog/python/django-migrations-and-how-to-manage-conflicts/
+«Постановка проблемы обратной совместимости» - https://habr.com/ru/articles/534238/
+
+ - Лучше всего использовать отдельные ветки для каждой новой фичи
+ - Не делать в рамках ветки много фич. Лучше быстрее влить одну готовую
+ - Если долго не заливаешь свою ветку в основную, нужно чаще делать ребэйз
+ - Что бы снизить конфликты миграций - все новые миградции должны только добавлять колонки (не менять и не удалять)
+ - Лучше тестировать миграции на локальном стенде перед заливкой ветки
+ - В API не рекомендуется менять/удалять поля и их тип (даже если опечатка в строках)
+
+                                    ******************************************************
+                                                    Контроль зависимостей
+
+Pipenv - https://pipenv.pypa.io/en/latest/
+Poetry - https://python-poetry.org/
+Integrating Python Poetry with Docker - https://stackoverflow.com/questions/53835198/integrating-python-poetry-with-docker
+Document docker poetry bestpractices - https://github.com/orgs/python-poetry/discussions/1879
+«Стенд для нагрузочного тестирования: от DEV до PROD» - https://habr.com/ru/companies/rtlabs/articles/577580/
+
+ - Pipenv и Poetry используют под капотом Pipenv. Poetry более новый и часто используемый. Все примеры будут с ним
+
+ - Установим Poetry (можно ставить как в глобалку так и в виртуалку, не принципиально). В терминале: pip install poetry
+
+ - Далее команда: poetry init
+    После нее будет ряд вопросов, все сохраняем по умолчанию (автор проекта, версия питона, лицензия)
+    На вопрос про установку пакетов и виртуалку овечам no и no
+    Следующий вопрос про текущую генерацию отвечаем yes
+
+ - После у нас появится в корне файл pyproject.toml, его добавляем в гит
+    ТК у нас нет файла readme, запись о нем удаляем вместе со строкой pakages (если они есть)
+
+- Установим rest_framework. В терминале: poetry add django django-rest-framework
+    появится файл poetry.lock Его нельзя редлактировать в ручную!!! Кго тоже добавляем в гит
+
+ - Дальшек бодавим то, что использовали в проекте (из файла rquirements нельзя вытащить инфу, все руками)
+    poetry add
+
+ - А когда скачаем рпозиторий, в теминале вводим: poetry install
+
+ - Далее, если приложение не запусттся из за разных версий библиотек, то можно в poetry прям написать, какая версия нужна:
+     - Для примера: poetry add "pillow@9.5.0"
+
+ - После настроим poetry в dockerfile
+    FROM python:3.11
+
+    ENV PYTHONUNBUFFERED=1
+
+    WORKDIR /app
+
+    RUN pip install --upgrade pip "poetry==1.6.1"
+    RUN poetry config virtualenvs.create false --local
+    COPY pyproject.toml poetry.lock ./
+    RUN poetry install
+
+    COPY mysite .
+
+    CMD ["gunicorn", "mysite.wsgi:application", "--bind", "0.0.0.0:8000"]
+
+ - Что бы проверить версию поетри в терминале: poetry --version
