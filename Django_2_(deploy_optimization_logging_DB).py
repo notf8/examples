@@ -1442,7 +1442,7 @@ OpenSSL rand - https://www.openssl.org/docs/man1.1.1/man1/rand.html
           - gunicorn
           - mysite.wsgi:application
           - --bind
-          - "0.0.0.0:8000"
+          - "0.0.0.0:8080"
 
         ports:
           - "8000:8080"
