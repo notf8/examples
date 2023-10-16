@@ -6358,3 +6358,14 @@ registrations_bad.log — для ошибочных, записывать стр
 # print(*a)
 Test key gitlab
 
+Код выводит цифры в консоль, которые делятся на 3 не делятся 5 и сумма которых меньше 10
+for i in range(1000):
+    if i % 3 == 0 and i % 5 != 0:
+        digit_summ = 0
+        temp_i = i
+        while temp_i > 10:
+            digit_summ += temp_i % 10
+            temp_i //= 10
+        digit_summ += temp_i % 10
+        if digit_summ < 10:
+            print(i)
